@@ -1,0 +1,11 @@
+-- DROP TABLE FLASK_ADDRESSES;
+-- CREATE TABLE FLASK_ADDRESSES(
+--     name varchar2(100) PRIMARY KEY,
+--     street varchar2(100) NOT NULL,
+--     city varchar2(100) NOT NULL,
+--     province varchar2(100) NOT NULL
+-- );
+-- INSERT INTO FLASK_ADDRESSES VALUES('David','Cornflower of East','Shiraz','Fars');  
+-- INSERT INTO FLASK_ADDRESSES VALUES('Adam','Kovardin St.','Alger','Tizi ouzou');
+-- INSERT INTO FLASK_ADDRESSES VALUES('Balkaran','Sajjanwal','Nakodar','Punjab');
+-- COMMIT;
