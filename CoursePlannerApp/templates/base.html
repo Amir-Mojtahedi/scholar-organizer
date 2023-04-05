@@ -1,0 +1,27 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>{%block title%} {%endblock%}</title>
+        <link rel="stylesheet" href="{{url_for('static', filename="styles.css")}}"/>
+        {%block script%} {%endblock%}
+    </head>
+    <body>
+        <h1> {%block headerTitle%} {% endblock %} </h1>
+        <nav>
+            <ul>
+                <li> <a href="{{url_for('home.index')}}">Home</a> </li>
+                <li> <a href="{{url_for('address.get_addresses')}}">Sign Up/Log In</a> </li>
+            </ul>
+        </nav>
+        <section>
+            {% block sectionContent %}
+            
+            {%endblock%}            
+        </section>
+        <section>
+            {% for message in  get_flashed_messages()  %}
+            <div class="flashMessages">{{message}}</div>
+            {% endfor %}            
+        </section>
+    </body>
+</html>
