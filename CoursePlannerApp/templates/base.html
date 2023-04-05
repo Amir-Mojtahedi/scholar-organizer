@@ -10,7 +10,8 @@
         <nav>
             <ul>
                 <li> <a href="{{url_for('home.index')}}">Home</a> </li>
-                <li> <a href="{{url_for('address.get_addresses')}}">Sign Up/Log In</a> </li>
+                <li> <a href="{{url_for('auth.signup')}}">Sign Up</a> </li>
+                <li> <a href="{{url_for('auth.login')}}">Login</a> </li>
             </ul>
         </nav>
         <section>
@@ -20,7 +21,7 @@
         </section>
         <section>
             {% for message in  get_flashed_messages()  %}
-            <div class="flashMessages">{{message}}</div>
+                <div class="flashMessages">{{message}}</div>
             {% endfor %}            
         </section>
     </body>
