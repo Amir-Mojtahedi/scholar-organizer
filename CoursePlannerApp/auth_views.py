@@ -35,3 +35,9 @@ def login():
         else:
             flash('Cannot Login')
     return render_template('login.html',form=form)
+
+@bp.route('/logout/')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('auth.login'))
