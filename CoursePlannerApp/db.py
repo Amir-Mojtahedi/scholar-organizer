@@ -1,5 +1,5 @@
 import os
-
+from .term import Term
 from .domain import Domain
 from .course import Course
 import oracledb
@@ -76,10 +76,38 @@ class Database:
         with self.__connection.cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
-            cursor.execute("CALL delete_domain(:domainId)",  domainId = domain.id)            
+            cursor.execute("CALL delete_domain(:domainId)", domainId = domain.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
             
+    #TERM
+    def add_term(self, term): 
+        '''Add a term to the DB for the given Term object'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(term, Term)):
+                raise ValueError
+            cursor.execute("CALL add_term(:termToAdd)", termToAdd = term)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+    
+    def update_term(self, term): 
+        '''Update a term for the given Term object'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(term, Term)):
+                raise ValueError
+            cursor.execute("CALL update_term(:termToUpdate)", termToUpdate = term)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
+    def delete_term(self, term): 
+        '''Delete a term in DB for the given Term object id'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(term, Term)):
+                raise ValueError
+            cursor.execute("CALL delete_term(:termId)", termId = term.id)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+    
     def close(self):
         if self.__connection is not None:
             self.__connection.close()
