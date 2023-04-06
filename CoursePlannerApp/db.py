@@ -24,7 +24,7 @@ class Database:
                             except Exception as e:
                                 print(e)
                         statement_parts = []
-    
+
     def add_course(self, course): 
         '''Add a course to the DB for the given Course object'''
         with self.__connection.cursor() as cursor:
@@ -51,16 +51,6 @@ class Database:
             cursor.execute("CALL delete_course(:courseId)",  courseId = course.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
-    
-    def add_domain(self, domain): 
-        '''Add a domain to the DB for the given Domain object'''
-        with self.__connection.cursor() as cursor:
-            if (not isinstance(domain, Domain)):
-                raise ValueError
-            cursor.execute("CALL add_course(:courseToAdd)",  courseToAdd = course)            
-            if not cursor.rowcount:
-                raise oracledb.Error
-    
     
     def close(self):
         if self.__connection is not None:
