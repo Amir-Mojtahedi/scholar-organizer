@@ -14,14 +14,6 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
-    login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
-    login_manager.init_app(app)
-
-    @login_manager.user_loader
-    def load_user(user_id):
-        return get_db().get_user_by_id(int(user_id))
-    
     from .home_views import bp as home_bp
     app.register_blueprint(home_bp)
 
