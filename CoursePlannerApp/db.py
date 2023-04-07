@@ -56,6 +56,16 @@ class Database:
                            email = user.email,
                            password = user.password,
                            name = user.name)
+    def get_user(self, email):
+        if not isinstance(email, str):
+            raise TypeError("Email must be a string")
+        with self.__conn.cursor() as cursor:
+            results = cursor.execute('select id, email, password, name from courseapp_users where email=:email', email=email)
+            for row in results:
+                user = User(id=row[0], email=row[1],
+                    password=row[2], name=row[3])
+                return user
+        return None
 
 if __name__ == '__main__':
     print('Provide file to initialize database')
