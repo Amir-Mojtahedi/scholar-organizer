@@ -1,4 +1,7 @@
 import os
+
+from .competency import Competency
+from .element import Element
 from .term import Term
 from .domain import Domain
 from .course import Course
@@ -108,6 +111,54 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
     
+    #COMPETENCY
+    def add_competency(self, competency): 
+        '''Add a competency to the DB for the given Competency object'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(competency, Competency)):
+                raise ValueError
+            cursor.execute("CALL add_competency(:competencyToAdd)", competencyToAdd = competency)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
+    def update_competency(self, competency): 
+        '''Update a competency for the given Competency object'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(competency, Competency)):
+                raise ValueError
+            cursor.execute("CALL update_competency(:competencyId, :competency, :competency_achievement)", competencyId = competency.id, competency = competency.name, competency_achievement = competency.achievement, competency_type = competency.type)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+    
+    def delete_competency(self, competency): 
+        '''Delete a competency in DB for the given COmpetency object id'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(competency, Competency)):
+                raise ValueError
+            cursor.execute(" CALL delete_competency(:competencyId)", competencyId = competency.id)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+    
+    #ELEMENT 
+    def add_element(self, element): 
+        '''Add an element to the DB for the given Element object'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(element, Element)):
+                raise ValueError
+            cursor.execute("CALL add_element(:elementToAdd)", elementToAdd = element)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
+    def delete_element(self, element): 
+            '''Delete a element for the given Element object'''
+            with self.__connection.cursor() as cursor:
+                if (not isinstance(element, Element)):
+                    raise ValueError
+                cursor.execute(" CALL delete_element(:elementId)", elementId = element.id)                  
+                if not cursor.rowcount:
+                    raise oracledb.Error
+            
+            
     def close(self):
         if self.__connection is not None:
             self.__connection.close()
