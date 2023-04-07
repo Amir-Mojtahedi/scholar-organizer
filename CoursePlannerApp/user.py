@@ -17,13 +17,14 @@ class User(UserMixin):
 
 from flask_wtf import FlaskForm
 from wtforms import EmailField, PasswordField, StringField, BooleanField
+from wtforms.validators import DataRequired
 
 class SignupForm(FlaskForm):
-    email=EmailField('email')
-    password=PasswordField('password')
-    name=StringField('name')
+    email=EmailField('email',validators=[DataRequired()])
+    password=PasswordField('password',validators=[DataRequired()])
+    name=StringField('name',validators=[DataRequired()])
 
 class LoginForm(FlaskForm):
-    email=EmailField('email')
-    password=PasswordField('password')
+    email=EmailField('email',validators=[DataRequired()])
+    password=PasswordField('password',validators=[DataRequired()])
     remember_me=BooleanField('remember me')

@@ -66,6 +66,17 @@ class Database:
                     password=row[2], name=row[3])
                 return user
         return None
+    
+    def get_user_by_id(self, id):
+        if not isinstance(id, int):
+            raise TypeError("Id must be an integer")
+        with self.__conn.cursor() as cursor:
+            results = cursor.execute('select id, email, password, name from courseapp_users where id=:id', id=id)
+            for row in results:
+                user = User(id=row[0], email=row[1],
+                    password=row[2], name=row[3])
+                return user
+        return None
 
 if __name__ == '__main__':
     print('Provide file to initialize database')
