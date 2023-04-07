@@ -51,7 +51,7 @@ class Database:
     def add_user(self, user):
         if not isinstance(user, User):
             raise TypeError("You must provide a user object to this function.")
-        with self.__conn.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             cursor.execute('insert into courseapp_users (email, password, name) values (:email, :password, :name)',
                            email = user.email,
                            password = user.password,
@@ -59,7 +59,7 @@ class Database:
     def get_user(self, email):
         if not isinstance(email, str):
             raise TypeError("Email must be a string")
-        with self.__conn.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             results = cursor.execute('select id, email, password, name from courseapp_users where email=:email', email=email)
             for row in results:
                 user = User(id=row[0], email=row[1],
@@ -70,7 +70,7 @@ class Database:
     def get_user_by_id(self, id):
         if not isinstance(id, int):
             raise TypeError("Id must be an integer")
-        with self.__conn.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             results = cursor.execute('select id, email, password, name from courseapp_users where id=:id', id=id)
             for row in results:
                 user = User(id=row[0], email=row[1],
