@@ -7,11 +7,10 @@ drop table terms;
 drop table elements;
 drop table competencies;
 drop table domains;
+drop table courseapp_users;
+
 --Logging
 drop table audit_logs;
-
---Users
-drop table course_users;
 
 --Drop Triggers
 --courses
