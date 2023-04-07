@@ -9,7 +9,7 @@ bp=Blueprint('auth',__name__,url_prefix='/auth/')
 @bp.route('/signup/',methods=['GET','POST'])
 def signup():
     form=SignupForm()
-    if request.methdo=='POST':
+    if request.method=='POST':
         if form.validate_on_submit():
             if get_db().get_user(form.email.data):
                 flash("User with this email already exists")
