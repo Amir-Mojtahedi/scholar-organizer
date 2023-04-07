@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{%block headerTitle%} Signup {% endblock %}
+{% block sectionContent %}
+<form method="post">
+    {{ form.csrf_token }}
+    {{ form.email.label}} {{ form.email() }}
+    {{ form.password.label}}{{ form.password() }}
+    {{ form.name.label}}{{ form.name() }}
+    <input type="submit" />
+</form>
+{% endblock %}
