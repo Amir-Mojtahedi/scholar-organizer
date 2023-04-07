@@ -1,6 +1,9 @@
 import os
 import oracledb
 
+
+from CoursePlannerApp.user import User
+
 class Database:
     def __init__(self, autocommit=True):
         self.__connection = self.__connect()
@@ -45,6 +48,14 @@ class Database:
     def __connect(self):
         return oracledb.connect(user=os.environ['DBUSER'], password=os.environ['DBPWD'],
                                 host="198.168.52.211", port=1521, service_name="pdbora19c.dawsoncollege.qc.ca")
+    def add_user(self, user):
+        if not isinstance(user, User):
+            raise TypeError("You must provide a user object to this function.")
+        with self.__conn.cursor() as cursor:
+            cursor.execute('insert into courseapp_users (email, password, name) values (:email, :password, :name)',
+                           email = user.email,
+                           password = user.password,
+                           name = user.name)
 
 if __name__ == '__main__':
     print('Provide file to initialize database')
@@ -55,3 +66,5 @@ if __name__ == '__main__':
         db.close()
     else:
         print('Invalid Path')
+
+
