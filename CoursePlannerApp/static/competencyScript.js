@@ -33,11 +33,17 @@ function fetchAllCompetencies(){
                                         competencyAchievement.innerHTML = ` Achievment: ${competency['achievement']}`
                                         let competencyType = document.createElement('p')
                                         competencyType.innerHTML = ` Type: ${competency['type']}`
+                                        let editPicture = document.createElement('img')
+                                        editPicture.setAttribute('src', '/static/edit.png')
+                                        let deletePicture = document.createElement('img')
+                                        deletePicture.setAttribute('src', '/static/delete.png')
                                         unorderedListItem.appendChild(competencyItem)
                                         competencyItem.appendChild(competencyName)
                                         competencyItem.appendChild(competencyId)
                                         competencyItem.appendChild(competencyAchievement)
                                         competencyItem.appendChild(competencyType)
+                                        competencyItem.appendChild(editPicture)
+                                        competencyItem.appendChild(deletePicture)
                                     });
                                 });
 }                                                                
