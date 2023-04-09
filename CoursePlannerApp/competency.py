@@ -18,4 +18,4 @@ class Competency:
         return f'{self.name}: {self.id}, {self.achievement}, {self.type} '        
      
     def __str__(self): 
-        return f'<p>Course {self.name}: {self.id}, {self.achievement}, {self.type} </p>'
+        return f'<p>Competency {self.name}: {self.id}, {self.achievement}, {self.type} </p>'

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}
+    Domain List
+{% endblock %}
+{% block headerTitle %}
+Domain List
+{% endblock %}
+{% block script %}
+    <script defer type="text/javascript" src="{{ url_for('static', filename='domainScript.js')}}"></script>
+{% endblock %}
+{% block sectionContent%}
+    <h1>Domains:</h1>
+    <div id="domainList" name="domainList"></div> 
+    <button type="button" id="addDomain" name="addDomain"> Add </button>
+{% endblock%}

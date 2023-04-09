@@ -63,7 +63,7 @@ a {
 	color: #718daa;
 }
 
-#competencyList ul, #elementList ul, #courseList ul{
+#competencyList ul, #elementList ul, #courseList, #domainList ul{
 	width: auto;
 	margin: 0;
 	list-style-type: disc;

@@ -12,7 +12,10 @@ from .element_api import bp as elementApi_bp
 from .element_views import bp as elementViews_bp
 from .course_api import bp as courseApi_bp
 from .course_views import bp as courseViews_bp
-
+from .domain_views import bp as domainApi_bp
+from .domain_api import bp as domainViews_bp
+from .term_api import bp as termApi_bp
+from .term_views import bp as termViews_bp
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -64,3 +67,15 @@ def init_app(app):
     
     #CourseViews
     app.register_blueprint(courseViews_bp)
+    
+    #DomainApi
+    app.register_blueprint(domainApi_bp)
+    
+    #DomainViews
+    app.register_blueprint(domainViews_bp)
+    
+    #TermApi
+    app.register_blueprint(termApi_bp)
+    
+    #TermViews
+    app.register_blueprint(termViews_bp)

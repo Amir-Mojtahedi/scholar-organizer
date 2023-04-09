@@ -68,6 +68,16 @@ class Database:
                 raise oracledb.Error
     
     #DOMAIN
+    def get_domains(self):
+        '''Returns all Domains objects in a list'''
+        with self.__connection.cursor() as cursor:
+            newListDomain = []
+            results = cursor.execute("SELECT * FROM DOMAINS")
+            for result in results:
+                newDomain = Domain(id = result[0], name = result[1], description= result[2])
+                newListDomain.append(newDomain)
+            return newListDomain
+        
     def add_domain(self, domain): 
         '''Add a domain to the DB for the given Domain object'''
         with self.__connection.cursor() as cursor:
@@ -96,6 +106,16 @@ class Database:
                 raise oracledb.Error
             
     #TERM
+    def get_terms(self):
+        '''Returns all Term objects in a list'''
+        with self.__connection.cursor() as cursor:
+            newListTerm = []
+            results = cursor.execute("SELECT * FROM TERMS")
+            for result in results:
+                newTerm = Term(id = result[0], name = result[1])
+                newListTerm.append(newTerm)
+            return newListTerm
+        
     def add_term(self, term): 
         '''Add a term to the DB for the given Term object'''
         with self.__connection.cursor() as cursor:

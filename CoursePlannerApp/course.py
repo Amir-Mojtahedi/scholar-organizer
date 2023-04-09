@@ -1,7 +1,3 @@
-from .term import Term
-from .domain import Domain
-
-
 class Course:
     def __init__(self, id, name, description, termId, domainId, lab_hours, theory_hours, work_hours):
         if not isinstance(id, str): #Number validation
