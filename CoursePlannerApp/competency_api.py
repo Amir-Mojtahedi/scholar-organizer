@@ -1,6 +1,5 @@
-from flask import Blueprint, jsonify, request, abort, flash
+from flask import Blueprint, jsonify
 from .dbmanager import get_db
-from .competency import Competency
 
 bp = Blueprint('competency_api', __name__, url_prefix='/api/competencies/')
 

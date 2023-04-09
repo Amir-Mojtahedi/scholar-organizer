@@ -3,9 +3,9 @@ import secrets
 from flask import Flask, render_template
 from flask_login import LoginManager
 
-from .auth_views import bp as auth_bp
+from CoursePlannerApp.views.auth_views import bp as auth_bp
 from .dbmanager import close_db, init_db_command, get_db
-from .home_views import bp as home_bp
+from CoursePlannerApp.views.home_views import bp as home_bp
 
 
 def create_app(test_config=None):
@@ -46,5 +46,5 @@ def init_app(app):
     app.register_blueprint(competencyApi_bp)
     
     #CompetencyViews
-    from .competency_views import bp as competencyApi_bp
+    from CoursePlannerApp.views.competency_views import bp as competencyApi_bp
     app.register_blueprint(competencyApi_bp)
