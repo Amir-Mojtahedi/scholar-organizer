@@ -1,7 +1,7 @@
 
 class Competency:
     def __init__(self, id, name, achievement, type):
-        if not isinstance(id, int): #Number validation
+        if not isinstance(id, str): #Number validation
             raise TypeError("Enter a valid number. Try again.")
         self.id = id
         if not isinstance(name, str): #Name validation

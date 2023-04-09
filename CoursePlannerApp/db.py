@@ -1,5 +1,4 @@
 import os
-
 from .competency import Competency
 from .element import Element
 from .term import Term
@@ -30,7 +29,7 @@ class Database:
                             except Exception as e:
                                 print(e)
                         statement_parts = []
-    #COURSE
+    #COURSE        
     def add_course(self, course): 
         '''Add a course to the DB for the given Course object'''
         with self.__connection.cursor() as cursor:
@@ -115,6 +114,16 @@ class Database:
                 raise oracledb.Error
     
     #COMPETENCY
+    def get_competencies(self):
+        '''Returns all Competency objects in a list'''
+        with self.__connection.cursor() as cursor:
+            newListCompetency = []
+            results = cursor.execute("SELECT * FROM COMPETENCIES")
+            for result in results:
+                newCompetency = Competency(id = result[0], name = result[1], achievement= result[2], type= result[3])
+                newListCompetency.append(newCompetency)
+            return newListCompetency
+        
     def add_competency(self, competency): 
         '''Add a competency to the DB for the given Competency object'''
         with self.__connection.cursor() as cursor:
@@ -143,6 +152,16 @@ class Database:
                 raise oracledb.Error
     
     #ELEMENT 
+    def get_elements(self):
+        '''Returns all Element objects in a list'''
+        with self.__connection.cursor() as cursor:
+            newListElement = []
+            results = cursor.execute("SELECT  * FROM COMPETENCIES")
+            for result in results:
+                newElement = Element(order= result[0], name= result[1], criteria= result[2], hours= result[3], competency= result[4])
+                newListElement.append(newElement)
+            return newListElement
+        
     def add_element(self, element): 
         '''Add an element to the DB for the given Element object'''
         with self.__connection.cursor() as cursor:

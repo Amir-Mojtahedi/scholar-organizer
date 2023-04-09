@@ -3,7 +3,7 @@ from .competency import Competency
 
 class Element:
     def __init__(self, order, name, criteria, hours, competency):
-        if not isinstance(id, order): #Order validation
+        if not isinstance(order, int): #Order validation
             raise TypeError("Enter a valid number. Try again.")
         self.order = order
         if not isinstance(name, str): #Name validation
@@ -20,7 +20,7 @@ class Element:
         self.competency = competency
         
     def __repr__(self):
-        return f'{self.name}: {self.id}, {self.achievement}, {self.type} '        
+        return f'{self.name}: {self.order}, {self.criteria}, {self.hours}, {self.competency.name}'        
      
     def __str__(self): 
-        return f'<p>Course {self.name}: {self.id}, {self.achievement}, {self.type} </p>'
+        return f'<p>Element {self.name}: {self.order}, {self.criteria}, {self.hours}, {self.competency.name} </p>'
