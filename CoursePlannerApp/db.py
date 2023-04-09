@@ -1,4 +1,7 @@
 import os
+from .term import Term
+from .domain import Domain
+from .course import Course
 import oracledb
 
 
@@ -24,7 +27,90 @@ class Database:
                             except Exception as e:
                                 print(e)
                         statement_parts = []
-
+    #COURSE
+    def add_course(self, course): 
+        '''Add a course to the DB for the given Course object'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(course, Course)):
+                raise ValueError
+            cursor.execute("CALL add_course(:courseToAdd)",  courseToAdd = course)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+    
+    def update_course(self, course): 
+        '''Update a coursefor the given Course object'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(course, Course)):
+                raise ValueError
+            cursor.execute("CALL update_course(:courseId, :title, :theory, :lab, :work, :description, :domainId, :termId)",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domain.id, termId = course.term.id)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+    
+    def delete_course(self, course): 
+        '''Delete a course in DB for the given Course object id'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(course, Course)):
+                raise ValueError
+            cursor.execute("CALL delete_course(:courseId)",  courseId = course.id)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+    
+    #DOMAIN
+    def add_domain(self, domain): 
+        '''Add a domain to the DB for the given Domain object'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(domain, Domain)):
+                raise ValueError
+            cursor.execute("CALL add_domain(:domainToAdd)",  domainToAdd = domain)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
+    def update_domain(self, domain): 
+        '''Update a domain for the given Domain object'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(domain, Domain)):
+                raise ValueError
+            cursor.execute("CALL update_domain(:domainToUpdate)", domainToUpdate = domain)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
+    def delete_domain(self, domain): 
+        '''Delete a domain in DB for the given Domain object id'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(domain, Domain)):
+                raise ValueError
+            cursor.execute("CALL delete_domain(:domainId)", domainId = domain.id)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
+    #TERM
+    def add_term(self, term): 
+        '''Add a term to the DB for the given Term object'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(term, Term)):
+                raise ValueError
+            cursor.execute("CALL add_term(:termToAdd)", termToAdd = term)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+    
+    def update_term(self, term): 
+        '''Update a term for the given Term object'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(term, Term)):
+                raise ValueError
+            cursor.execute("CALL update_term(:termToUpdate)", termToUpdate = term)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
+    def delete_term(self, term): 
+        '''Delete a term in DB for the given Term object id'''
+        with self.__connection.cursor() as cursor:
+            if (not isinstance(term, Term)):
+                raise ValueError
+            cursor.execute("CALL delete_term(:termId)", termId = term.id)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+    
     def close(self):
         if self.__connection is not None:
             self.__connection.close()
