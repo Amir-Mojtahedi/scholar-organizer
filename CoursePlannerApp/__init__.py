@@ -46,5 +46,13 @@ def init_app(app):
     app.register_blueprint(competencyApi_bp)
     
     #CompetencyViews
-    from .competency_views import bp as competencyApi_bp
-    app.register_blueprint(competencyApi_bp)
+    from .competency_views import bp as competencyViews_bp
+    app.register_blueprint(competencyViews_bp)
+    
+    #ElementApi
+    from .element_api import bp as elementApi_bp
+    app.register_blueprint(elementApi_bp)
+    
+    #ElementViews
+    from .element_views import bp as elementViews_bp
+    app.register_blueprint(elementViews_bp)

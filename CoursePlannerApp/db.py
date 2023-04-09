@@ -156,9 +156,9 @@ class Database:
         '''Returns all Element objects in a list'''
         with self.__connection.cursor() as cursor:
             newListElement = []
-            results = cursor.execute("SELECT  * FROM COMPETENCIES")
+            results = cursor.execute("SELECT  * FROM ELEMENTS")
             for result in results:
-                newElement = Element(order= result[0], name= result[1], criteria= result[2], hours= result[3], competency= result[4])
+                newElement = Element(id= result[0], order= result[1], name= result[2], criteria= result[3], competencyId= result[4])
                 newListElement.append(newElement)
             return newListElement
         

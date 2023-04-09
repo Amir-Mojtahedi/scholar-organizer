@@ -1,6 +1,5 @@
-from flask import Blueprint, render_template, flash, g, redirect, abort, escape, render_template, request, url_for
+from flask import Blueprint, render_template, flash, render_template, request
 from werkzeug.local import LocalProxy
-from .competency import Competency
 from .dbmanager import get_db
 import oracledb
 
