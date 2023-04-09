@@ -1,4 +1,3 @@
-
     //Initializing global elements needed
     let competencyList = document.getElementsByName('competencyList')[0];
     let unorderedListItem = document.createElement('ul');
@@ -25,13 +24,22 @@ function fetchAllCompetencies(){
                                 .then((data) => { 
                                     console.log(data)
                                     data.forEach(competency => {
-                                        let competencyItem = document.createElement('li')
-                                        competencyItem.innerHTML = ` Competency name: ${competency['name']}  
-                                                                    Competency Id:  ${competency['id']}, 
-                                                                    Competency Achievement: ${competency['achievement']}, 
-                                                                    Competency Type: ${competency['type']}`
-                                        unorderedListItem.appendChild(competencyItem)});
+                                        let competencyItem = document.createElement('div')
+                                        let competencyName = document.createElement('h3')
+                                        competencyName.innerHTML = ` ${competency['name']}`
+                                        let competencyId = document.createElement('p')
+                                        competencyId.innerHTML = ` Code: ${competency['id']}`
+                                        let competencyAchievement = document.createElement('p')
+                                        competencyAchievement.innerHTML = ` Achievment: ${competency['achievement']}`
+                                        let competencyType = document.createElement('p')
+                                        competencyType.innerHTML = ` Type: ${competency['type']}`
+                                        unorderedListItem.appendChild(competencyItem)
+                                        competencyItem.appendChild(competencyName)
+                                        competencyItem.appendChild(competencyId)
+                                        competencyItem.appendChild(competencyAchievement)
+                                        competencyItem.appendChild(competencyType)
                                     });
+                                });
 }                                                                
 
 function addCompetency(){
