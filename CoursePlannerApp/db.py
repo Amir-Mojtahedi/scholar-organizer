@@ -29,7 +29,17 @@ class Database:
                             except Exception as e:
                                 print(e)
                         statement_parts = []
-    #COURSE        
+    #COURSE     
+    def get_courses(self):
+        '''Returns all Courses objects in a list'''
+        with self.__connection.cursor() as cursor:
+            newListCourse = []
+            results = cursor.execute("SELECT * FROM COURSES")
+            for result in results:
+                newCourse = Course(id = result[0], name = result[1], theory_hours = result[2], lab_hours = result[3], work_hours = result[4], description = result[5], domainId = result[6], termId = result[7])
+                newListCourse.append(newCourse)
+            return newListCourse
+           
     def add_course(self, course): 
         '''Add a course to the DB for the given Course object'''
         with self.__connection.cursor() as cursor:

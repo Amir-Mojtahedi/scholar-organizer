@@ -22,7 +22,6 @@ function fetchAllCompetencies(){
                                                     return res.json();
                                 }})
                                 .then((data) => { 
-                                    console.log(data)
                                     data.forEach(competency => {
                                         let competencyItem = document.createElement('div')
                                         let competencyName = document.createElement('h3')
@@ -35,15 +34,17 @@ function fetchAllCompetencies(){
                                         competencyType.innerHTML = ` Type: ${competency['type']}`
                                         let editPicture = document.createElement('img')
                                         editPicture.setAttribute('src', '/static/edit.png')
+                                        editPicture.setAttribute('class', 'editBtn')                                       
                                         let deletePicture = document.createElement('img')
                                         deletePicture.setAttribute('src', '/static/delete.png')
+                                        deletePicture.setAttribute('class', 'deleteBtn')
                                         unorderedListItem.appendChild(competencyItem)
                                         competencyItem.appendChild(competencyName)
+                                        competencyName.appendChild(editPicture)
+                                        competencyName.appendChild(deletePicture)
                                         competencyItem.appendChild(competencyId)
                                         competencyItem.appendChild(competencyAchievement)
                                         competencyItem.appendChild(competencyType)
-                                        competencyItem.appendChild(editPicture)
-                                        competencyItem.appendChild(deletePicture)
                                     });
                                 });
 }                                                                

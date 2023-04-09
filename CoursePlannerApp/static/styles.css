@@ -63,8 +63,15 @@ a {
 	color: #718daa;
 }
 
-#competencyList ul{
+#competencyList ul, #elementList ul, #courseList ul{
 	width: auto;
 	margin: 0;
 	list-style-type: disc;
+}
+
+.editBtn, .deleteBtn{
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	margin-left: 10px;
 }

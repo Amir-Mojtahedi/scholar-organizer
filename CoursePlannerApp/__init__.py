@@ -6,6 +6,12 @@ from flask_login import LoginManager
 from .auth_views import bp as auth_bp
 from .dbmanager import close_db, init_db_command, get_db
 from .home_views import bp as home_bp
+from .competency_api import bp as competencyApi_bp
+from .competency_views import bp as competencyViews_bp
+from .element_api import bp as elementApi_bp
+from .element_views import bp as elementViews_bp
+from .course_api import bp as courseApi_bp
+from .course_views import bp as courseViews_bp
 
 
 def create_app(test_config=None):
@@ -42,17 +48,19 @@ def init_app(app):
     app.teardown_appcontext(close_db)
 
     #CompetencyApi
-    from .competency_api import bp as competencyApi_bp
     app.register_blueprint(competencyApi_bp)
     
     #CompetencyViews
-    from .competency_views import bp as competencyViews_bp
     app.register_blueprint(competencyViews_bp)
     
     #ElementApi
-    from .element_api import bp as elementApi_bp
     app.register_blueprint(elementApi_bp)
     
     #ElementViews
-    from .element_views import bp as elementViews_bp
     app.register_blueprint(elementViews_bp)
+    
+    #CourseApi
+    app.register_blueprint(courseApi_bp)
+    
+    #CourseViews
+    app.register_blueprint(courseViews_bp)

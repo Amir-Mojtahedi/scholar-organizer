@@ -21,7 +21,6 @@ function fetchAllElements(){
                                                     return res.json();
                                 }})
                                 .then((data) => { 
-                                    console.log(data)
                                     data.forEach(element => {
                                         let elementItem = document.createElement('div')
                                         let elementName = document.createElement('h3')
@@ -34,12 +33,21 @@ function fetchAllElements(){
                                         elementCriteria.innerHTML = ` Criteria: ${element['criteria']}`
                                         let elementCompetency = document.createElement('p')
                                         elementCompetency.innerHTML = ` Competency Id: ${element['competencyId']}`
+                                        let editPicture = document.createElement('img')
+                                        editPicture.setAttribute('src', '/static/edit.png')
+                                        editPicture.setAttribute('class', 'editBtn')
+                                        let deletePicture = document.createElement('img')
+                                        deletePicture.setAttribute('src', '/static/delete.png')
+                                        deletePicture.setAttribute('class', 'deleteBtn')
                                         unorderedListItem.appendChild(elementItem)
                                         elementItem.appendChild(elementName)
+                                        elementName.appendChild(editPicture)
+                                        elementName.appendChild(deletePicture)
                                         elementItem.appendChild(elementId)
                                         elementItem.appendChild(elementOrder)
                                         elementItem.appendChild(elementCriteria)
                                         elementItem.appendChild(elementCompetency)
+                                        
                                     });
                                 });
 }                                                                
