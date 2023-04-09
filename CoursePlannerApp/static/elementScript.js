@@ -27,18 +27,18 @@ function fetchAllElements(){
                                         let elementName = document.createElement('h3')
                                         elementName.innerHTML = ` ${element['name']}`
                                         let elementOrder = document.createElement('p')
+                                        let elementId = document.createElement('p')
+                                        elementId.innerHTML = ` Id: ${element['id']}`
                                         elementOrder.innerHTML = ` Order: ${element['order']}`
                                         let elementCriteria = document.createElement('p')
                                         elementCriteria.innerHTML = ` Criteria: ${element['criteria']}`
-                                        let elementHours = document.createElement('p')
-                                        elementHours.innerHTML = ` Hours: ${element['hours']}`
                                         let elementCompetency = document.createElement('p')
-                                        elementHours.innerHTML = ` Competency: ${element['competency']}`
+                                        elementCompetency.innerHTML = ` Competency Id: ${element['competencyId']}`
                                         unorderedListItem.appendChild(elementItem)
                                         elementItem.appendChild(elementName)
+                                        elementItem.appendChild(elementId)
                                         elementItem.appendChild(elementOrder)
                                         elementItem.appendChild(elementCriteria)
-                                        elementItem.appendChild(elementHours)
                                         elementItem.appendChild(elementCompetency)
                                     });
                                 });

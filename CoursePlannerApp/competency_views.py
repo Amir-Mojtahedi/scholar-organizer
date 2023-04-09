@@ -11,7 +11,6 @@ dtb = LocalProxy(get_db)
 @bp.route("/", methods=['GET', 'POST'])
 def get_competencies():
     if request.method == 'GET':
-        ##Fetching address from dtb
         try:
             competencies = dtb.get_competencies() 
         except Exception as e:
