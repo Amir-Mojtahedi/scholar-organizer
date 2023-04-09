@@ -37,5 +37,14 @@ def create_app(test_config=None):
 
 
 def init_app(app):
+    #DbManager
     app.cli.add_command(init_db_command)
     app.teardown_appcontext(close_db)
+
+    #CompetencyApi
+    from .competency_api import bp as competencyApi_bp
+    app.register_blueprint(competencyApi_bp)
+    
+    #CompetencyViews
+    from .competency_views import bp as competencyApi_bp
+    app.register_blueprint(competencyApi_bp)

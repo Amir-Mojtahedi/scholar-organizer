@@ -62,3 +62,9 @@ a {
 .main-nav a:hover {
 	color: #718daa;
 }
+
+#competencyList ul{
+	width: auto;
+	margin: 0;
+	list-style-type: disc;
+}
