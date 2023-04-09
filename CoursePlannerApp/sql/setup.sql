@@ -42,6 +42,14 @@ create table courses_elements (course_id REFERENCES courses(course_id) ON DELETE
                                 element_id REFERENCES elements(element_id) ON DELETE CASCADE, 
                                 element_hours number NOT NULL);
 
+--CourseAppUsers
+CREATE TABLE courseapp_users (
+    id  NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR2(20) NOT NULL,
+    email    VARCHAR2(50) NOT NULL,
+    password VARCHAR2(102) NOT NULL
+);
+
 --calling creation of sample data
 @inserting.sql
 

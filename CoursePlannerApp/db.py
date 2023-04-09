@@ -7,6 +7,9 @@ from .domain import Domain
 from .course import Course
 import oracledb
 
+
+from CoursePlannerApp.user import User
+
 class Database:
     def __init__(self, autocommit=True):
         self.__connection = self.__connect()
@@ -182,6 +185,35 @@ class Database:
     def __connect(self):
         return oracledb.connect(user=os.environ['DBUSER'], password=os.environ['DBPWD'],
                                 host="198.168.52.211", port=1521, service_name="pdbora19c.dawsoncollege.qc.ca")
+    def add_user(self, user):
+        if not isinstance(user, User):
+            raise TypeError("You must provide a user object to this function.")
+        with self.__get_cursor() as cursor:
+            cursor.execute('insert into courseapp_users (email, password, name) values (:email, :password, :name)',
+                           email = user.email,
+                           password = user.password,
+                           name = user.name)
+    def get_user(self, email):
+        if not isinstance(email, str):
+            raise TypeError("Email must be a string")
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select id, email, password, name from courseapp_users where email=:email', email=email)
+            for row in results:
+                user = User(id=row[0], email=row[1],
+                    password=row[2], name=row[3])
+                return user
+        return None
+    
+    def get_user_by_id(self, id):
+        if not isinstance(id, int):
+            raise TypeError("Id must be an integer")
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select id, email, password, name from courseapp_users where id=:id', id=id)
+            for row in results:
+                user = User(id=row[0], email=row[1],
+                    password=row[2], name=row[3])
+                return user
+        return None
 
 if __name__ == '__main__':
     print('Provide file to initialize database')
@@ -192,3 +224,5 @@ if __name__ == '__main__':
         db.close()
     else:
         print('Invalid Path')
+
+
