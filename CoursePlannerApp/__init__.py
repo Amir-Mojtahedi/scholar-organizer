@@ -3,19 +3,19 @@ import secrets
 from flask import Flask, render_template
 from flask_login import LoginManager
 
-from .auth_views import bp as auth_bp
+from .views.auth_views import bp as auth_bp
 from .dbmanager import close_db, init_db_command, get_db
-from .home_views import bp as home_bp
-from .competency_api import bp as competencyApi_bp
-from .competency_views import bp as competencyViews_bp
-from .element_api import bp as elementApi_bp
-from .element_views import bp as elementViews_bp
-from .course_api import bp as courseApi_bp
-from .course_views import bp as courseViews_bp
-from .domain_views import bp as domainApi_bp
-from .domain_api import bp as domainViews_bp
-from .term_api import bp as termApi_bp
-from .term_views import bp as termViews_bp
+from .views.home_views import bp as home_bp
+from .apis.competency_api import bp as competencyApi_bp
+from .views.competency_views import bp as competencyViews_bp
+from .apis.element_api import bp as elementApi_bp
+from .views.element_views import bp as elementViews_bp
+from .apis.course_api import bp as courseApi_bp
+from .views.course_views import bp as courseViews_bp
+from .apis.domain_api import bp as domainViews_bp
+from .views.domain_views import bp as domainApi_bp
+from .apis.term_api import bp as termApi_bp
+from .views.term_views import bp as termViews_bp
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)

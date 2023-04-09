@@ -1,6 +1,3 @@
-
-from .competency import Competency
-
 class Element:
     def __init__(self, id, order, name, criteria, competencyId):
         if not isinstance(id, int): #Id validation 

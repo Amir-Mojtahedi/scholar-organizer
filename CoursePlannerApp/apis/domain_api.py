@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, abort, flash
-from .dbmanager import get_db
-from .domain import Domain
+from ..dbmanager import get_db
+from ..objects.domain import Domain
 
 bp = Blueprint('domain_api', __name__, url_prefix='/api/domains/')
 

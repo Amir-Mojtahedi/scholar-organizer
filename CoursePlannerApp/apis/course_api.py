@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, abort, flash
-from .dbmanager import get_db
-from .course import Course
+from ..dbmanager import get_db
+from ..objects.course import Course
 
 bp = Blueprint('course_api', __name__, url_prefix='/api/courses/')
 

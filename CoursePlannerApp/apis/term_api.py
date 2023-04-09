@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, abort, flash
-from .dbmanager import get_db
-from .term import Term
+from ..dbmanager import get_db
+from ..objects.term import Term
 
 bp = Blueprint('term_api', __name__, url_prefix='/api/terms/')
 

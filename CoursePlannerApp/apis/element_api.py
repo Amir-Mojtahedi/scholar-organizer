@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify
-from .dbmanager import get_db
+from ..dbmanager import get_db
+from ..objects.element import Element
 
 bp = Blueprint('element_api', __name__, url_prefix='/api/elements/')
 

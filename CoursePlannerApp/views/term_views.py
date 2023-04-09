@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, flash, render_template, request
 from werkzeug.local import LocalProxy
-from .dbmanager import get_db
+from ..dbmanager import get_db
 import oracledb
 
 bp = Blueprint('term', __name__, url_prefix='/terms')

@@ -3,8 +3,8 @@ from flask import Blueprint, redirect, render_template, request, url_for, flash
 from flask_login import login_user, logout_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .dbmanager import get_db
-from .user import LoginForm, SignupForm, User
+from ..dbmanager import get_db
+from ..objects.user import LoginForm, SignupForm, User
 
 bp = Blueprint("auth", __name__, url_prefix="/auth/")
 
