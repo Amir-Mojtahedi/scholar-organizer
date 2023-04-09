@@ -1,23 +1,25 @@
 import oracledb
 from flask import Blueprint, redirect, render_template, request, url_for, flash
 from flask_login import login_user, logout_user, login_required
+from werkzeug.local import LocalProxy
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from ..dbmanager import get_db
-from ..objects.user import LoginForm, SignupForm, User
+from CoursePlannerApp.dbmanager import get_db
+from CoursePlannerApp.objects.user import LoginForm, SignupForm, User
 
 bp = Blueprint("auth", __name__, url_prefix="/auth/")
+
+dtb = LocalProxy(get_db)
 
 
 @bp.route("/signup/", methods=["GET", "POST"])
 def signup():
     form = SignupForm()
-    db = get_db()
 
     if request.method == "POST":
         if form.validate_on_submit():
             try:
-                db_user = db.get_user(form.email.data)
+                db_user = dtb.get_user(form.email.data)
             except oracledb.Error as e:
                 flash("Error: " + str(e))
                 return render_template("signup.html", form=form)
@@ -27,7 +29,7 @@ def signup():
             else:
                 _hash = generate_password_hash(form.password.data)
                 user = User(form.email.data, _hash, form.name.data)
-                db.add_user(user)
+                dtb.add_user(user)
         else:
             flash("Form is not valid")
 
@@ -37,12 +39,11 @@ def signup():
 @bp.route("/login/", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    db = get_db()
 
     if request.method == "POST":
         if form.validate_on_submit():
             try:
-                user = db.get_user(form.email.data)
+                user = dtb.get_user(form.email.data)
             except oracledb.Error as e:
                 flash("Error: " + str(e))
                 return render_template("login.html", form=form)

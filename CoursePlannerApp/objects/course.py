@@ -1,9 +1,9 @@
 class Course:
     def __init__(self, id, name, description, termId, domainId, lab_hours, theory_hours, work_hours):
-        if not isinstance(id, str): #Number validation
-            raise TypeError("Enter a valid number. Try again.")
+        if not isinstance(id, str): #Id validation
+            raise TypeError("Enter a valid Id. Try again.")
         self.id = id
-        if not isinstance(name, str): #Name validation
+        if not isinstance(name, str):  # Name validation
             raise TypeError("Enter a valid name. Try again.")
         self.name = name
         if not isinstance(theory_hours, int): #Theory Hours validation
