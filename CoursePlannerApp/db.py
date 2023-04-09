@@ -1,13 +1,13 @@
 import os
-from .competency import Competency
-from .element import Element
-from .term import Term
-from .domain import Domain
-from .course import Course
+from CoursePlannerApp.objects.competency import Competency
+from CoursePlannerApp.objects.element import Element
+from CoursePlannerApp.objects.term import Term
+from CoursePlannerApp.objects.domain import Domain
+from CoursePlannerApp.objects.course import Course
 import oracledb
 
 
-from CoursePlannerApp.user import User
+from CoursePlannerApp.objects.user import User
 
 class Database:
     def __init__(self, autocommit=True):
