@@ -6,7 +6,7 @@
     let flashMsg = document.getElementsByClassName("flashMessages")[0];
 
     //Adding listener to btn
-    addTermBtn.addEventListener('click', addTerm);
+    addTermBtn.addEventListener('click', addCompetency);
 
 
     //Appending ul to Competency Section
@@ -43,7 +43,7 @@ function fetchAllTerms(){
                                 });
 }                                                                
 
-function addTerm(){
+function addCompetency(){
 }
  
 

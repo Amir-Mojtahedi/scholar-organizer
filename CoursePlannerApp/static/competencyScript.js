@@ -6,17 +6,17 @@
     let flashMsg = document.getElementsByClassName("flashMessages")[0];
 
     //Adding listener to btn
-    addTermBtn.addEventListener('click', addTerm);
+    addCompetencyBtn.addEventListener('click', addCompetency);
 
 
     //Appending ul to Competency Section
-    termList.appendChild(unorderedListItem);
+    competencyList.appendChild(unorderedListItem);
 
     //Fetch all competencies
-    fetchAllTerms();
+    fetchAllCompetency();
 
 
-function fetchAllTerms(){
+function fetchAllCompetency(){
     //Fetch * competencies
     fetch(url).then((res) => { if(res.status==200){
                                                     return res.json();
@@ -49,7 +49,7 @@ function fetchAllTerms(){
                                 });
 }                                                                
 
-function addTerm(){
+function addCompetency(){
 }
  
 
