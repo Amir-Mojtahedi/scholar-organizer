@@ -1,3 +1,7 @@
+from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField
+from wtforms.validators import DataRequired
+
 class Element:
     def __init__(self, id, order, name, criteria, competencyId):
         if not isinstance(id, int): #Id validation 
@@ -21,3 +25,10 @@ class Element:
      
     def __str__(self): 
         return f'<p>Element {self.name}: {self.id}, {self.order}, {self.criteria}, {self.competencyId} </p>'
+
+class ElementForm(FlaskForm):
+    id = IntegerField('id',validators=[DataRequired()])
+    order = IntegerField('order',validators=[DataRequired()])
+    name = StringField('name',validators=[DataRequired()])
+    criteria = StringField('criteria',validators=[DataRequired()])
+    competencyId = StringField('competencyId',validators=[DataRequired()])
