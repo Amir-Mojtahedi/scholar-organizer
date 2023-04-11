@@ -32,3 +32,22 @@ const deleteGroup = async id => {
         alert(res.error)
     }
 }
+
+const addGroup = async () => {
+    const name = prompt("Add group", "Enter a name for this group!")
+    if (name.length === 0) return alert("The group name cannot be empty!")
+
+    const req = await fetch("/groups", {
+        method: "POST",
+        body: JSON.stringify({ name: name }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+
+    if (req.status === 200) alert("The group has successfully been added!")
+    else {
+        const res = await req.json()
+        alert(res.error)
+    }
+}
