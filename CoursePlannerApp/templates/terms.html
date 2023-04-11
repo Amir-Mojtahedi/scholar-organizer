@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}
+    Term List
+{% endblock %}
+{% block headerTitle %}
+    Term List
+{% endblock %}
+{% block script %}
+    <script defer type="text/javascript" src="{{ url_for('static', filename='termScript.js')}}"></script>
+{% endblock %}
+{% block sectionContent%}
+    <h1>Terms:</h1>
+    <div id="termList" name="termList"></div> 
+    <button type="button" id="addTerm" name="addTerm"> Add </button>
+{% endblock%}

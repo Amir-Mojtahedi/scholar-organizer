@@ -4,9 +4,19 @@ from flask import Flask, render_template
 from flask_login import LoginManager
 
 from CoursePlannerApp.views.auth_views import bp as auth_bp
-from CoursePlannerApp.views.competency_views import bp as competency_bp
 from CoursePlannerApp.views.home_views import bp as home_bp
-from .competency_api import bp as competency_api_bp
+from CoursePlannerApp.views.display_views import bp as display_bp
+from CoursePlannerApp.views.competency_views import bp as competency_bp
+from CoursePlannerApp.apis.competency_api import bp as competency_api_bp
+from CoursePlannerApp.views.course_views import bp as course_bp
+from CoursePlannerApp.apis.course_api import bp as course_api_bp
+from CoursePlannerApp.views.domain_views import bp as domain_bp
+from CoursePlannerApp.apis.domain_api import bp as domain_api_bp
+from CoursePlannerApp.views.element_views import bp as element_bp
+from CoursePlannerApp.apis.element_api import bp as element_api_bp
+from CoursePlannerApp.views.term_views import bp as term_bp
+from CoursePlannerApp.apis.term_api import bp as term_api_bp
+
 from .dbmanager import close_db, init_db_command, get_db
 
 
@@ -42,5 +52,15 @@ def init_app(app):
 
     app.register_blueprint(home_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(display_bp)
     app.register_blueprint(competency_bp)
     app.register_blueprint(competency_api_bp)
+    app.register_blueprint(course_bp)
+    app.register_blueprint(course_api_bp)
+    app.register_blueprint(domain_bp)
+    app.register_blueprint(domain_api_bp)
+    app.register_blueprint(element_bp)
+    app.register_blueprint(element_api_bp)
+    app.register_blueprint(term_bp)
+    app.register_blueprint(term_api_bp)
+    

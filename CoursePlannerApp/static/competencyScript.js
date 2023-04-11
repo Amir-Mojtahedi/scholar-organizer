@@ -13,16 +13,15 @@
     competencyList.appendChild(unorderedListItem);
 
     //Fetch all competencies
-    fetchAllCompetencies();
+    fetchAllCompetency();
 
 
-function fetchAllCompetencies(){
+function fetchAllCompetency(){
     //Fetch * competencies
     fetch(url).then((res) => { if(res.status==200){
                                                     return res.json();
                                 }})
                                 .then((data) => { 
-                                    console.log(data)
                                     data.forEach(competency => {
                                         let competencyItem = document.createElement('div')
                                         let competencyName = document.createElement('h3')
@@ -33,8 +32,16 @@ function fetchAllCompetencies(){
                                         competencyAchievement.innerHTML = ` Achievment: ${competency['achievement']}`
                                         let competencyType = document.createElement('p')
                                         competencyType.innerHTML = ` Type: ${competency['type']}`
+                                        let editPicture = document.createElement('img')
+                                        editPicture.setAttribute('src', '/static/edit.png')
+                                        editPicture.setAttribute('class', 'editBtn')                                       
+                                        let deletePicture = document.createElement('img')
+                                        deletePicture.setAttribute('src', '/static/delete.png')
+                                        deletePicture.setAttribute('class', 'deleteBtn')
                                         unorderedListItem.appendChild(competencyItem)
                                         competencyItem.appendChild(competencyName)
+                                        competencyName.appendChild(editPicture)
+                                        competencyName.appendChild(deletePicture)
                                         competencyItem.appendChild(competencyId)
                                         competencyItem.appendChild(competencyAchievement)
                                         competencyItem.appendChild(competencyType)

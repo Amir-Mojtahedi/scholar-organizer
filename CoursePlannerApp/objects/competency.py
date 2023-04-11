@@ -1,7 +1,7 @@
 class Competency:
     def __init__(self, id, name, achievement, type):
-        if not isinstance(id, str):  # Number validation
-            raise TypeError("Enter a valid number. Try again.")
+        if not isinstance(id, str):  # Id validation
+            raise TypeError("Enter a valid Id. Try again.")
         self.id = id
         if not isinstance(name, str):  # Name validation
             raise TypeError("Enter a valid name. Try again.")
@@ -17,4 +17,4 @@ class Competency:
         return f'{self.name}: {self.id}, {self.achievement}, {self.type} '
 
     def __str__(self):
-        return f'<p>Course {self.name}: {self.id}, {self.achievement}, {self.type} </p>'
+        return f'<p>Competency {self.name}: {self.id}, {self.achievement}, {self.type} </p>'

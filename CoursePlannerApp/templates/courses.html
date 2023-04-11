@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}
+    Course List
+{% endblock %}
+{% block headerTitle %}
+    Course List
+{% endblock %}
+{% block script %}
+    <script defer type="text/javascript" src="{{ url_for('static', filename='courseScript.js')}}"></script>
+{% endblock %}
+{% block sectionContent%}
+    <h1>Course:</h1>
+    <div id="courseList" name="courseList"></div> 
+    <button type="button" id="addCourse" name="addCourse"> Add </button>
+{% endblock%}
