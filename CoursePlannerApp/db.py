@@ -2,6 +2,7 @@ import os
 import oracledb
 from CoursePlannerApp.objects.competency import Competency
 from CoursePlannerApp.objects.element import Element
+from CoursePlannerApp.objects.group import Group
 from CoursePlannerApp.objects.term import Term
 from CoursePlannerApp.objects.domain import Domain
 from CoursePlannerApp.objects.course import Course
@@ -261,6 +262,46 @@ class Database:
                     password=row[3], name=row[4])
                 return user
         return None
+
+    def get_groups(self):
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select id, name from courseapp_groups')
+            groups = []
+            for row in results:
+                groups.append(Group(id=row[0], name=row[1]))
+            return groups
+
+    def get_group(self, id):
+        if not isinstance(id, int):
+            raise TypeError("Id must be an integer")
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select id, name from courseapp_groups where id=:id', id=id)
+            for row in results:
+                group = Group(id=row[0], name=row[1])
+                return group
+        return None
+
+    def add_group(self, group):
+        if not isinstance(group, Group):
+            raise TypeError("You must provide a group object to this function.")
+        with self.__get_cursor() as cursor:
+            cursor.execute('insert into courseapp_groups (name) values (:name)',
+                           name = group.name)
+
+    def update_group(self, group):
+        if not isinstance(group, Group):
+            raise TypeError("You must provide a group object to this function.")
+        with self.__get_cursor() as cursor:
+            cursor.execute('update courseapp_groups set name=:name where id=:id',
+                       id = group.id,
+                       name = group.name)
+
+    def delete_group(self, group):
+        if not isinstance(group, Group):
+            raise TypeError("You must provide a group object to this function.")
+        with self.__get_cursor() as cursor:
+            cursor.execute('delete from courseapp_groups where id=:id',
+                           id = group.id)
 
 if __name__ == '__main__':
     print('Provide file to initialize database')
