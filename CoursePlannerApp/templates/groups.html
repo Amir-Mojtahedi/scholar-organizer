@@ -6,15 +6,20 @@
     Group List
 {% endblock %}
 {% block script %}
-
+    <script defer type="text/javascript" src="{{ url_for('static', filename='groups.js')}}"></script>
 {% endblock %}
 {% block sectionContent%}
     <h1>Groups:</h1>
     <div>
         <ul>
             {% for group in groups %}
-                <li>
+                <li style="display: flex">
                     <p>{{ group.name }}</p>
+
+                    {% if manages %}
+                        <button onclick="editGroup(group.id)">Edit</button>
+                        <button onclick="deleteGroup(group.id)">Delete</button>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
