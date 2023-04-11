@@ -8,6 +8,7 @@ drop table elements;
 drop table competencies;
 drop table domains;
 drop table courseapp_users;
+drop table courseapp_groups;
 
 --Logging
 drop table audit_logs;

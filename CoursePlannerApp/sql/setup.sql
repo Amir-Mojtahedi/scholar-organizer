@@ -50,6 +50,12 @@ CREATE TABLE courseapp_users (
     password VARCHAR2(102) NOT NULL
 );
 
+--CourseAppGroups
+CREATE TABLE courseapp_groups (
+    id  NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR2(20) NOT NULL
+);
+
 --calling creation of sample data
 @inserting.sql
 

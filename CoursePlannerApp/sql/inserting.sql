@@ -1,3 +1,7 @@
+INSERT INTO courseapp_groups(name) VALUES('Members');
+INSERT INTO courseapp_groups(name) VALUES('Admin_user_gp');
+INSERT INTO courseapp_groups(name) VALUES('Admin_gp');
+
 --Sample Data
 --base course
 --PROGRAMMING I----------------------------------------------------------------------------------------------------------------------
