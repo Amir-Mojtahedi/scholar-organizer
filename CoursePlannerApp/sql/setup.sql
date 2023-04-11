@@ -45,6 +45,7 @@ create table courses_elements (course_id REFERENCES courses(course_id) ON DELETE
 --CourseAppUsers
 CREATE TABLE courseapp_users (
     id  NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    group_id NUMBER NOT NULL,
     name VARCHAR2(20) NOT NULL,
     email    VARCHAR2(50) NOT NULL,
     password VARCHAR2(102) NOT NULL

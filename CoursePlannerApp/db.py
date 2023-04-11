@@ -236,7 +236,7 @@ class Database:
         if not isinstance(user, User):
             raise TypeError("You must provide a user object to this function.")
         with self.__get_cursor() as cursor:
-            cursor.execute('insert into courseapp_users (email, password, name) values (:email, :password, :name)',
+            cursor.execute('insert into courseapp_users (group_id, email, password, name) values (0, :email, :password, :name)',
                            email = user.email,
                            password = user.password,
                            name = user.name)
@@ -244,10 +244,10 @@ class Database:
         if not isinstance(email, str):
             raise TypeError("Email must be a string")
         with self.__get_cursor() as cursor:
-            results = cursor.execute('select id, email, password, name from courseapp_users where email=:email', email=email)
+            results = cursor.execute('select id, group_id, email, password, name from courseapp_users where email=:email', email=email)
             for row in results:
-                user = User(id=row[0], email=row[1],
-                    password=row[2], name=row[3])
+                user = User(id=row[0], group_id=row[1], email=row[2],
+                    password=row[3], name=row[4])
                 return user
         return None
     
@@ -255,10 +255,10 @@ class Database:
         if not isinstance(id, int):
             raise TypeError("Id must be an integer")
         with self.__get_cursor() as cursor:
-            results = cursor.execute('select id, email, password, name from courseapp_users where id=:id', id=id)
+            results = cursor.execute('select id, group_id, email, password, name from courseapp_users where id=:id', id=id)
             for row in results:
-                user = User(id=row[0], email=row[1],
-                    password=row[2], name=row[3])
+                user = User(id=row[0], group_id=row[1], email=row[2],
+                    password=row[3], name=row[4])
                 return user
         return None
 
