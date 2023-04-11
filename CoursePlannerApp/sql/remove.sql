@@ -8,8 +8,7 @@ drop table elements;
 drop table competencies;
 drop table domains;
 drop table courseapp_users;
-drop table courseapp_groups;
-
+drop table courseapp_groups CASCADE CONSTRAINTS PURGE;
 --Logging
 drop table audit_logs;
 
