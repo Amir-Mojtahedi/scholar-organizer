@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired
 
 
 class User(UserMixin):
-    def __init__(self, email, password, name, id=None):
+    def __init__(self, email, password, name, id=None, group_id=None):
         if not isinstance(email, str):
             raise TypeError("E-mail must be a string")
         if not isinstance(password, str):
@@ -14,11 +14,14 @@ class User(UserMixin):
             raise TypeError("Name must be a string")
         if id and not isinstance(id, int):
             raise TypeError("Id must be an integer")
+        if group_id and not isinstance(group_id, int):
+            raise TypeError("Group id must be an integer")
 
         self.email = email
         self.password = password
         self.name = name
         self.id = id
+        self.group_id = group_id
 
 
 class SignupForm(FlaskForm):
