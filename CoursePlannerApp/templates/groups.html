@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}
+    Group List
+{% endblock %}
+{% block headerTitle %}
+    Group List
+{% endblock %}
+{% block script %}
+
+{% endblock %}
+{% block sectionContent%}
+    <h1>Groups:</h1>
+    <div>
+        <ul>
+            {% for group in groups %}
+                <li>
+                    <p>{{ group.name }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if manages %}
+            <button>Create Group</button>
+        {% endif %}
+    </div>
+{% endblock%}
