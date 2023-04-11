@@ -30,7 +30,7 @@ class Database:
     #COURSE     
     def get_courses(self):
         '''Returns all Courses objects in a list'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             newListCourse = []
             results = cursor.execute("SELECT * FROM COURSES")
             for result in results:
@@ -40,7 +40,7 @@ class Database:
            
     def add_course(self, course): 
         '''Add a course to the DB for the given Course object'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(course, Course)):
                 raise ValueError
             cursor.execute("CALL add_course(:courseToAdd)",  courseToAdd = course)            
@@ -49,7 +49,7 @@ class Database:
     
     def update_course(self, course): 
         '''Update a coursefor the given Course object'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(course, Course)):
                 raise ValueError
             cursor.execute("CALL update_course(:courseId, :title, :theory, :lab, :work, :description, :domainId, :termId)",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domain.id, termId = course.term.id)            
@@ -58,7 +58,7 @@ class Database:
     
     def delete_course(self, course): 
         '''Delete a course in DB for the given Course object id'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(course, Course)):
                 raise ValueError
             cursor.execute("CALL delete_course(:courseId)",  courseId = course.id)            
@@ -68,7 +68,7 @@ class Database:
     #DOMAIN
     def get_domains(self):
         '''Returns all Domains objects in a list'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             newListDomain = []
             results = cursor.execute("SELECT * FROM DOMAINS")
             for result in results:
@@ -78,7 +78,7 @@ class Database:
         
     def add_domain(self, domain): 
         '''Add a domain to the DB for the given Domain object'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
             cursor.execute("CALL add_domain(:domainToAdd)",  domainToAdd = domain)            
@@ -87,7 +87,7 @@ class Database:
             
     def update_domain(self, domain): 
         '''Update a domain for the given Domain object'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
             cursor.execute("CALL update_domain(:domainToUpdate)", domainToUpdate = domain)            
@@ -96,7 +96,7 @@ class Database:
             
     def delete_domain(self, domain): 
         '''Delete a domain in DB for the given Domain object id'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
             cursor.execute("CALL delete_domain(:domainId)", domainId = domain.id)            
@@ -106,7 +106,7 @@ class Database:
     #TERM
     def get_terms(self):
         '''Returns all Term objects in a list'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             newListTerm = []
             results = cursor.execute("SELECT * FROM TERMS")
             for result in results:
@@ -116,7 +116,7 @@ class Database:
         
     def add_term(self, term): 
         '''Add a term to the DB for the given Term object'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(term, Term)):
                 raise ValueError
             cursor.execute("CALL add_term(:termToAdd)", termToAdd = term)            
@@ -125,7 +125,7 @@ class Database:
     
     def update_term(self, term): 
         '''Update a term for the given Term object'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(term, Term)):
                 raise ValueError
             cursor.execute("CALL update_term(:termToUpdate)", termToUpdate = term)            
@@ -134,7 +134,7 @@ class Database:
             
     def delete_term(self, term): 
         '''Delete a term in DB for the given Term object id'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(term, Term)):
                 raise ValueError
             cursor.execute("CALL delete_term(:termId)", termId = term.id)            
@@ -144,7 +144,7 @@ class Database:
     #COMPETENCY
     def get_competencies(self):
         '''Returns all Competency objects in a list'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             newListCompetency = []
             results = cursor.execute("SELECT * FROM COMPETENCIES")
             for result in results:
@@ -154,7 +154,7 @@ class Database:
         
     def add_competency(self, competency): 
         '''Add a competency to the DB for the given Competency object'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(competency, Competency)):
                 raise ValueError
             cursor.execute("CALL add_competency(:competencyToAdd)", competencyToAdd = competency)            
@@ -163,7 +163,7 @@ class Database:
             
     def update_competency(self, competency): 
         '''Update a competency for the given Competency object'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(competency, Competency)):
                 raise ValueError
             cursor.execute("CALL update_competency(:competencyId, :competency, :competency_achievement)", competencyId = competency.id, competency = competency.name, competency_achievement = competency.achievement, competency_type = competency.type)            
@@ -172,7 +172,7 @@ class Database:
     
     def delete_competency(self, competency): 
         '''Delete a competency in DB for the given COmpetency object id'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(competency, Competency)):
                 raise ValueError
             cursor.execute(" CALL delete_competency(:competencyId)", competencyId = competency.id)            
@@ -182,7 +182,7 @@ class Database:
     #ELEMENT 
     def get_elements(self):
         '''Returns all Element objects in a list'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             newListElement = []
             results = cursor.execute("SELECT  * FROM ELEMENTS")
             for result in results:
@@ -192,7 +192,7 @@ class Database:
         
     def add_element(self, element): 
         '''Add an element to the DB for the given Element object'''
-        with self.__connection.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             if (not isinstance(element, Element)):
                 raise ValueError
             cursor.execute("CALL add_element(:elementToAdd)", elementToAdd = element)            
@@ -201,7 +201,7 @@ class Database:
             
     def delete_element(self, element): 
             '''Delete a element for the given Element object'''
-            with self.__connection.cursor() as cursor:
+            with self.__get_cursor() as cursor:
                 if (not isinstance(element, Element)):
                     raise ValueError
                 cursor.execute(" CALL delete_element(:elementId)", elementId = element.id)                  
