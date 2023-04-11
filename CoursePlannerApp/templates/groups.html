@@ -17,8 +17,8 @@
                     <p>{{ group.name }}</p>
 
                     {% if manages %}
-                        <button onclick="editGroup(group.id)">Edit</button>
-                        <button onclick="deleteGroup(group.id)">Delete</button>
+                        <button onclick="editGroup({{ group.id }})">Edit</button>
+                        <button onclick="deleteGroup({{ group.id }})">Delete</button>
                     {% endif %}
                 </li>
             {% endfor %}
