@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from werkzeug.local import LocalProxy
 
 from CoursePlannerApp.dbmanager import get_db
+from CoursePlannerApp.objects.group import Group
 
 bp = Blueprint("groups_api", __name__, url_prefix="/api/groups/")
 
@@ -32,24 +33,15 @@ def get_group(group_id):
     return jsonify(group)
 
 
-@bp.route("/<int:group_id>/", methods=["POST"])
+@bp.route("/", methods=["POST"])
 @login_required
-def add_group(group_id):
+def add_group():
     # get user
     user = current_user
     manages = user.group_id == 1 or user.group_id == 2
 
     if not manages:
         return jsonify({"error": "You do not have permissions to do this action"}), 403
-
-    # get group
-    try:
-        group = dtb.get_group(group_id)
-    except oracledb.Error as e:
-        return jsonify({"error": str(e)}), 500
-
-    if group:
-        return jsonify({"error": "Group already exists"}), 400
 
     # get data
     data = request.get_json()
@@ -60,9 +52,14 @@ def add_group(group_id):
     if not name:
         return jsonify({"error": "No name provided"}), 400
 
+    try:
+        group = Group(name=name)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
     # add group
     try:
-        dtb.add_group(group_id, name)
+        dtb.add_group(group)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
@@ -99,7 +96,8 @@ def update_group(group_id):
 
     # update group
     try:
-        dtb.update_group(group_id, name)
+        group.name = name
+        dtb.update_group(group)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
@@ -127,7 +125,7 @@ def delete_group(group_id):
 
     # delete group
     try:
-        dtb.delete_group(group_id)
+        dtb.delete_group(group)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
