@@ -2,7 +2,7 @@ const editGroup = async id => {
     const name = prompt("Edit group", "Enter a new name for this group!")
     if (name.length === 0) return alert("The group name cannot be empty!")
 
-    const req = await fetch(`/groups/${id}`, {
+    const req = await fetch(`/api/groups/${id}/`, {
         method: "PATCH",
         body: JSON.stringify({ id: id, name: name }),
         headers: {
@@ -22,7 +22,7 @@ const deleteGroup = async id => {
 
     if ([0, 1, 2].includes(+id)) return alert("You cannot delete this group!")
 
-    const req = await fetch(`/groups/${id}`, {
+    const req = await fetch(`/api/groups/${id}/`, {
         method: "DELETE"
     })
 
@@ -33,11 +33,11 @@ const deleteGroup = async id => {
     }
 }
 
-const addGroup = async () => {
+const addGroup = async() => {
     const name = prompt("Add group", "Enter a name for this group!")
     if (name.length === 0) return alert("The group name cannot be empty!")
 
-    const req = await fetch("/groups", {
+    const req = await fetch("/api/groups/", {
         method: "POST",
         body: JSON.stringify({ name: name }),
         headers: {
