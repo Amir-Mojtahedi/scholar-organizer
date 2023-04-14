@@ -42,7 +42,7 @@ class Course:
                             <li> Domain ID: {self.domainId}</li>    \
                             <li> Lab Hours: {self.lab_hours}</li>   \
                             <li> Theory Hours: {self.theory_hours}</li> \
-                            <li> Work HoursL {self.work_hours} </li>    \
+                            <li> Work Hours: {self.work_hours} </li>    \
                     </ul>'
     
 class CourseForm(FlaskForm):

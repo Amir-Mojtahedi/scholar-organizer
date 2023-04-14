@@ -12,7 +12,7 @@
     <h1>Course:</h1>
     <ul class="courseList">
         {% for course in banner %}
-        <li class="courseItem"> <a href={{url_for('course.get_courses', name=course.name)}}> {{course | safe}} </a>   </li>
+        <li class="courseItem"> <a href={{url_for('course.get_courses')}}> {{course | safe}} </a>   </li>
         {% endfor %}
     </ul>
     <button type="button" id="addCourse" name="addCourse"> Add </button>

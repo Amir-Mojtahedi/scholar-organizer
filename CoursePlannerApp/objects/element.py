@@ -24,7 +24,13 @@ class Element:
         return f'{self.name}: {self.id}, {self.order}, {self.criteria}, {self.competencyId}'        
      
     def __str__(self): 
-        return f'<p>Element {self.name}: {self.id}, {self.order}, {self.criteria}, {self.competencyId} </p>'
+        return f'<h3>{self.name} </h3> \
+                    <ul>    \
+                            <li> ID: {self.id}</li> \
+                            <li> Order: {self.order}</li>   \
+                            <li> Criteria: {self.criteria}</li> \
+                            <li> Competency ID: {self.competencyId}</li>    \
+                    </ul>'
 
 class ElementForm(FlaskForm):
     id = IntegerField('id',validators=[DataRequired()])

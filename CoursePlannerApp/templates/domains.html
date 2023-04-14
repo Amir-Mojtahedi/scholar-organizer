@@ -12,7 +12,7 @@
     <h1>Domains:</h1>
     <ul class="domainList">
         {% for domain in banner %}
-        <li class="domainItem"> <a href={{url_for('domain.get_domains', name=domain.name)}}> {{domain | safe}} </a>   </li>
+        <li class="domainItem"> <a href={{url_for('domain.get_domains')}}> {{domain | safe}} </a>   </li>
         {% endfor %}
     </ul>
     <button type="button" id="addDomain" name="addDomain"> Add </button>

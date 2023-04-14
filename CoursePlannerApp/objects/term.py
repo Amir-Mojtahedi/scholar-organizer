@@ -15,7 +15,10 @@ class Term:
         return f'{self.name}: {self.id}'
 
     def __str__(self):
-        return f'<p>Term {self.name}: {self.id}</p>'
+        return f'<h3> Term ID: {self.id}: </h3> \
+                    <ul>    \
+                            <li> Season: {self.name}</li> \
+                    </ul>'
 
 class TermForm(FlaskForm):
     id = IntegerField('id',validators=[DataRequired()])
