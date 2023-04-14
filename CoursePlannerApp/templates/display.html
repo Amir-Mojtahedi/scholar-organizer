@@ -9,9 +9,9 @@
     <script defer type="text/javascript" src="{{ url_for('static', filename='displayScript.js')}}"></script>
 {% endblock %}
 {% block sectionContent%}
-    <button type="button" id="showCourses" name="showCourses" ><a href="{{url_for('course.get_courses')}}"> COURSES </a></button>
-    <button type="button" id="showTerms" name="showTerms" > <a href="{{url_for('term.get_terms')}}"> TERMS  </a> </button>
-    <button type="button" id="showDomains" name="showDomains"> <a href="{{url_for('domain.get_domains')}}"> DOMAINS</a> </button>
-    <button type="button" id="showElements" name="showElements"> <a href="{{url_for('element.get_elements')}}"> ELEMENTS </a> </button>
-    <button type="button" id="showCompetencies" name="showCompetencies"> <a href="{{url_for('competency.get_competencies')}}"> COMPETENCIES </a> </button>
+    <button type="button" id="showCourses" name="showCourses" ><a href="{{url_for('display.display_courses')}}"> COURSES </a></button>
+    <button type="button" id="showTerms" name="showTerms" > <a href="{{url_for('display.display_terms')}}"> TERMS  </a> </button>
+    <button type="button" id="showDomains" name="showDomains"> <a href="{{url_for('display.display_domains')}}"> DOMAINS</a> </button>
+    <button type="button" id="showElements" name="showElements"> <a href="{{url_for('display.display_elements')}}"> ELEMENTS </a> </button>
+    <button type="button" id="showCompetencies" name="showCompetencies"> <a href="{{url_for('display.display_competencies')}}"> COMPETENCIES </a> </button>
 {% endblock%}
