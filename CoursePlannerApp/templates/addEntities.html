@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+    Display
+{% endblock %}
+{% block headerTitle %}
+    Choose the list
+{% endblock %}
+{% block script %}
+    <script defer type="text/javascript" src="{{ url_for('static', filename='addScript.js')}}"></script>
+{% endblock %}
+{% block sectionContent%}
+    <button type="button" id="addCourses" name="addCourses" ><a href="{{url_for('add.add_courses')}}"> COURSES </a></button>
+    <button type="button" id="addTerms" name="addTerms" > <a href="{{url_for('add.add_terms')}}"> TERMS  </a> </button>
+    <button type="button" id="addDomains" name="addDomains"> <a href="{{url_for('add.add_domains')}}"> DOMAINS</a> </button>
+    <button type="button" id="addElements" name="addElements"> <a href="{{url_for('add.add_elements')}}"> ELEMENTS </a> </button>
+    <button type="button" id="addCompetencies" name="addCompetencies"> <a href="{{url_for('add.add_competencies')}}"> COMPETENCIES </a> </button>
+{% endblock%}

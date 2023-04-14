@@ -1,12 +1,8 @@
-import oracledb
-from flask import Blueprint, flash, render_template, request
-from werkzeug.local import LocalProxy
-from CoursePlannerApp.dbmanager import get_db
-bp = Blueprint('display', __name__, url_prefix='/')
+from flask import Blueprint, render_template, url_for
 
-dtb = LocalProxy(get_db)
+bp = Blueprint('display', __name__, url_prefix='/display')
 
-#Display Page
+#HOMEPAGE
 @bp.route("/")
 def display():
     return render_template('display.html')
