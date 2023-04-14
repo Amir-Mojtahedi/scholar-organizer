@@ -3,13 +3,17 @@
     Domain List
 {% endblock %}
 {% block headerTitle %}
-Domain List
+    Domain List
 {% endblock %}
 {% block script %}
     <script defer type="text/javascript" src="{{ url_for('static', filename='domainScript.js')}}"></script>
 {% endblock %}
 {% block sectionContent%}
     <h1>Domains:</h1>
-    <div id="domainList" name="domainList"></div> 
+    <ul class="domainList">
+        {% for domain in banner %}
+        <li class="domainItem"> <a href={{url_for('domain.get_domains', name=domain.name)}}> {{domain | safe}} </a>   </li>
+        {% endfor %}
+    </ul>
     <button type="button" id="addDomain" name="addDomain"> Add </button>
 {% endblock%}
