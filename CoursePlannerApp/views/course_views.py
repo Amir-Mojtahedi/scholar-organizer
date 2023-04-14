@@ -13,7 +13,9 @@ def get_courses():
     try:
         courses = dtb.get_courses() 
     except Exception as e:
-        flash('There is an issue with the Database')
+        flash("Error: " + str(e))
+        return render_template("competencies.html", banner=[])
+
     if not courses or len(courses) == 0:
         flash('There is no course in database')       
         return render_template('display.html')

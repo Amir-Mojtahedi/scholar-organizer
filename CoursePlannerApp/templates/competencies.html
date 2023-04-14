@@ -10,6 +10,9 @@
 {% endblock %}
 {% block sectionContent%}
     <h1>Competencies:</h1>
-    <div id="competencyList" name="competencyList"></div> 
-    <button type="button" id="addCompetency" name="addCompetency"> Add </button>
+    <ul class="competencyList">
+        {% for competency in banner %}
+            <li class="competencyItem"> <a href={{url_for('competency.get_competencies', competency=competency.name)}}> {{competency | safe}} </a>   </li>
+        {% endfor %}
+    </ul>    <button type="button" id="addCompetency" name="addCompetency"> Add </button>
 {% endblock%}
