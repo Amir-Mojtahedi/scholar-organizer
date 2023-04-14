@@ -1,7 +1,6 @@
 import oracledb
 from flask import Blueprint, flash, render_template, request
 from werkzeug.local import LocalProxy
-from CoursePlannerApp.apis.competency_api import competency_api
 from CoursePlannerApp.dbmanager import get_db
 bp = Blueprint('addEntities', __name__, url_prefix='/add')
 
