@@ -34,7 +34,16 @@ class Course:
         return f'{self.name}: {self.id}, {self.description}, {self.termId}, {self.domainId}, {self.lab_hours}, {self.theory_hours}, {self.work_hours} '        
      
     def __str__(self): 
-        return f'<p>Course {self.name}: {self.id}, {self.description}, {self.termId}, {self.domainId}, {self.lab_hours}, {self.theory_hours}, {self.work_hours} </p>'
+        return f'<h3>{self.name}: </h3> \
+                    <ul>    \
+                            <li> ID: {self.id}</li> \
+                            <li> Description: {self.description}</li>   \
+                            <li> Term ID: {self.termId}</li> \
+                            <li> Domain ID: {self.domainId}</li>    \
+                            <li> Lab Hours: {self.lab_hours}</li>   \
+                            <li> Theory Hours: {self.theory_hours}</li> \
+                            <li> Work HoursL {self.work_hours} </li>    \
+                    </ul>'
     
 class CourseForm(FlaskForm):
     id = StringField('id',validators=[DataRequired()])
