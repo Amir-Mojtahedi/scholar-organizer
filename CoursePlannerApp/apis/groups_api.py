@@ -23,7 +23,7 @@ def get_groups():
 
     # try jsonifying
     try:
-        groups = [group.to_dict() for group in groups]
+        groups = [group.__dict__ for group in groups]
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -41,7 +41,7 @@ def get_group(group_id):
     if not group:
         return jsonify({"error": "Group not found"}), 404
 
-    return jsonify(group), 200
+    return jsonify(group.__dict__), 200
 
 
 @bp.route("/", methods=["POST"])
