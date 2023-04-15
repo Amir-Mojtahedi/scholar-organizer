@@ -24,7 +24,7 @@ class Domain:
                             <li> Description: {self.description}</li>   \
                     </ul>'
 
-class CourseForm(FlaskForm):
+class DomainForm(FlaskForm):
     id = IntegerField('id',validators=[DataRequired()])
     name = StringField('name',validators=[DataRequired()])
     description = StringField('description',validators=[DataRequired()])

@@ -44,7 +44,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(course, Course)):
                 raise ValueError
-            cursor.execute("INSERT INTO COURSES VALUES (:courseId, :title, :theory, :lab, :work, :description, :domainId, :termId)",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domain.id, termId = course.term.id)            
+            cursor.execute("INSERT INTO COURSES (course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id) VALUES (:courseId, :title, :theory, :lab, :work, :description, :domainId, :termId)",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domainId, termId = course.termId)            
             if not cursor.rowcount:
                 raise oracledb.Error
     
@@ -82,7 +82,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
-            cursor.execute("CALL add_domain(:domainToAdd)",  domainToAdd = domain)            
+            cursor.execute("DECLARE domain_exists NUMBER; BEGIN SELECT COUNT(*) INTO domain_exists FROM domains WHERE domain_id = :domainId; IF domain_exists = 0 THEN INSERT INTO domains VALUES( :domainId, :domainName, :domainDescription); END IF; END;",  domainId = domain.id, domainName = domain.name, domainDescription = domain.description)            
             if not cursor.rowcount:
                 raise oracledb.Error
             
@@ -91,7 +91,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
-            cursor.execute("CALL update_domain(:domainToUpdate)", domainToUpdate = domain)            
+            cursor.execute("UPDATE domains SET domain = :domainName, domain_description = :domainDescription WHERE domain_id = :domainId;", domainName = domain.name, domainDescription = domain.description, domainId = domain.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
             
@@ -100,7 +100,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
-            cursor.execute("CALL delete_domain(:domainId)", domainId = domain.id)            
+            cursor.execute("DELETE FROM domains WHERE domain_id = domainId;", domainId = domain.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
             

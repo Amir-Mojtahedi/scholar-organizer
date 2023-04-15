@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}
+    Add Element
+{% endblock %}
+{% block headerTitle %}
+    Add Element
+{% endblock %}
+{% block script %}
+    <script defer type="text/javascript" src="{{ url_for('static', filename='js/courseScript.js')}}"></script>
+{% endblock %}
+{% block sectionContent%}
+    <h1>New Element:</h1>
+    <form method="POST">
+        {{ form.csrf_token }}
+        {{ form.id.label }}             {{ form.id() }}
+        {{ form.order.label }}          {{ form.order()}}
+        {{ form.name.label }}           {{ form.name()}}
+        {{ form.criteria.label }}       {{ form.criteria()}}
+        {{ form.competencyId.label }}   {{ form.competencyId() }}
+        <button type="button" class="add" id="addElement" name="addElement"> Add </button>
+    </form>
+{% endblock%}
