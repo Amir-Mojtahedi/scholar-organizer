@@ -21,7 +21,12 @@ class Competency:
         return f'{self.name}: {self.id}, {self.achievement}, {self.type} '
 
     def __str__(self):
-        return f'<p>Competency {self.name}: {self.id}, {self.achievement}, {self.type} </p>'
+        return f'<h3>{self.name}: </h3> \
+                    <ul>    \
+                            <li> ID: {self.id}</li> \
+                            <li> Achievement: {self.achievement}</li>   \
+                            <li> Type: {self.type}</li> \
+                    </ul>'
 
 class CompetencyForm(FlaskForm):
     id = StringField('id',validators=[DataRequired()])

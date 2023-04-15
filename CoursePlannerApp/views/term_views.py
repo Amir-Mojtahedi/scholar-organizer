@@ -10,13 +10,15 @@ dtb = LocalProxy(get_db)
 #Get * Terms
 @bp.route("/", methods=['GET', 'POST'])
 def get_terms():
-    if request.method == 'GET':
-        try:
-            terms = dtb.get_terms() 
-        except Exception as e:
-            flash('There is an issue with the Database')
-        if not terms or len(terms) == 0:
-            flash('There is no term in database')            
+    try:
+        terms = dtb.get_terms() 
+    except Exception as e:
+        flash("Error: " + str(e))
+        return render_template("terms.html", banner=[])
+    
+    if not terms or len(terms) == 0:
+        flash('There is no term in database') 
+        return render_template('display.html')
     return render_template('terms.html', banner = dtb.get_terms())
 
 

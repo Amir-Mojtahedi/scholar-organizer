@@ -8,15 +8,18 @@ bp = Blueprint('domain', __name__, url_prefix='/domains')
 dtb = LocalProxy(get_db)
 
 #Get * Domains
-@bp.route("/", methods=['GET', 'POST'])
+@bp.route("/")
 def get_domains():
-    if request.method == 'GET':
-        try:
-            domains = dtb.get_domains() 
-        except Exception as e:
-            flash('There is an issue with the Database')
-        if not domains or len(domains) == 0:
-            flash('There is no domain in database')            
+    try:
+        domains = dtb.get_domains() 
+    except Exception as e:
+        flash("Error: " + str(e))
+        return render_template("competencies.html", banner=[])
+        
+    if not domains or len(domains) == 0:
+        flash('There is no domain in database')            
+        return render_template('display.html')
+    
     return render_template('domains.html', banner = dtb.get_domains())
 
 

@@ -10,6 +10,10 @@
 {% endblock %}
 {% block sectionContent%}
     <h1>Course:</h1>
-    <div id="courseList" name="courseList"></div> 
+    <ul class="courseList">
+        {% for course in banner %}
+        <li class="courseItem"> <a href={{url_for('course.get_courses')}}> {{course | safe}} </a>   </li>
+        {% endfor %}
+    </ul>
     <button type="button" id="addCourse" name="addCourse"> Add </button>
 {% endblock%}
