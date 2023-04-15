@@ -21,7 +21,8 @@
         }
 
         button {
-            width: 200px;
+            width: fit-content;
+            margin: 0;
         }
 
         form button {
@@ -63,6 +64,33 @@
                 transform: translateY(0);
             }
         }
+
+        table {
+            width: calc(100% - 2rem);
+            margin: auto;
+        }
+
+        td {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .orange {
+            background-color: orange;
+            border-color: orange;
+        }
+
+        .red {
+            background-color: red;
+            border-color: red;
+        }
     </style>
 {% endblock %}
 {% block sectionContent%}
@@ -73,18 +101,22 @@
         {% endif %}
     </main>
     <div>
-        <ul>
+        <table>
+            <tbody>
             {% for group in groups %}
-                <li style="display: flex">
-                    <p>{{ group.name }}</p>
+                <tr>
+                    <td>{{ group.name }}</td>
 
                     {% if manages %}
-                        {#                        <button onclick="openForm("", {{ group.id }})">Edit</button>#}
-                        {#                        <button onclick="openForm(2, {{ group.id }})">Delete</button>#}
+                        <td class="buttons">
+                            <button class="orange" onclick="openForm("", {{ group.id }})">Edit</button>
+                            <button class="red" onclick="openForm(2, {{ group.id }})">Delete</button>
+                        </td>
                     {% endif %}
-                </li>
+                </tr>
             {% endfor %}
-        </ul>
+            </tbody>
+        </table>
     </div>
 
     <main id="group-container" class="container-fluid overlay">
