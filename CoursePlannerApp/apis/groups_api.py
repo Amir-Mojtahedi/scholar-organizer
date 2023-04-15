@@ -1,6 +1,5 @@
 import oracledb
 from flask import Blueprint, jsonify, request
-from flask_login import login_required, current_user
 from werkzeug.local import LocalProxy
 
 from CoursePlannerApp.dbmanager import get_db
@@ -11,16 +10,28 @@ bp = Blueprint("groups_api", __name__, url_prefix="/api/groups/")
 dtb = LocalProxy(get_db)
 
 
+@bp.route("/")
+def get_groups():
+    # get groups
+    try:
+        groups = dtb.get_groups()
+    except oracledb.Error as e:
+        return jsonify({"error": str(e)}), 500
+
+    if len(groups) == 0:
+        return jsonify({"error": "No groups found"}), 404
+
+    # try jsonifying
+    try:
+        groups = [group.to_dict() for group in groups]
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    return jsonify(groups), 200
+
+
 @bp.route("/<int:group_id>/")
-@login_required
 def get_group(group_id):
-    # get user
-    user = current_user
-    manages = user.group_id == 1 or user.group_id == 2
-
-    if not manages:
-        return jsonify({"error": "You do not have permissions to do this action"}), 403
-
     # get group
     try:
         group = dtb.get_group(group_id)
@@ -30,19 +41,11 @@ def get_group(group_id):
     if not group:
         return jsonify({"error": "Group not found"}), 404
 
-    return jsonify(group)
+    return jsonify(group), 200
 
 
 @bp.route("/", methods=["POST"])
-@login_required
 def add_group():
-    # get user
-    user = current_user
-    manages = user.group_id == 1 or user.group_id == 2
-
-    if not manages:
-        return jsonify({"error": "You do not have permissions to do this action"}), 403
-
     # get data
     data = request.get_json()
     if not data:
@@ -67,15 +70,7 @@ def add_group():
 
 
 @bp.route("/<int:group_id>/", methods=["PATCH"])
-@login_required
 def update_group(group_id):
-    # get user
-    user = current_user
-    manages = user.group_id == 1 or user.group_id == 2
-
-    if not manages:
-        return jsonify({"error": "You do not have permissions to do this action"}), 403
-
     # get group
     try:
         group = dtb.get_group(group_id)
@@ -105,15 +100,7 @@ def update_group(group_id):
 
 
 @bp.route("/<int:group_id>/", methods=["DELETE"])
-@login_required
 def delete_group(group_id):
-    # get user
-    user = current_user
-    manages = user.group_id == 1 or user.group_id == 2
-
-    if not manages:
-        return jsonify({"error": "You do not have permissions to do this action"}), 403
-
     # get group
     try:
         group = dtb.get_group(group_id)
