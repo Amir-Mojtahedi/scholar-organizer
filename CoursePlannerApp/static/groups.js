@@ -1,53 +1,15 @@
-const editGroup = async id => {
-    const name = prompt("Edit group", "Enter a new name for this group!")
-    if (name.length === 0) return alert("The group name cannot be empty!")
+const submit = document.querySelector("button[type=submit]")
 
-    const req = await fetch(`/api/groups/${id}/`, {
-        method: "PATCH",
-        body: JSON.stringify({ id: id, name: name }),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
+const openForm = () => {
+    submit.setAttribute("aria-busy", "false")
 
-    if (req.status === 200) alert("The group has successfully been edited!")
-    else {
-        const res = await req.json()
-        alert(res.error)
-    }
+    const container = document.querySelector("#group-container")
+    container.style.display = "flex"
+
+    const overlay = document.querySelector(".overlay")
+    overlay.classList.add("active")
 }
 
-const deleteGroup = async id => {
-    if (!confirm("Are you sure you want to delete this group?")) return
-
-    if ([0, 1, 2].includes(+id)) return alert("You cannot delete this group!")
-
-    const req = await fetch(`/api/groups/${id}/`, {
-        method: "DELETE"
-    })
-
-    if (req.status === 200) alert("The group has successfully been deleted!")
-    else {
-        const res = await req.json()
-        alert(res.error)
-    }
-}
-
-const addGroup = async() => {
-    const name = prompt("Add group", "Enter a name for this group!")
-    if (name.length === 0) return alert("The group name cannot be empty!")
-
-    const req = await fetch("/api/groups/", {
-        method: "POST",
-        body: JSON.stringify({ name: name }),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-
-    if (req.status === 200) alert("The group has successfully been added!")
-    else {
-        const res = await req.json()
-        alert(res.error)
-    }
-}
+document.addEventListener("submit", () => {
+    submit.setAttribute("aria-busy", "true")
+})
