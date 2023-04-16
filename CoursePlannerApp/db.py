@@ -283,6 +283,12 @@ class Database:
                 return user
         return None
 
+    def delete_user(self, user):
+        if not isinstance(user, User):
+            raise TypeError("You must provide a user object to this function.")
+        with self.__get_cursor() as cursor:
+            cursor.execute('delete from courseapp_users where id=:id', id=user.id)
+
     def get_groups(self):
         with self.__get_cursor() as cursor:
             results = cursor.execute('select id, name from courseapp_groups')
