@@ -1,3 +1,7 @@
+from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField
+from wtforms.validators import DataRequired
+
 class Course:
     def __init__(self, id, name, description, termId, domainId, lab_hours, theory_hours, work_hours):
         if not isinstance(id, str): #Id validation
@@ -30,4 +34,23 @@ class Course:
         return f'{self.name}: {self.id}, {self.description}, {self.termId}, {self.domainId}, {self.lab_hours}, {self.theory_hours}, {self.work_hours} '        
      
     def __str__(self): 
-        return f'<p>Course {self.name}: {self.id}, {self.description}, {self.termId}, {self.domainId}, {self.lab_hours}, {self.theory_hours}, {self.work_hours} </p>'
+        return f'<h3>{self.name}: </h3> \
+                    <ul>    \
+                            <li> ID: {self.id}</li> \
+                            <li> Description: {self.description}</li>   \
+                            <li> Term ID: {self.termId}</li> \
+                            <li> Domain ID: {self.domainId}</li>    \
+                            <li> Lab Hours: {self.lab_hours}</li>   \
+                            <li> Theory Hours: {self.theory_hours}</li> \
+                            <li> Work Hours: {self.work_hours} </li>    \
+                    </ul>'
+    
+class CourseForm(FlaskForm):
+    id = StringField('id',validators=[DataRequired()])
+    name = StringField('name',validators=[DataRequired()])
+    theory_hours = IntegerField('theory_hours',validators=[DataRequired()])
+    lab_hours = IntegerField('lab_hours',validators=[DataRequired()])
+    work_hours = IntegerField('work_hours',validators=[DataRequired()])
+    description = StringField('description',validators=[DataRequired()])
+    termId = IntegerField('termId',validators=[DataRequired()])
+    domainId = IntegerField('domainId',validators=[DataRequired()])

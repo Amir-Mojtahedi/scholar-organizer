@@ -3,7 +3,7 @@ from flask import Blueprint, flash, render_template
 from werkzeug.local import LocalProxy
 from CoursePlannerApp.dbmanager import get_db
 
-bp = Blueprint("competency", __name__, url_prefix="/competencies/")
+bp = Blueprint("competency", __name__, url_prefix="/competencies")
 
 dtb = LocalProxy(get_db)
 
@@ -18,6 +18,6 @@ def get_competencies():
 
     if not competencies or len(competencies) == 0:
         flash("There are no competency in database")
-        return render_template("competencies.html", banner=[])
+        return render_template('display.html')
 
-    return render_template("competencies.html", banner=competencies)
+    return render_template("competencies.html", banner=dtb.get_competencies())
