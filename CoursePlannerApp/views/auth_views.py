@@ -28,7 +28,7 @@ def signup():
                 flash("User with this email already exists")
             else:
                 _hash = generate_password_hash(form.password.data)
-                user = User(form.email.data, _hash, form.name.data)
+                user = User(form.email.data, form.name.data, _hash)
                 dtb.add_user(user)
         else:
             flash("Form is not valid")
