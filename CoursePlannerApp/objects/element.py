@@ -33,8 +33,8 @@ class Element:
                     </ul>'
 
 class ElementForm(FlaskForm):
-    id = IntegerField('id',validators=[DataRequired()])
-    order = IntegerField('order',validators=[DataRequired()])
-    name = StringField('name',validators=[DataRequired()])
-    criteria = StringField('criteria',validators=[DataRequired()])
-    competencyId = StringField('competencyId',validators=[DataRequired()])
+    id = IntegerField('Id',validators=[DataRequired()])
+    order = IntegerField('Order',validators=[DataRequired()])
+    name = StringField('Name',validators=[DataRequired()])
+    criteria = StringField('Criteria',validators=[DataRequired()])
+    competencyId = StringField('Id of associated Competency',validators=[DataRequired()])

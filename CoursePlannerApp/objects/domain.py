@@ -25,7 +25,7 @@ class Domain:
                     </ul>'
 
 class DomainForm(FlaskForm):
-    id = IntegerField('id',validators=[DataRequired()])
-    name = StringField('name',validators=[DataRequired()])
-    description = StringField('description',validators=[DataRequired()])
+    id = IntegerField('Id',validators=[DataRequired()])
+    name = StringField('Name',validators=[DataRequired()])
+    description = StringField('Domain Description',validators=[DataRequired()])
     

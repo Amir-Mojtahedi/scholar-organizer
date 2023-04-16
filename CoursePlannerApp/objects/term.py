@@ -21,5 +21,5 @@ class Term:
                     </ul>'
 
 class TermForm(FlaskForm):
-    id = IntegerField('id',validators=[DataRequired()])
-    name = StringField('name',validators=[DataRequired()])
+    id = IntegerField('Id',validators=[DataRequired()])
+    name = StringField('Name',validators=[DataRequired()])

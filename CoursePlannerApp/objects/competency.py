@@ -29,8 +29,8 @@ class Competency:
                     </ul>'
 
 class CompetencyForm(FlaskForm):
-    id = StringField('id',validators=[DataRequired()])
-    name = StringField('name',validators=[DataRequired()])
-    achievement = StringField('achievement',validators=[DataRequired()])
-    type = StringField('type',validators=[DataRequired()])
+    id = StringField('Id',validators=[DataRequired()])
+    name = StringField('Name',validators=[DataRequired()])
+    achievement = StringField('Achievement',validators=[DataRequired()])
+    type = StringField('Type',validators=[DataRequired()])
     

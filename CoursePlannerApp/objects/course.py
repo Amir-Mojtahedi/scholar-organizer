@@ -46,11 +46,11 @@ class Course:
                     </ul>'
     
 class CourseForm(FlaskForm):
-    id = StringField('id',validators=[DataRequired()])
-    name = StringField('name',validators=[DataRequired()])
-    theory_hours = IntegerField('theory_hours',validators=[DataRequired()])
-    lab_hours = IntegerField('lab_hours',validators=[DataRequired()])
-    work_hours = IntegerField('work_hours',validators=[DataRequired()])
-    description = StringField('description',validators=[DataRequired()])
-    termId = IntegerField('termId',validators=[DataRequired()])
-    domainId = IntegerField('domainId',validators=[DataRequired()])
+    id = StringField('Id',validators=[DataRequired()])
+    name = StringField('Name',validators=[DataRequired()])
+    theory_hours = IntegerField('Theory Hours',validators=[DataRequired()])
+    lab_hours = IntegerField('Lab Hours',validators=[DataRequired()])
+    work_hours = IntegerField('Work Hours',validators=[DataRequired()])
+    description = StringField('Course Description',validators=[DataRequired()])
+    termId = IntegerField('Id of associated Term',validators=[DataRequired()])
+    domainId = IntegerField('Id of associated Domain',validators=[DataRequired()])
