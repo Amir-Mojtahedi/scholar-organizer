@@ -1,3 +1,7 @@
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import DataRequired
+
 class Competency:
     def __init__(self, id, name, achievement, type):
         if not isinstance(id, str):  # Id validation
@@ -17,4 +21,16 @@ class Competency:
         return f'{self.name}: {self.id}, {self.achievement}, {self.type} '
 
     def __str__(self):
-        return f'<p>Competency {self.name}: {self.id}, {self.achievement}, {self.type} </p>'
+        return f'<h3>{self.name}: </h3> \
+                    <ul>    \
+                            <li> ID: {self.id}</li> \
+                            <li> Achievement: {self.achievement}</li>   \
+                            <li> Type: {self.type}</li> \
+                    </ul>'
+
+class CompetencyForm(FlaskForm):
+    id = StringField('id',validators=[DataRequired()])
+    name = StringField('name',validators=[DataRequired()])
+    achievement = StringField('achievement',validators=[DataRequired()])
+    type = StringField('type',validators=[DataRequired()])
+    

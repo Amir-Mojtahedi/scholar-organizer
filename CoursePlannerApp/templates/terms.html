@@ -10,6 +10,10 @@
 {% endblock %}
 {% block sectionContent%}
     <h1>Terms:</h1>
-    <div id="termList" name="termList"></div> 
+    <ul class="termList">
+        {% for term in banner %}
+        <li class="termItem"> <a href={{url_for('term.get_terms')}}> {{term | safe}} </a>   </li>
+        {% endfor %}
+    </ul>
     <button type="button" id="addTerm" name="addTerm"> Add </button>
 {% endblock%}

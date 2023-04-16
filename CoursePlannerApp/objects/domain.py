@@ -1,3 +1,7 @@
+from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField
+from wtforms.validators import DataRequired
+
 class Domain:
     def __init__(self, id, name, description):
         if not isinstance(id, int):  # Id validation
@@ -14,4 +18,14 @@ class Domain:
         return f'{self.name}: {self.id}, {self.description}'
 
     def __str__(self):
-        return f'<p>Domain {self.name}: {self.id}, {self.description}</p>'
+        return f'<h3>{self.name}: </h3> \
+                    <ul>    \
+                            <li> ID: {self.id}</li> \
+                            <li> Description: {self.description}</li>   \
+                    </ul>'
+
+class CourseForm(FlaskForm):
+    id = IntegerField('id',validators=[DataRequired()])
+    name = StringField('name',validators=[DataRequired()])
+    description = StringField('description',validators=[DataRequired()])
+    

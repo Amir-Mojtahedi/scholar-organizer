@@ -64,7 +64,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(course, Course)):
                 raise ValueError
-            cursor.execute("CALL add_course(:courseToAdd)",  courseToAdd = course)            
+            cursor.execute("INSERT INTO COURSES VALUES (:courseId, :title, :theory, :lab, :work, :description, :domainId, :termId)",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domain.id, termId = course.term.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
     
@@ -73,7 +73,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(course, Course)):
                 raise ValueError
-            cursor.execute("CALL update_course(:courseId, :title, :theory, :lab, :work, :description, :domainId, :termId)",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domain.id, termId = course.term.id)            
+            cursor.execute("UPDATE COURSES SET course_title = :title, theory_hours = :theory, lab_hours = :lab, work_hours = :work, description = :description, domain_id = :domainId, term_id = :termId WHERE course_id = :courseId",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domain.id, termId = course.term.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
     
@@ -82,7 +82,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(course, Course)):
                 raise ValueError
-            cursor.execute("CALL delete_course(:courseId)",  courseId = course.id)            
+            cursor.execute("DECLARE ce_exists NUMBER;   BEGIN SELECT COUNT(*) INTO ce_exists FROM courses_elements WHERE course_id = :courseId; IF ce_exists !=0 THEN DELETE FROM courses_elements WHERE course_id = vcourse_id; END IF; DELETE FROM courses WHERE course_id = vcourse_id; END;",  courseId = course.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
     
