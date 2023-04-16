@@ -283,6 +283,17 @@ class Database:
                     password=row[3], name=row[4])
                 return user
         return None
+
+    def get_user_by_email(self, email):
+        if not isinstance(email, str):
+            raise TypeError("Email must be a string")
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select id, group_id, email, password, name from courseapp_users where email=:email', email=email)
+            for row in results:
+                user = User(id=row[0], group_id=row[1], email=row[2],
+                    password=row[3], name=row[4])
+                return user
+        return None
     
     def update_user(self, user):
         if not isinstance(user, User):

@@ -33,7 +33,7 @@ def create_app(test_config=None):
 
     @login_manager.user_loader
     def load_user(user_id):
-        return get_db().get_user_by_id(int(user_id))
+        return get_db().get_user(int(user_id))
 
     @app.errorhandler(404)
     def page_not_found(_):

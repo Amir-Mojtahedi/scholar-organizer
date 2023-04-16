@@ -19,7 +19,7 @@ def signup():
     if request.method == "POST":
         if form.validate_on_submit():
             try:
-                db_user = dtb.get_user(form.email.data)
+                db_user = dtb.get_user_by_email(form.email.data)
             except oracledb.Error as e:
                 flash("Error: " + str(e))
                 return render_template("signup.html", form=form)
@@ -43,7 +43,7 @@ def login():
     if request.method == "POST":
         if form.validate_on_submit():
             try:
-                user = dtb.get_user(form.email.data)
+                user = dtb.get_user_by_email(form.email.data)
             except oracledb.Error as e:
                 flash("Error: " + str(e))
                 return render_template("login.html", form=form)
