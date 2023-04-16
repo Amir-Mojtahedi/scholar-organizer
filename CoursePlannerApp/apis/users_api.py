@@ -20,16 +20,10 @@ def get_users():
     if len(users) == 0:
         return jsonify({"error": "No users found"}), 404
 
-    # try jsonifying
-    try:
-        users = []
-        for user in users:
-            user_dict = user.__dict__
-            user_dict.pop("password")
-            users.append(user_dict)
+    for user in users:
+        user.__dict__.pop("password")
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    users = [user.__dict__ for user in users]
 
     return jsonify(users), 200
 
@@ -76,6 +70,8 @@ def move_user_to_group(user_id):
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
+    return '', 200
+
 
 @bp.route("/<int:user_id>/", methods=["DELETE"])
 def remove_user_from_group(user_id):
@@ -90,7 +86,7 @@ def remove_user_from_group(user_id):
 
     # delete user
     try:
-        dtb.delete_user(user_id)
+        dtb.delete_user(user)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
