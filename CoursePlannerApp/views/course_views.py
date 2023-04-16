@@ -25,7 +25,9 @@ def get_courses():
 #Add course
 @bp.route('/new/', methods=['GET', 'POST'])
 def create_course():
-    form = CourseForm()
+    form = CourseForm()   
+    form.termId.choices = sorted([(term.id, str(term.id)+" - "+term.name) for term in dtb.get_terms()]) #Getting data for Select field for termId  (Circular import error)
+    form.domainId.choices = sorted([(domain.id, str(domain.id)+" - "+domain.name) for domain in dtb.get_domains()]) #Getting data for Select field for domainId  (Circular import error)
     if request.method == 'POST':
         if form.validate_on_submit():
 
@@ -35,6 +37,7 @@ def create_course():
                                form.work_hours.data)
             try:
                 dtb.add_course(newCourse)
+                flash("Course has been added")    
                 return redirect(url_for('courses.get_courses'))
             
             except oracledb.IntegrityError as e:
@@ -44,7 +47,6 @@ def create_course():
         
             except Exception as e:
                 flash("Error: " + str(e))
-        else:
-            flash('Invalid input')
+                
     return render_template('Add/addCourse.html', form=form)
 

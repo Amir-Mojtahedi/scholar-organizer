@@ -145,6 +145,7 @@ class Database:
                 newListTerm.append(newTerm)
             return newListTerm
         
+            
     def add_term(self, term): 
         '''Add a term to the DB for the given Term object'''
         with self.__get_cursor() as cursor:

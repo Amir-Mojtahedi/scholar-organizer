@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField
-from wtforms.validators import DataRequired
+from wtforms import StringField, IntegerField, SelectField
+from wtforms.validators import DataRequired, Regexp, NumberRange
 
 class Course:
     def __init__(self, id, name, description, termId, domainId, lab_hours, theory_hours, work_hours):
@@ -22,9 +22,13 @@ class Course:
         if not isinstance(description, str): #Description validation
             raise TypeError("Enter a valid Description. Try again.")
         self.description = description
+        if termId.isdigit(): 
+            termId = int(termId) 
         if not isinstance(termId, int): #Term validation 
             raise TypeError("Enter a valid/existing Term ID. Try again.")
         self.termId = termId
+        if domainId.isdigit(): 
+            domainId = int(domainId) 
         if not isinstance(domainId, int): #Domain validation
             raise TypeError("Enter a valid/existing Domain ID. Try again.")
         self.domainId = domainId
@@ -46,11 +50,28 @@ class Course:
                     </ul>'
     
 class CourseForm(FlaskForm):
-    id = StringField('Id',validators=[DataRequired()])
-    name = StringField('Name',validators=[DataRequired()])
-    theory_hours = IntegerField('Theory Hours',validators=[DataRequired()])
-    lab_hours = IntegerField('Lab Hours',validators=[DataRequired()])
-    work_hours = IntegerField('Work Hours',validators=[DataRequired()])
+    
+    id = StringField('Id', validators=
+                     [DataRequired(),
+                      Regexp('^[0-9A-Z]{3}-[0-9A-Z]{3}-[0-9A-Z]{2}$', message="Wrong Id format: ###-###-## (# => Letter or Digit)")
+                      ])
+    name = StringField('Name',validators=
+                       [DataRequired(), 
+                        Regexp('^[A-Za-z\s]*', message=" Wrong Name format (Only letters)")])
+    theory_hours = IntegerField('Theory Hours',validators=
+                                [DataRequired(), 
+                                 NumberRange(min=1, max=5)
+                                 ])
+    lab_hours = IntegerField('Lab Hours',validators=
+                                [DataRequired(), 
+                                 NumberRange(min=1, max=5)
+                                 ])
+    work_hours = IntegerField('Work Hours',validators=
+                                [DataRequired(), 
+                                 NumberRange(min=1, max=5)
+                                 ])
     description = StringField('Course Description',validators=[DataRequired()])
-    termId = IntegerField('Id of associated Term',validators=[DataRequired()])
-    domainId = IntegerField('Id of associated Domain',validators=[DataRequired()])
+    
+    
+    termId = SelectField('Id of associated Term',validators=[DataRequired()], choices=[])
+    domainId = SelectField('Id of associated Domain',validators=[DataRequired()], choices=[])
