@@ -1,136 +1,46 @@
 {% extends 'base.html' %}
 {% block title %}
-    Group List
+    Organizer - Group List
 {% endblock %}
+
 {% block script %}
     <script defer type="text/javascript" src="{{ url_for('static', filename='groups.js')}}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <style>
-        * {
-            animation: fadeIn 0.5s;
-        }
-
-        main.container-fluid {
-            padding: 1rem;
-        }
-
-        #header {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #group-container {
-            display: none;
-        }
-
-        button {
-            width: fit-content;
-            margin: 0;
-        }
-
-        form button {
-            width: 100%;
-        }
-
-        h1 {
-            margin: 0;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Darkens the background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s, visibility 0s 0.5s;
-        }
-
-        .active {
-            opacity: 1;
-            visibility: visible;
-            transition-delay: 0s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10%);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        table {
-            width: calc(100% - 2rem);
-            margin: auto;
-        }
-
-        td {
-            padding-left: 0;
-            padding-right: 0;
-        }
-
-        .buttons {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .orange {
-            background-color: orange;
-            border-color: orange;
-        }
-
-        .red {
-            background-color: red;
-            border-color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css')}}">
 {% endblock %}
+
 {% block sectionContent%}
     <main id="header" class="container-fluid">
         <h1>Groups</h1>
-        {% if manages %}
-            <button onclick="openForm()">Create Group</button>
-        {% endif %}
+        {% if manages %} <button onclick="openForm()">Create Group</button> {% endif %}
     </main>
+
     <div>
         <table>
             <tbody>
-            {% for group in groups %}
-                <tr>
-                    <td>{{ group.name }}</td>
-
-                    {% if manages %}
-                        <td class="buttons">
-                            <button class="orange" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Edit</button>
-                            <button class="red" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Delete</button>
-                        </td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
+                {% for group in groups %}
+                    <tr>
+                        <td>{{ group.name }}</td>
+                        {% if manages %}
+                            <td class="buttons">
+                                <button class="orange" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Edit</button>
+                                <button class="red" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Delete</button>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <main id="group-container" class="container-fluid overlay">
+    <main class="container-fluid overlay">
         <form method="POST">
             {{ form.csrf_token }}
             {{ form.hidden_tag() }}
 
             {{ form.name.label }} {{ form.name() }}
-            <input name="id" type="hidden">
+            <input name="id" type="hidden" value=-1>
             <button type="submit">Create Group</button>
         </form>
     </main>
-
 {% endblock%}

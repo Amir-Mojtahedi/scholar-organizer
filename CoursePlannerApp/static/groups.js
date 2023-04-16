@@ -1,6 +1,6 @@
-const submit = document.querySelector("button[type=submit]")
-const container = document.querySelector("#group-container")
-const overlay = document.querySelector(".overlay")
+const container = document.querySelector(".container-fluid.overlay")
+const form = container.querySelector("form")
+const submit = form.querySelector("button[type=submit]")
 
 //edit
 document.querySelectorAll("button.orange").forEach(button => button.addEventListener("click", () => {
@@ -19,15 +19,15 @@ const openForm = (actionId, groupId, groupName) => {
         submit.innerText = "Edit Group"
 
         //manually changing form data for simplicity
-        container.querySelector("form").action = `/groups/edit/`
-        container.querySelector("input[name=id]").value = groupId
+        form.action = `/groups/edit/`
+        form.querySelector("input[name=id]").value = groupId
     }
 
     if (actionId === 2) { //delete
         //manually changing form data for simplicity
-        container.querySelector("form").action = `/groups/delete/`
-        container.querySelector("input[name=name]").value = groupName
-        container.querySelector("input[name=id]").value = groupId
+        form.action = `/groups/delete/`
+        form.querySelector("input[name=name]").value = groupName
+        form.querySelector("input[name=id]").value = groupId
 
         //no need to actually show form, just submit
         document.querySelector("form").submit()
@@ -35,7 +35,7 @@ const openForm = (actionId, groupId, groupName) => {
     }
 
     container.style.display = "flex"
-    overlay.classList.add("active")
+    container.classList.add("active")
 }
 
 document.addEventListener("submit", () => {
