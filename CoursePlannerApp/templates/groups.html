@@ -112,8 +112,8 @@
 
                     {% if manages %}
                         <td class="buttons">
-                            <button class="orange" onclick="openForm(1, {{ group.id }})">Edit</button>
-                            <button class="red" onclick="openForm(2, {{ group.id }})">Delete</button>
+                            <button class="orange" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Edit</button>
+                            <button class="red" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Delete</button>
                         </td>
                     {% endif %}
                 </tr>
@@ -126,7 +126,8 @@
         <form method="POST">
             {{ form.csrf_token }}
             {{ form.hidden_tag() }}
-            {{ form.name.label }} {{ form.name() }} <br>
+
+            {{ form.name.label }} {{ form.name() }}
             <input name="id" type="hidden">
             <button type="submit">Create Group</button>
         </form>
