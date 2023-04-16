@@ -20,9 +20,9 @@ ul {
     padding: 0;
     list-style: none;
 }
-section{
-	display: flex;
-}
+/*section{*/
+/*	display: flex;*/
+/*}*/
 section ul {
 	padding:0.5%;
 	width:50%;
