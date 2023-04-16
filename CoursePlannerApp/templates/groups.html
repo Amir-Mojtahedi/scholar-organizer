@@ -6,9 +6,12 @@
     <script defer type="text/javascript" src="{{ url_for('static', filename='groups.js')}}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <style>
+        * {
+            animation: fadeIn 0.5s;
+        }
+
         main.container-fluid {
             padding: 1rem;
-            animation: fadeIn 0.5s;
         }
 
         #header {
@@ -109,7 +112,7 @@
 
                     {% if manages %}
                         <td class="buttons">
-                            <button class="orange" onclick="openForm("", {{ group.id }})">Edit</button>
+                            <button class="orange" onclick="openForm(1, {{ group.id }})">Edit</button>
                             <button class="red" onclick="openForm(2, {{ group.id }})">Delete</button>
                         </td>
                     {% endif %}
@@ -124,6 +127,7 @@
             {{ form.csrf_token }}
             {{ form.hidden_tag() }}
             {{ form.name.label }} {{ form.name() }} <br>
+            <input name="id" type="hidden">
             <button type="submit">Create Group</button>
         </form>
     </main>
