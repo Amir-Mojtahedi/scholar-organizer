@@ -46,6 +46,13 @@ class Database:
             #Check Type
             if (not isinstance(course, Course)):
                 raise ValueError("Should be a Course obj")
+            
+            #Check if course doesn't already exist
+            results = cursor.execute("SELECT * FROM COURSES where course_id = :courseId or course_title = :courseName", courseId = course.id, courseName = course.name)
+            course = [result for result in results if (result[0] == course.id or result[1] == course.name)]
+            if not (course is None):
+                raise ValueError("Course already exist")
+            
             #Check if domain exists
             results = cursor.execute("SELECT * FROM DOMAINS where domain_id = :domainId", domainId = course.domainId)
             domain = [result for result in results if result[0] == course.domainId]
@@ -96,8 +103,16 @@ class Database:
         '''Add a domain to the DB for the given Domain object'''
         with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
-                raise ValueError
-            cursor.execute("CALL add_domain(:domainToAdd)",  domainToAdd = domain)            
+                raise ValueError("Should be domain obj")
+            
+            #Check if domain doesn't already exist
+            results = cursor.execute("SELECT domain FROM DOMAINS where domain_id = :domainId", domainId = domain.id)
+            domain = [result for result in results if result[0] == domain.name]
+            if not (domain is None):
+                raise ValueError("Domain already exist")
+            
+            #Insert data
+            cursor.execute("INSERT INTO DOMAINS (domain_id, domain, domain_description) VALUES(:domainId, :domainName, :domainDescription)",  domainId = domain.id, domainName = domain.name, domainDescription = domain.description)            
             if not cursor.rowcount:
                 raise oracledb.Error
             

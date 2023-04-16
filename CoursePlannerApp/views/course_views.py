@@ -22,6 +22,7 @@ def get_courses():
         return render_template('display.html')
     return render_template('courses.html', banner = dtb.get_courses())
 
+#Add course
 @bp.route('/new/', methods=['GET', 'POST'])
 def create_course():
     form = CourseForm()

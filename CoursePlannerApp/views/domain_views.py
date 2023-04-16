@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, flash, render_template, request
+from flask import Blueprint, redirect, render_template, flash, render_template, request, url_for
 from werkzeug.local import LocalProxy
 from CoursePlannerApp.dbmanager import get_db
 import oracledb
 
-bp = Blueprint('domain', __name__, url_prefix='/domains')
+from CoursePlannerApp.objects.domain import DomainForm, Domain
+
+bp = Blueprint('domains', __name__, url_prefix='/domains')
 
 dtb = LocalProxy(get_db)
 
@@ -22,5 +24,27 @@ def get_domains():
     
     return render_template('domains.html', banner = dtb.get_domains())
 
+#Add Domain
+@bp.route('/new/', methods=['GET', 'POST'])
+def create_domain():
+    form = DomainForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            
+            newDomain = Domain(form.id.data, form.name.data, form.description.data)
+            try:
+                dtb.add_domain(newDomain)
+                return redirect(url_for('domains.get_domains'))
+            
+            except oracledb.IntegrityError as e:
+                error_obj, = e.args #To acces code error 
+                if error_obj.code == 1: # 1 is related to primary key issue (when the primary key already exist) 
+                    flash("Domain already exist")
+        
+            except Exception as e:
+                flash("Error: " + str(e))
+        else:
+            flash('Invalid input')
+    return render_template('Add/addDomain.html', form=form)
 
 
