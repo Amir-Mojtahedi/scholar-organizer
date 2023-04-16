@@ -1,5 +1,6 @@
 import os
 import oracledb
+from oracledb import IntegrityError
 from CoursePlannerApp.objects.competency import Competency
 from CoursePlannerApp.objects.element import Element
 from CoursePlannerApp.objects.group import Group
@@ -42,9 +43,23 @@ class Database:
     def add_course(self, course): 
         '''Add a course to the DB for the given Course object'''
         with self.__get_cursor() as cursor:
+            #Check Type
             if (not isinstance(course, Course)):
-                raise ValueError
-            cursor.execute("INSERT INTO COURSES VALUES (:courseId, :title, :theory, :lab, :work, :description, :domainId, :termId)",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domain.id, termId = course.term.id)            
+                raise ValueError("Should be a Course obj")
+            #Check if domain exists
+            results = cursor.execute("SELECT * FROM DOMAINS where domain_id = :domainId", domainId = course.domainId)
+            domain = [result for result in results if result[0] == course.domainId]
+            if domain is None:
+                raise ValueError("Domain doesn't exist. Create a domain first")
+            
+            #Check if term exists
+            results = cursor.execute("SELECT term_id FROM TERMS where term_id = :termId", termId = course.termId)
+            term = [result for result in results if result[0] == course.termId]
+            if term is None:
+                raise ValueError("Term doesn't exist. Create a term first")
+            
+            #Insert data
+            cursor.execute("INSERT INTO COURSES (course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id) VALUES (:courseId, :title, :theory, :lab, :work, :description, :domainId, :termId)",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domainId, termId = course.termId)            
             if not cursor.rowcount:
                 raise oracledb.Error
     

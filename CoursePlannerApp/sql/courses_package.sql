@@ -158,7 +158,11 @@ CREATE OR REPLACE PACKAGE BODY courses_package IS
     END;
     
     /**
-        add_domain is a procedure that taking in a domain_typ object and adds it's components
+        add_domain
+DELETE FROM DOMAIN
+WHERE
+    DOMAIN_NAME = 'VARCHAR2(16)';
+ is a procedure that taking in a domain_typ object and adds it's components
         to the domain table.    
     */
     PROCEDURE add_domain(
