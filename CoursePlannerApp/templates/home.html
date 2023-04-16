@@ -9,9 +9,25 @@
 {% endblock %}
 
 {% block headerTitle %}
-    Welcome to the Course Planner website
+    Courses List
 {% endblock %}
 
 {% block sectionContent%}
-
+    <ul>
+        {% for course in courses %}
+            <li>
+                <a href="{{ url_for('home.list_competencies', course_id=course.id) }}">{{course.name | safe}}</a>
+                <p>{{course.description | safe}}</p>
+                {% if course.termId%2==0 %}
+                    <p>Session: Winter</p>
+                    {%else%}
+                        <p>Session: Fall</p>
+                {% endif %}
+                <p>Class hours: {{course.theory_hours | safe}}</p>
+                <p>Lab hours: {{course.lab_hours | safe}}</p>
+                <p>Homework hours: {{course.work_hours | safe}}</p>
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
 {% endblock%}

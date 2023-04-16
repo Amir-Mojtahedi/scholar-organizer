@@ -1,3 +1,8 @@
+from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField
+from wtforms.validators import DataRequired
+
+
 class Group:
     def __init__(self, name, id=None):
         if not isinstance(name, str):
@@ -13,3 +18,8 @@ class Group:
 
     def __repr__(self):
         return f"{self.name}"
+
+
+class GroupForm(FlaskForm):
+    name = StringField("Name", validators=[DataRequired()])
+    id = IntegerField("Id")

@@ -3,16 +3,20 @@
     Competency List
 {% endblock %}
 {% block headerTitle %}
-    Competency List
+    Competencies List
 {% endblock %}
 {% block script %}
 {% endblock %}
 {% block sectionContent%}
-    <h1>Competencies:</h1>
-    <ul class="competencyList">
-        {% for competency in banner %}
-            <li class="competencyItem"> <a href={{url_for('competencies.get_competencies')}}> {{competency | safe}} </a>   </li>
+    <ul>
+        {% for competency in competencies %}
+            <li>
+                <p>{{competency.id | safe}}</p>
+                <a href="{{ url_for('home.list_elements', competency_id=competency.id) }}">{{competency.name | safe}}</a>
+                <p>{{competency.achievement | safe}}</p>
+                <p>{{competency.type | safe}}</p>
+            </li>
+            <hr>
         {% endfor %}
-    </ul>    
-    <button type="button" id="addCompetency" name="addCompetency"> <a href={{url_for('competencies.create_competency')}}> Add </a> </button>
+    </ul>
 {% endblock%}
