@@ -3,9 +3,9 @@
     Add Element
 {% endblock %}
 {% block headerTitle %}
-    Add Element
 {% endblock %}
 {% block script %}
+    <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
 {% endblock %}
 {% block sectionContent%}
     <h1>New Element:</h1>
@@ -16,8 +16,7 @@
         {{ form.name.label}}            {{ form.name() }}
         {{ form.criteria.label}}        {{ form.criteria() }}
         {{ form.competencyId.label}}    {{ form.competencyId() }}
-
-        <input type="submit" id="addElement" name="addElement"/>
+        <button type="submit" id="addElement" name="addElement"> Submit </button>
     </form>
 {% endblock%}
 

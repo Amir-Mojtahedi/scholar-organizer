@@ -6,7 +6,6 @@
     Choose the list
 {% endblock %}
 {% block script %}
-    <script defer type="text/javascript" src="{{ url_for('static', filename='displayScript.js')}}"></script>
 {% endblock %}
 {% block sectionContent%}
     <button type="button" id="showCourses" name="showCourses" ><a href="{{url_for('courses.get_courses')}}"> COURSES </a></button>

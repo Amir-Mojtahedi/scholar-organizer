@@ -3,9 +3,9 @@
     Add Term
 {% endblock %}
 {% block headerTitle %}
-    Add Term
 {% endblock %}
 {% block script %}
+    <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
 {% endblock %}
 {% block sectionContent%}
     <h1>New Term:</h1>
@@ -13,7 +13,7 @@
         {{ form.csrf_token }}
         {{ form.id.label}}              {{ form.id() }}
         {{ form.name.label}}            {{ form.name() }}
-        <input type="submit" id="addTerm" name="addTerm"/>
+        <button type="submit" id="addTerm" name="addTerm"> Submit </button>
     </form>
 {% endblock%}
 

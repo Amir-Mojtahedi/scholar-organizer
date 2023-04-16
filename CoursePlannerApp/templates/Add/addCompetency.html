@@ -3,9 +3,9 @@
     Add Competency
 {% endblock %}
 {% block headerTitle %}
-    Add Competency
 {% endblock %}
 {% block script %}
+    <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
 {% endblock %}
 {% block sectionContent%}
     <h1>New Competency:</h1>
@@ -15,7 +15,7 @@
         {{ form.name.label}}            {{ form.name() }}
         {{ form.achievement.label}}     {{ form.achievement() }}
         {{ form.type.label}}            {{ form.type() }}
-        <input type="submit" id="addCompetency" name="addCompetency"/>
+        <button type="submit" id="addCompetency" name="addCompetency"> Submit </button>
     </form>
 {% endblock%}
 

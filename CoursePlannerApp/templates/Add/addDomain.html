@@ -3,9 +3,9 @@
     Add Domain
 {% endblock %}
 {% block headerTitle %}
-    Add Domain
 {% endblock %}
 {% block script %}
+    <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
 {% endblock %}
 {% block sectionContent%}
     <h1>New Domain:</h1>
@@ -14,7 +14,7 @@
         {{ form.id.label}}              {{ form.id() }}
         {{ form.name.label}}            {{ form.name() }}
         {{ form.description.label}}     {{ form.description() }}
-        <input type="submit" id="addDomain" name="addDomain"/>
+        <button type="submit" id="addDomain" name="addDomain"> Submit </button>
     </form>
 {% endblock%}
 
