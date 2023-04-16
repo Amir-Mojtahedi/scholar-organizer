@@ -37,6 +37,18 @@ class Database:
                 newCourse = Course(id = result[0], name = result[1], theory_hours = result[2], lab_hours = result[3], work_hours = result[4], description = result[5], domainId = result[6], termId = result[7])
                 newListCourse.append(newCourse)
             return newListCourse
+    
+    def get_course_by_id(self,course_id):
+        '''Returns a specific course'''
+        course
+        with self.__get_cursor() as cursor:
+            cursor.execute("SELECT * FROM COURSES WHERE course_id=:course_id",course_id=course_id)
+            result=cursor.fetchone()
+            if result:
+                course=Course(id = result[0], name = result[1], theory_hours = result[2], lab_hours = result[3], work_hours = result[4], description = result[5], domainId = result[6], termId = result[7])
+                return course
+            else:
+                return None
            
     def add_course(self, course): 
         '''Add a course to the DB for the given Course object'''
