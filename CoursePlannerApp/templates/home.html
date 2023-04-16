@@ -16,7 +16,7 @@
     <ul>
         {% for course in courses %}
             <li>
-                <a>{{course.name | safe}}</a>
+                <a href="{{ url_for('home.list_competencies', course_id=course.id) }}">{{course.name | safe}}</a>
                 <p>{{course.description | safe}}</p>
                 {% if course.termId%2==0 %}
                     <p>Session: Winter</p>
@@ -30,5 +30,4 @@
             <hr>
         {% endfor %}
     </ul>
-    
 {% endblock%}
