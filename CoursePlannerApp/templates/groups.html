@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}
+    Organizer - Group List
+{% endblock %}
+
+{% block script %}
+    <script defer type="text/javascript" src="{{ url_for('static', filename='groups.js')}}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css')}}">
+{% endblock %}
+
+{% block sectionContent%}
+    <main id="header" class="container-fluid">
+        <h1>Groups</h1>
+        {% if manages %} <button onclick="openForm()">Create Group</button> {% endif %}
+    </main>
+
+    <div>
+        <table>
+            <tbody>
+                {% for group in groups %}
+                    <tr>
+                        <td>{{ group.name }}</td>
+                        {% if manages %}
+                            <td class="buttons">
+                                <button class="orange" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Edit</button>
+                                <button class="red" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Delete</button>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <main class="container-fluid overlay">
+        <form method="POST">
+            {{ form.csrf_token }}
+            {{ form.hidden_tag() }}
+
+            {{ form.name.label }} {{ form.name() }}
+            <input name="id" type="hidden" value=-1>
+            <button type="submit">Create Group</button>
+        </form>
+    </main>
+{% endblock%}
