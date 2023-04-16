@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField
-from wtforms.validators import DataRequired
+from wtforms import StringField, IntegerField, SelectField
+from wtforms.validators import DataRequired, NumberRange
 
 class Term:
     def __init__(self, id, name):
@@ -21,5 +21,6 @@ class Term:
                     </ul>'
 
 class TermForm(FlaskForm):
-    id = IntegerField('Id',validators=[DataRequired()])
-    name = StringField('Name',validators=[DataRequired()])
+    id = IntegerField('Id',validators=[DataRequired(),
+                                        NumberRange(min=1)])
+    name =  SelectField('Season',validators=[DataRequired()], choices=["Choose one season", "Winter", "Summer", "Fall"])

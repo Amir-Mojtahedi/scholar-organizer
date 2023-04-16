@@ -27,9 +27,16 @@ def get_elements():
 @bp.route('/new/', methods=['GET', 'POST'])
 def create_element():
     form = ElementForm()
+    #Fill competency drop list
+    form.competencyId.choices = sorted([(competency.id, str(competency.id)+" - "+competency.name) for competency in dtb.get_competencies()]) #Getting data for Select field for competencyId  (Circular import error)
+    form.competencyId.choices.append(['newCompetency', 'Create new competency'])
+    form.competencyId.choices.insert(0, [0, "Choose Competency"])
     if request.method == 'POST':
         if form.validate_on_submit():
 
+            if form.competencyId.data == 'newCompetency':
+                return redirect(url_for('competencies.create_competency')) #If user want new competency
+            
             newElement = Element(form.id.data, form.order.data, form.name.data, 
                                     form.criteria.data, form.competencyId.data)
             try:

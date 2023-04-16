@@ -22,15 +22,15 @@ class Course:
         if not isinstance(description, str): #Description validation
             raise TypeError("Enter a valid Description. Try again.")
         self.description = description
-        if termId.isdigit(): 
-            termId = int(termId) 
-        if not isinstance(termId, int): #Term validation 
-            raise TypeError("Enter a valid/existing Term ID. Try again.")
+        # if termId.isdigit(): 
+        #     termId = int(termId) 
+        # if not isinstance(termId, int): #Term validation 
+        #     raise TypeError("Enter a valid/existing Term ID. Try again.")
         self.termId = termId
-        if domainId.isdigit(): 
-            domainId = int(domainId) 
-        if not isinstance(domainId, int): #Domain validation
-            raise TypeError("Enter a valid/existing Domain ID. Try again.")
+        # if domainId.isdigit(): 
+        #     domainId = int(domainId) 
+        # if not isinstance(domainId, int): #Domain validation
+        #     raise TypeError("Enter a valid/existing Domain ID. Try again.")
         self.domainId = domainId
 
         
@@ -71,7 +71,6 @@ class CourseForm(FlaskForm):
                                  NumberRange(min=1, max=5)
                                  ])
     description = StringField('Course Description',validators=[DataRequired()])
-    
     
     termId = SelectField('Id of associated Term',validators=[DataRequired()], choices=[])
     domainId = SelectField('Id of associated Domain',validators=[DataRequired()], choices=[])
