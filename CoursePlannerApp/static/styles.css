@@ -20,7 +20,12 @@ ul {
     padding: 0;
     list-style: none;
 }
-
+section{
+	display: flex;
+}
+section ul {
+	width:50%;
+}
 a {
     color: #34495e;
 	text-decoration: none;
