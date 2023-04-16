@@ -33,7 +33,7 @@ class Database:
         '''Returns all Courses objects in a list'''
         with self.__get_cursor() as cursor:
             newListCourse = []
-            results = cursor.execute("SELECT * FROM COURSES")
+            results = cursor.execute("SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES")
             for result in results:
                 newCourse = Course(id = result[0], name = result[1], theory_hours = result[2], lab_hours = result[3], work_hours = result[4], description = result[5], domainId = result[6], termId = result[7])
                 newListCourse.append(newCourse)
@@ -91,7 +91,7 @@ class Database:
         '''Returns all Domains objects in a list'''
         with self.__get_cursor() as cursor:
             newListDomain = []
-            results = cursor.execute("SELECT * FROM DOMAINS")
+            results = cursor.execute("SELECT domain_id, domain, domain_description FROM DOMAINS")
             for result in results:
                 newDomain = Domain(id = result[0], name = result[1], description= result[2])
                 newListDomain.append(newDomain)
@@ -129,7 +129,7 @@ class Database:
         '''Returns all Term objects in a list'''
         with self.__get_cursor() as cursor:
             newListTerm = []
-            results = cursor.execute("SELECT * FROM TERMS")
+            results = cursor.execute("SELECT term_id, term_name  FROM TERMS")
             for result in results:
                 newTerm = Term(id = result[0], name = result[1])
                 newListTerm.append(newTerm)
@@ -167,7 +167,7 @@ class Database:
         '''Returns all Competency objects in a list'''
         with self.__get_cursor() as cursor:
             newListCompetency = []
-            results = cursor.execute("SELECT * FROM COMPETENCIES")
+            results = cursor.execute("SELECT competency_id, competency, competency_achievement, competency_type  FROM COMPETENCIES")
             for result in results:
                 newCompetency = Competency(id = result[0], name = result[1], achievement= result[2], type= result[3])
                 newListCompetency.append(newCompetency)
@@ -205,7 +205,7 @@ class Database:
         '''Returns all Element objects in a list'''
         with self.__get_cursor() as cursor:
             newListElement = []
-            results = cursor.execute("SELECT  * FROM ELEMENTS")
+            results = cursor.execute("SELECT element_id, element_order, element, element_criteria, competency_id FROM ELEMENTS")
             for result in results:
                 newElement = Element(id= result[0], order= result[1], name= result[2], criteria= result[3], competencyId= result[4])
                 newListElement.append(newElement)
