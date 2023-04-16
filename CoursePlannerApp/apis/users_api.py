@@ -20,6 +20,7 @@ def get_users():
     if len(users) == 0:
         return jsonify({"error": "No users found"}), 404
 
+    # we don't really want to send the password
     for user in users:
         user.__dict__.pop("password")
 
@@ -39,6 +40,7 @@ def get_user(user_id):
     if not user:
         return jsonify({"error": "User not found"}), 404
 
+    # we don't really want to send the password
     user.__dict__.pop("password")
     return jsonify(user.__dict__), 200
 
