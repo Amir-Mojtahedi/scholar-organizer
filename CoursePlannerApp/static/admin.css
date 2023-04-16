@@ -1,0 +1,82 @@
+* {
+    animation: slideFadeIn 0.5s;
+}
+
+main.container-fluid {
+    padding: 1rem;
+}
+
+button {
+    width: fit-content;
+}
+
+h1, button {
+    margin: 0;
+}
+
+form button {
+    width: 100%;
+}
+
+table {
+    width: calc(100% - 2rem);
+    margin: auto;
+}
+
+td {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.orange {
+    background-color: orange;
+    border-color: orange;
+}
+
+.red {
+    background-color: red;
+    border-color: red;
+}
+
+@keyframes slideFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

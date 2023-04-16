@@ -38,6 +38,26 @@ class Database:
                 newCourse = Course(id = result[0], name = result[1], theory_hours = result[2], lab_hours = result[3], work_hours = result[4], description = result[5], domainId = result[6], termId = result[7])
                 newListCourse.append(newCourse)
             return newListCourse
+    
+    def get_course_competencies(self,course_id):
+        '''Returns a specific competencies for a course'''
+        with self.__get_cursor() as cursor:
+            competenciesList=[]
+            results=cursor.execute("SELECT UNIQUE competency_id,competency,competency_achievement,competency_type FROM COURSES JOIN COURSES_ELEMENTS USING(course_id) JOIN ELEMENTS USING(element_id) JOIN COMPETENCIES USING(competency_id) WHERE course_id=:course_id",course_id=course_id)
+            for result in results:
+                competency=Competency(id = result[0], name = result[1], achievement= result[2], type= result[3])
+                competenciesList.append(competency)
+            return competenciesList
+        
+    def get_competency_elements(self,competency_id):
+        '''Returns a specific elements for a competency'''
+        with self.__get_cursor() as cursor:
+            elementsList=[]
+            results=cursor.execute("SELECT UNIQUE element_id,element_order,element,element_criteria,competency_id FROM elements JOIN competencies USING(competency_id) WHERE competency_id=:competency_id",competency_id=competency_id)
+            for result in results:
+                element=Element(id= result[0], order= result[1], name= result[2], criteria= result[3], competencyId= result[4])
+                elementsList.append(element)
+            return elementsList
            
     def add_course(self, course): 
         '''Add a course to the DB for the given Course object'''
