@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}
+    Add Term
+{% endblock %}
+{% block headerTitle %}
+    Add Term
+{% endblock %}
+{% block script %}
+{% endblock %}
+{% block sectionContent%}
+    <h1>New Term:</h1>
+    <form method="post">
+        {{ form.csrf_token }}
+        {{ form.id.label}}              {{ form.id() }}
+        {{ form.name.label}}            {{ form.name() }}
+        <input type="submit" id="addTerm" name="addTerm"/>
+    </form>
+{% endblock%}
+

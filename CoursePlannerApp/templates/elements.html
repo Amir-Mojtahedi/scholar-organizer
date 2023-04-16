@@ -6,14 +6,13 @@
     Element List
 {% endblock %}
 {% block script %}
-    <script defer type="text/javascript" src="{{ url_for('static', filename='elementScript.js')}}"></script>
 {% endblock %}
 {% block sectionContent%}
     <h1>Elements:</h1>
     <ul class="elementList">
         {% for element in banner %}
-        <li class="elementItem"> <a href={{url_for('element.get_elements')}}> {{element | safe}} </a>   </li>
+        <li class="elementItem"> <a href={{url_for('elements.get_elements')}}> {{element | safe}} </a>   </li>
         {% endfor %}
     </ul>
-    <button type="button" id="addElement" name="addElement"> Add </button>
+    <button type="button" id="addElement" name="addElement"> <a href={{url_for('elements.create_element')}}> Add </a> </button>
 {% endblock%}

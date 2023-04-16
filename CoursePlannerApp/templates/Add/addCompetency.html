@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}
+    Add Competency
+{% endblock %}
+{% block headerTitle %}
+    Add Competency
+{% endblock %}
+{% block script %}
+{% endblock %}
+{% block sectionContent%}
+    <h1>New Competency:</h1>
+    <form method="post">
+        {{ form.csrf_token }}
+        {{ form.id.label}}              {{ form.id() }}
+        {{ form.name.label}}            {{ form.name() }}
+        {{ form.achievement.label}}     {{ form.achievement() }}
+        {{ form.type.label}}            {{ form.type() }}
+        <input type="submit" id="addCompetency" name="addCompetency"/>
+    </form>
+{% endblock%}
+

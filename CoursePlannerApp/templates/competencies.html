@@ -12,7 +12,8 @@
     <h1>Competencies:</h1>
     <ul class="competencyList">
         {% for competency in banner %}
-            <li class="competencyItem"> <a href={{url_for('competency.get_competencies')}}> {{competency | safe}} </a>   </li>
+            <li class="competencyItem"> <a href={{url_for('competencies.get_competencies')}}> {{competency | safe}} </a>   </li>
         {% endfor %}
-    </ul>    <button type="button" id="addCompetency" name="addCompetency"> Add </button>
+    </ul>    
+    <button type="button" id="addCompetency" name="addCompetency"> <a href={{url_for('competencies.create_competency')}}> Add </a> </button>
 {% endblock%}

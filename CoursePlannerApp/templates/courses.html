@@ -14,5 +14,5 @@
         <li class="courseItem"> <a href={{url_for('courses.get_courses')}}> {{course | safe}} </a>   </li>
         {% endfor %}
     </ul>
-    <button type="button" id="addCourse" name="addCourse" href={{url_for('courses.create_course')}}> Add </button>
+    <button type="button" id="addCourse" name="addCourse"> <a href={{url_for('courses.create_course')}}> Add </a> </button>
 {% endblock%}

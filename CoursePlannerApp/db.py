@@ -49,8 +49,8 @@ class Database:
             
             #Check if course doesn't already exist
             results = cursor.execute("SELECT * FROM COURSES where course_id = :courseId or course_title = :courseName", courseId = course.id, courseName = course.name)
-            course = [result for result in results if (result[0] == course.id or result[1] == course.name)]
-            if not (course is None):
+            nCourse = [result for result in results if (result[0] == course.id or result[1] == course.name)]
+            if not (nCourse == []):
                 raise ValueError("Course already exist")
             
             #Check if domain exists
@@ -107,8 +107,8 @@ class Database:
             
             #Check if domain doesn't already exist
             results = cursor.execute("SELECT domain FROM DOMAINS where domain_id = :domainId", domainId = domain.id)
-            domain = [result for result in results if result[0] == domain.name]
-            if not (domain is None):
+            nDomain = [result for result in results if result[0] == domain.name]
+            if not (nDomain == []):
                 raise ValueError("Domain already exist")
             
             #Insert data
@@ -149,10 +149,20 @@ class Database:
         '''Add a term to the DB for the given Term object'''
         with self.__get_cursor() as cursor:
             if (not isinstance(term, Term)):
-                raise ValueError
-            cursor.execute("CALL add_term(:termToAdd)", termToAdd = term)            
+                raise ValueError("Should be a Term obj")
+            
+            #Check if term doesn't already exist
+            results = cursor.execute("SELECT * FROM TERMS where term_id = :termId", termId = term.id)
+            nTerm = [result for result in results if (result[0] == term.id)]
+            if not (nTerm == []):
+                raise ValueError("Term already exist")       
+                 
+            #Insert data
+            cursor.execute("INSERT INTO TERMS (term_id, term_name) VALUES(:termId, :termName)",  termId = term.id, termName = term.name)            
             if not cursor.rowcount:
                 raise oracledb.Error
+    
+    
     
     def update_term(self, term): 
         '''Update a term for the given Term object'''
@@ -187,10 +197,18 @@ class Database:
         '''Add a competency to the DB for the given Competency object'''
         with self.__get_cursor() as cursor:
             if (not isinstance(competency, Competency)):
-                raise ValueError
-            cursor.execute("CALL add_competency(:competencyToAdd)", competencyToAdd = competency)            
+                raise ValueError("Should be Competency obj")
+            
+            #Check if competency doesn't already exist
+            results = cursor.execute("SELECT * FROM COMPETENCIES where competency_id = :competencyId or competency = :competencyName", competencyId = competency.id, competencyName = competency.name)
+            nCompetency = [result for result in results if (result[0] == competency.id or result[1] == competency.name)]
+            if not (nCompetency == []):
+                raise ValueError("Competency already exist")
+            
+            #Insert data
+            cursor.execute("INSERT INTO COMPETENCIES (competency_id, competency, competency_achievement, competency_type) VALUES(:competencyId, :competencyName, :competencyAchievement, :competencyType)",  competencyId = competency.id, competencyName = competency.name, competencyAchievement = competency.achievement, competencyType = competency.type)            
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise oracledb.Error        
             
     def update_competency(self, competency): 
         '''Update a competency for the given Competency object'''
@@ -225,8 +243,22 @@ class Database:
         '''Add an element to the DB for the given Element object'''
         with self.__get_cursor() as cursor:
             if (not isinstance(element, Element)):
-                raise ValueError
-            cursor.execute("CALL add_element(:elementToAdd)", elementToAdd = element)            
+                raise ValueError("Should be Element obj")
+            
+            #Check if Element doesn't already exist
+            results = cursor.execute("SELECT * FROM ELEMENTS where element_id = :elementId or element = :elementName or element_order = :elementOrder", elementId = element.id, elementName = element.name, elementOrder = element.order)
+            nElement = [result for result in results if (result[0] == element.id or result[1] == element.order or result[2] == element.name)]
+            if not (nElement == []):
+                raise ValueError("Element already exist")
+            
+            #Check if Competency exists
+            results = cursor.execute("SELECT * FROM COMPETENCIES where competency_id = :competencyId", competencyId = element.competencyId)
+            nCompetency = [result for result in results if result[0] == element.competencyId]
+            if nCompetency is None:
+                raise ValueError("Competency doesn't exist. Create a competency first")
+            
+            #Insert Data
+            cursor.execute("INSERT INTO ELEMENTS (element_id, element_order, element, element_criteria, competency_id) VALUES (:elementId, :elementOrder, :elementName, :elementCriteria, :competencyId)", elementId = element.id, elementOrder = element.order, elementName = element.name, elementCriteria = element.criteria, competencyId = element.competencyId )            
             if not cursor.rowcount:
                 raise oracledb.Error
             

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+    Add Element
+{% endblock %}
+{% block headerTitle %}
+    Add Element
+{% endblock %}
+{% block script %}
+{% endblock %}
+{% block sectionContent%}
+    <h1>New Element:</h1>
+    <form method="post">
+        {{ form.csrf_token }}
+        {{ form.id.label}}              {{ form.id() }}
+        {{ form.order.label}}           {{ form.order() }}
+        {{ form.name.label}}            {{ form.name() }}
+        {{ form.criteria.label}}        {{ form.criteria() }}
+        {{ form.competencyId.label}}    {{ form.competencyId() }}
+
+        <input type="submit" id="addElement" name="addElement"/>
+    </form>
+{% endblock%}
+
