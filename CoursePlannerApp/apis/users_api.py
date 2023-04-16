@@ -3,7 +3,6 @@ from flask import Blueprint, jsonify, request
 from werkzeug.local import LocalProxy
 
 from CoursePlannerApp.dbmanager import get_db
-from CoursePlannerApp.objects.group import Group
 
 bp = Blueprint("users_api", __name__, url_prefix="/api/users/")
 
@@ -23,7 +22,12 @@ def get_users():
 
     # try jsonifying
     try:
-        users = [user.__dict__ for user in users]
+        users = []
+        for user in users:
+            user_dict = user.__dict__
+            user_dict.pop("password")
+            users.append(user_dict)
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -41,6 +45,7 @@ def get_user(user_id):
     if not user:
         return jsonify({"error": "User not found"}), 404
 
+    user.__dict__.pop("password")
     return jsonify(user.__dict__), 200
 
 
