@@ -3,13 +3,19 @@
     Element List
 {% endblock %}
 {% block headerTitle %}
-    Element List
+    Elements List
 {% endblock %}
 {% block script %}
     <script defer type="text/javascript" src="{{ url_for('static', filename='elementScript.js')}}"></script>
 {% endblock %}
 {% block sectionContent%}
-    <h1>Elements:</h1>
-    <div id="elementList" name="elementList"></div> 
-    <button type="button" id="addElement" name="addElement"> Add </button>
+    <ul>
+        {% for element in elements %}
+            <li>
+                <p>{{element.name | safe}}</p>
+                <p>{{element.criteria | safe}}</p>
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
 {% endblock%}

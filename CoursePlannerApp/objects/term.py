@@ -1,3 +1,7 @@
+from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField
+from wtforms.validators import DataRequired
+
 class Term:
     def __init__(self, id, name):
         if not isinstance(id, int):  # Id validation
@@ -11,4 +15,11 @@ class Term:
         return f'{self.name}: {self.id}'
 
     def __str__(self):
-        return f'<p>Term {self.name}: {self.id}</p>'
+        return f'<h3> Term ID: {self.id}: </h3> \
+                    <ul>    \
+                            <li> Season: {self.name}</li> \
+                    </ul>'
+
+class TermForm(FlaskForm):
+    id = IntegerField('id',validators=[DataRequired()])
+    name = StringField('name',validators=[DataRequired()])

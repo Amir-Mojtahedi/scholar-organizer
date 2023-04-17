@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}
+    Organizer - Users List
+{% endblock %}
+
+{% block script %}
+    <script defer type="text/javascript" src="{{ url_for('static', filename='users.js')}}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css')}}">
+{% endblock %}
+
+{% block sectionContent%}
+    <main id="header" class="container-fluid">
+        <h1>Users</h1>
+    </main>
+
+    <div>
+        <table>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.name }}</td>
+                        {% if manages %}
+                            <td class="buttons">
+                                <button class="orange">Edit</button>
+                                <button class="red">Delete</button>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock%}
