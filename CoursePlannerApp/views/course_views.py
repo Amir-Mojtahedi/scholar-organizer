@@ -30,23 +30,15 @@ def create_course():
     form = CourseForm()   
     #Fill term drop list
     form.termId.choices = sorted([(term.id, str(term.id)+" - "+term.name) for term in dtb.get_terms()]) #Getting data for Select field for termId  (Circular import error)
-    form.termId.choices.append(['newTerm', "Create new term"])
     form.termId.choices.insert(0, [0, "Choose a term"])
 
     #Fill domain drop list
     form.domainId.choices = sorted([(domain.id, str(domain.id)+" - "+domain.name) for domain in dtb.get_domains()]) #Getting data for Select field for domainId  (Circular import error)
-    form.domainId.choices.append(['newDomain', "Create new domain"])
     form.domainId.choices.insert(0, [0, "Choose a domain"])
     
     if request.method == 'POST':
         if form.validate_on_submit():
             
-            if form.termId.data == 'newTerm':
-                return redirect(url_for('terms.create_term')) #If user want new term
-            
-            if form.domainId.data == 'newDomain':
-                return redirect(url_for('domains.create_domain')) #If user want new domain
-
             newCourse = Course(form.id.data, form.name.data, form.description.data, 
                                form.termId.data, form.domainId.data, 
                                form.lab_hours.data, form.theory_hours.data, 
