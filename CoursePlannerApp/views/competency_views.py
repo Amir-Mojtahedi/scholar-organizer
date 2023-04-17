@@ -1,3 +1,4 @@
+from flask_login import login_required
 import oracledb
 from flask import Blueprint, flash, render_template, request, url_for, redirect
 from werkzeug.local import LocalProxy
@@ -25,6 +26,7 @@ def get_competencies():
 
 #Add Competency
 @bp.route('/new/', methods=['GET', 'POST'])
+@login_required
 def create_competency():
     form = CompetencyForm()
     if request.method == 'POST':

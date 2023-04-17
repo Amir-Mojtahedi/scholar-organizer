@@ -25,6 +25,7 @@ def get_elements():
 
 #Add Element
 @bp.route('/new/', methods=['GET', 'POST'])
+@login_required
 def create_element():
     form = ElementForm()
     #Fill competency drop list

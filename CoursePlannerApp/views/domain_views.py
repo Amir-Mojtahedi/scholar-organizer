@@ -26,6 +26,7 @@ def get_domains():
 
 #Add Domain
 @bp.route('/new/', methods=['GET', 'POST'])
+@login_required
 def create_domain():
     form = DomainForm()
     if request.method == 'POST':

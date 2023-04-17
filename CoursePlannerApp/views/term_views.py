@@ -25,6 +25,7 @@ def get_terms():
 
 #Add term
 @bp.route('/new/', methods=['GET', 'POST'])
+@login_required
 def create_term():
     form = TermForm()
     if request.method == 'POST':

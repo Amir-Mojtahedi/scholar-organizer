@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, render_template, flash, render_template, request, url_for
+from flask_login import login_required
 from werkzeug.local import LocalProxy
 from CoursePlannerApp.dbmanager import get_db
 import oracledb
@@ -24,6 +25,7 @@ def get_courses():
 
 #Add course
 @bp.route('/new/', methods=['GET', 'POST'])
+@login_required
 def create_course():
     form = CourseForm()   
     #Fill term drop list
