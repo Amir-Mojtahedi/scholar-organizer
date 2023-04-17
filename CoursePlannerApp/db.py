@@ -33,7 +33,7 @@ class Database:
         '''Returns all Courses objects in a list'''
         with self.__get_cursor() as cursor:
             newListCourse = []
-            results = cursor.execute("SELECT * FROM COURSES")
+            results = cursor.execute("SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES")
             for result in results:
                 newCourse = Course(id = result[0], name = result[1], theory_hours = result[2], lab_hours = result[3], work_hours = result[4], description = result[5], domainId = result[6], termId = result[7])
                 newListCourse.append(newCourse)
@@ -64,7 +64,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(course, Course)):
                 raise ValueError
-            cursor.execute("INSERT INTO COURSES VALUES (:courseId, :title, :theory, :lab, :work, :description, :domainId, :termId)",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domain.id, termId = course.term.id)            
+            cursor.execute("INSERT INTO COURSES (course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id) VALUES (:courseId, :title, :theory, :lab, :work, :description, :domainId, :termId)",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domainId, termId = course.termId)            
             if not cursor.rowcount:
                 raise oracledb.Error
     
@@ -91,7 +91,7 @@ class Database:
         '''Returns all Domains objects in a list'''
         with self.__get_cursor() as cursor:
             newListDomain = []
-            results = cursor.execute("SELECT * FROM DOMAINS")
+            results = cursor.execute("SELECT domain_id, domain, domain_description FROM DOMAINS")
             for result in results:
                 newDomain = Domain(id = result[0], name = result[1], description= result[2])
                 newListDomain.append(newDomain)
@@ -102,7 +102,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
-            cursor.execute("CALL add_domain(:domainToAdd)",  domainToAdd = domain)            
+            cursor.execute("DECLARE domain_exists NUMBER; BEGIN SELECT COUNT(*) INTO domain_exists FROM domains WHERE domain_id = :domainId; IF domain_exists = 0 THEN INSERT INTO domains VALUES( :domainId, :domainName, :domainDescription); END IF; END;",  domainId = domain.id, domainName = domain.name, domainDescription = domain.description)            
             if not cursor.rowcount:
                 raise oracledb.Error
             
@@ -111,7 +111,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
-            cursor.execute("CALL update_domain(:domainToUpdate)", domainToUpdate = domain)            
+            cursor.execute("UPDATE domains SET domain = :domainName, domain_description = :domainDescription WHERE domain_id = :domainId;", domainName = domain.name, domainDescription = domain.description, domainId = domain.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
             
@@ -120,7 +120,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
-            cursor.execute("CALL delete_domain(:domainId)", domainId = domain.id)            
+            cursor.execute("DELETE FROM domains WHERE domain_id = domainId;", domainId = domain.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
             
@@ -129,7 +129,7 @@ class Database:
         '''Returns all Term objects in a list'''
         with self.__get_cursor() as cursor:
             newListTerm = []
-            results = cursor.execute("SELECT * FROM TERMS")
+            results = cursor.execute("SELECT term_id, term_name  FROM TERMS")
             for result in results:
                 newTerm = Term(id = result[0], name = result[1])
                 newListTerm.append(newTerm)
@@ -167,7 +167,7 @@ class Database:
         '''Returns all Competency objects in a list'''
         with self.__get_cursor() as cursor:
             newListCompetency = []
-            results = cursor.execute("SELECT * FROM COMPETENCIES")
+            results = cursor.execute("SELECT competency_id, competency, competency_achievement, competency_type  FROM COMPETENCIES")
             for result in results:
                 newCompetency = Competency(id = result[0], name = result[1], achievement= result[2], type= result[3])
                 newListCompetency.append(newCompetency)
@@ -205,7 +205,7 @@ class Database:
         '''Returns all Element objects in a list'''
         with self.__get_cursor() as cursor:
             newListElement = []
-            results = cursor.execute("SELECT  * FROM ELEMENTS")
+            results = cursor.execute("SELECT element_id, element_order, element, element_criteria, competency_id FROM ELEMENTS")
             for result in results:
                 newElement = Element(id= result[0], order= result[1], name= result[2], criteria= result[3], competencyId= result[4])
                 newListElement.append(newElement)
