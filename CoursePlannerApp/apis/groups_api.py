@@ -21,11 +21,7 @@ def get_groups():
     if len(groups) == 0:
         return jsonify({"error": "No groups found"}), 404
 
-    # try jsonifying
-    try:
-        groups = [group.__dict__ for group in groups]
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    groups = [group.__dict__ for group in groups]
 
     return jsonify(groups), 200
 

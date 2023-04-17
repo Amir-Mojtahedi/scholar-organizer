@@ -32,8 +32,7 @@ class Course:
         # if not isinstance(domainId, int): #Domain validation
         #     raise TypeError("Enter a valid/existing Domain ID. Try again.")
         self.domainId = domainId
-
-        
+       
     def __repr__(self):
         return f'{self.name}: {self.id}, {self.description}, {self.termId}, {self.domainId}, {self.lab_hours}, {self.theory_hours}, {self.work_hours} '        
      

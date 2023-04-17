@@ -9,7 +9,7 @@ bp = Blueprint('courses', __name__, url_prefix='/courses')
 
 dtb = LocalProxy(get_db)
 
-#Get * Courses
+#Get * Courses 
 @bp.route("/")
 def get_courses():
     try:
