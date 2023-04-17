@@ -19,7 +19,7 @@ def signup():
     if request.method == "POST":
         if form.validate_on_submit():
             try:
-                db_user = dtb.get_user(form.email.data)
+                db_user = dtb.get_user_by_email(form.email.data)
             except oracledb.Error as e:
                 flash("Error: " + str(e))
                 return render_template("signup.html", form=form)
@@ -28,7 +28,7 @@ def signup():
                 flash("User with this email already exists")
             else:
                 _hash = generate_password_hash(form.password.data)
-                user = User(form.email.data, _hash, form.name.data)
+                user = User(form.email.data, form.name.data, _hash)
                 dtb.add_user(user)
         else:
             flash("Form is not valid")
@@ -43,7 +43,7 @@ def login():
     if request.method == "POST":
         if form.validate_on_submit():
             try:
-                user = dtb.get_user(form.email.data)
+                user = dtb.get_user_by_email(form.email.data)
             except oracledb.Error as e:
                 flash("Error: " + str(e))
                 return render_template("login.html", form=form)

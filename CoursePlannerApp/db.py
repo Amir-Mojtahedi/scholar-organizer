@@ -253,6 +253,17 @@ class Database:
     def __connect(self):
         return oracledb.connect(user=os.environ['DBUSER'], password=os.environ['DBPWD'],
                                 host="198.168.52.211", port=1521, service_name="pdbora19c.dawsoncollege.qc.ca")
+
+    def get_users(self):
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select id, group_id, email, password, name from courseapp_users')
+            users = []
+            for row in results:
+                user = User(id=row[0], group_id=row[1], email=row[2],
+                    password=row[3], name=row[4])
+                users.append(user)
+            return users
+
     def add_user(self, user):
         if not isinstance(user, User):
             raise TypeError("You must provide a user object to this function.")
@@ -261,7 +272,19 @@ class Database:
                            email = user.email,
                            password = user.password,
                            name = user.name)
-    def get_user(self, email):
+    
+    def get_user(self, id):
+        if not isinstance(id, int):
+            raise TypeError("Id must be an integer")
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select id, group_id, email, password, name from courseapp_users where id=:id', id=id)
+            for row in results:
+                user = User(id=row[0], group_id=row[1], email=row[2],
+                    password=row[3], name=row[4])
+                return user
+        return None
+
+    def get_user_by_email(self, email):
         if not isinstance(email, str):
             raise TypeError("Email must be a string")
         with self.__get_cursor() as cursor:
@@ -272,16 +295,22 @@ class Database:
                 return user
         return None
     
-    def get_user_by_id(self, id):
-        if not isinstance(id, int):
-            raise TypeError("Id must be an integer")
+    def update_user(self, user):
+        if not isinstance(user, User):
+            raise TypeError("You must provide a user object to this function.")
         with self.__get_cursor() as cursor:
-            results = cursor.execute('select id, group_id, email, password, name from courseapp_users where id=:id', id=id)
-            for row in results:
-                user = User(id=row[0], group_id=row[1], email=row[2],
-                    password=row[3], name=row[4])
-                return user
-        return None
+            cursor.execute('update courseapp_users set group_id=:group_id, email=:email, password=:password, name=:name where id=:id',
+                           group_id = user.group_id,
+                           email = user.email,
+                           password = user.password,
+                           name = user.name,
+                           id = user.id)
+
+    def delete_user(self, user):
+        if not isinstance(user, User):
+            raise TypeError("You must provide a user object to this function.")
+        with self.__get_cursor() as cursor:
+            cursor.execute('delete from courseapp_users where id=:id', id=user.id)
 
     def get_groups(self):
         with self.__get_cursor() as cursor:
