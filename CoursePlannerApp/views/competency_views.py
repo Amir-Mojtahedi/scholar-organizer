@@ -1,15 +1,16 @@
+from flask_login import login_required
 import oracledb
-from flask import Blueprint, flash, render_template, request
+from flask import Blueprint, flash, render_template, request, url_for, redirect
 from werkzeug.local import LocalProxy
 from CoursePlannerApp.dbmanager import get_db
 from CoursePlannerApp.objects.competency import CompetencyForm, Competency
 
-bp = Blueprint("competency", __name__, url_prefix="/competencies")
+bp = Blueprint("competencies", __name__, url_prefix="/competencies")
 
 dtb = LocalProxy(get_db)
 
 #Get * Competencies
-@bp.route("/", methods=["GET"])
+@bp.route("/")
 def get_competencies():
     try:
         competencies = dtb.get_competencies()
@@ -23,20 +24,27 @@ def get_competencies():
 
     return render_template("competencies.html", banner=dtb.get_competencies())
 
-#Add course
-@bp.route('/newCourse', methods=['GET', 'POST'])
-def add_course():
+#Add Competency
+@bp.route('/new/', methods=['GET', 'POST'])
+@login_required
+def create_competency():
     form = CompetencyForm()
-    if request.method == 'POST' and form.validate_on_submit():
-        ##Adding course to dtb
-        try:
-            newCompetency = Competency(form.id.data, form.name.data, form.achievement.data, form.type.data) 
-            if newCompetency in dtb.get_courses():
-                flash("This competency already exist")
-            else:
-                dtb.add_course(newCompetency)
-        except ValueError as v: 
-            flash("Your competency is in the wrong format")
-        except Exception as e:
-            flash("Something wrong happened in the database")
-        return render_template('addCompetency.html', form = form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+
+            newCompetency = Competency(form.id.data, form.name.data, form.achievement.data, 
+                                       form.type.data)
+            try:
+                dtb.add_competency(newCompetency)
+                return redirect(url_for('competencies.get_competencies'))
+            
+            except oracledb.IntegrityError as e:
+                error_obj, = e.args #To acces code error 
+                if error_obj.code == 1: # 1 is related to primary key issue (when the primary key already exist) 
+                    flash("Competency already exist")
+        
+            except Exception as e:
+                flash("Error: " + str(e))
+        else:
+            flash('Invalid input')
+    return render_template('Add/addCompetency.html', form=form)

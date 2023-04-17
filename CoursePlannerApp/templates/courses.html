@@ -6,14 +6,13 @@
     Course List
 {% endblock %}
 {% block script %}
-    <script defer type="text/javascript" src="{{ url_for('static', filename='js/courseScript.js')}}"></script>
 {% endblock %}
 {% block sectionContent%}
     <h1>Course:</h1>
     <ul class="courseList">
         {% for course in banner %}
-        <li class="courseItem"> <a href={{url_for('course.get_courses')}}> {{course | safe}} </a>   </li>
+        <li class="courseItem"> <a href={{url_for('courses.get_courses')}}> {{course | safe}} </a>   </li>
         {% endfor %}
     </ul>
-    <button type="button" id="addCourse" name="addCourse"> <a href={{url_for('course.add_course')}}> Add Course </a></button>
+    <button type="button" id="addCourse" name="addCourse"> <a href={{url_for('courses.create_course')}}> Add </a> </button>
 {% endblock%}

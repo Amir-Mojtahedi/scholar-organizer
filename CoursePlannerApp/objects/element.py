@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField
-from wtforms.validators import DataRequired
+from wtforms import StringField, IntegerField, SelectField
+from wtforms.validators import DataRequired, NumberRange
 
 class Element:
     def __init__(self, id, order, name, criteria, competencyId):
@@ -33,8 +33,14 @@ class Element:
                     </ul>'
 
 class ElementForm(FlaskForm):
-    id = IntegerField('id',validators=[DataRequired()])
-    order = IntegerField('order',validators=[DataRequired()])
-    name = StringField('name',validators=[DataRequired()])
-    criteria = StringField('criteria',validators=[DataRequired()])
-    competencyId = StringField('competencyId',validators=[DataRequired()])
+    id = IntegerField('Id',validators=
+                                [DataRequired(), 
+                                 NumberRange(min=1)
+                                 ])
+    order = IntegerField('Order',validators=
+                                [DataRequired(), 
+                                 NumberRange(min=1)
+                                 ])
+    name = StringField('Name',validators=[DataRequired()])
+    criteria = StringField('Criteria',validators=[DataRequired()])
+    competencyId = SelectField('Id of associated Competency',validators=[DataRequired()], choices=[])

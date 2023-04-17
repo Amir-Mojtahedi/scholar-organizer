@@ -6,14 +6,13 @@
     Term List
 {% endblock %}
 {% block script %}
-    <script defer type="text/javascript" src="{{ url_for('static', filename='termScript.js')}}"></script>
 {% endblock %}
 {% block sectionContent%}
     <h1>Terms:</h1>
     <ul class="termList">
         {% for term in banner %}
-        <li class="termItem"> <a href={{url_for('term.get_terms')}}> {{term | safe}} </a>   </li>
+        <li class="termItem"> <a href={{url_for('terms.get_terms')}}> {{term | safe}} </a>   </li>
         {% endfor %}
     </ul>
-    <button type="button" id="addTerm" name="addTerm"> Add </button>
+    <button type="button" id="addTerm" name="addTerm"> <a href={{url_for('terms.create_term')}}> Add </a> </button>
 {% endblock%}

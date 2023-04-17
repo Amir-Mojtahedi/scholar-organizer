@@ -1,11 +1,12 @@
-from flask import Blueprint, render_template, flash, render_template, request
+from flask import Blueprint, redirect, render_template, flash, render_template, request, url_for
+from flask_login import login_required
 from werkzeug.local import LocalProxy
 from CoursePlannerApp.dbmanager import get_db
 import oracledb
 
-from CoursePlannerApp.objects.domain import Domain, DomainForm
+from CoursePlannerApp.objects.domain import DomainForm, Domain
 
-bp = Blueprint('domain', __name__, url_prefix='/domains')
+bp = Blueprint('domains', __name__, url_prefix='/domains')
 
 dtb = LocalProxy(get_db)
 
@@ -25,22 +26,27 @@ def get_domains():
     return render_template('domains.html', banner = dtb.get_domains())
 
 #Add Domain
-@bp.route('/newDomain', methods=['GET', 'POST'])
-def add_course():
+@bp.route('/new/', methods=['GET', 'POST'])
+@login_required
+def create_domain():
     form = DomainForm()
-    if request.method == 'POST' and form.validate_on_submit():
-        ##Adding Domain to dtb
-        try:
-            newDomain = Domain(form.id.data, form.name.data, form.description.data) 
-            if newDomain in dtb.get_domains():
-                flash("This domain already exist")
-            else:
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            
+            newDomain = Domain(form.id.data, form.name.data, form.description.data)
+            try:
                 dtb.add_domain(newDomain)
-        except ValueError as v: 
-            flash("Your domain is in the wrong format")
-        except Exception as e:
-            flash("Something wrong happened in the database")
-        return render_template('addDomain.html', form = form)
-
+                return redirect(url_for('domains.get_domains'))
+            
+            except oracledb.IntegrityError as e:
+                error_obj, = e.args #To acces code error 
+                if error_obj.code == 1: # 1 is related to primary key issue (when the primary key already exist) 
+                    flash("Domain already exist")
+        
+            except Exception as e:
+                flash("Error: " + str(e))
+        else:
+            flash('Invalid input')
+    return render_template('Add/addDomain.html', form=form)
 
 
