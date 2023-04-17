@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, NumberRange
 
 class Domain:
     def __init__(self, id, name, description):
@@ -25,7 +25,8 @@ class Domain:
                     </ul>'
 
 class DomainForm(FlaskForm):
-    id = IntegerField('id',validators=[DataRequired()])
-    name = StringField('name',validators=[DataRequired()])
-    description = StringField('description',validators=[DataRequired()])
+    id = IntegerField('Id',validators=[DataRequired(),
+                                        NumberRange(min=1)])
+    name = StringField('Name',validators=[DataRequired()])
+    description = StringField('Domain Description',validators=[DataRequired()])
     

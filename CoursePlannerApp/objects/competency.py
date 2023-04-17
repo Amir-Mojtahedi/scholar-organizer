@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField
-from wtforms.validators import DataRequired
+from wtforms import StringField, SelectField
+from wtforms.validators import DataRequired, Regexp
 
 class Competency:
     def __init__(self, id, name, achievement, type):
@@ -29,8 +29,11 @@ class Competency:
                     </ul>'
 
 class CompetencyForm(FlaskForm):
-    id = StringField('id',validators=[DataRequired()])
-    name = StringField('name',validators=[DataRequired()])
-    achievement = StringField('achievement',validators=[DataRequired()])
-    type = StringField('type',validators=[DataRequired()])
+    id = StringField('Id',validators=
+                     [DataRequired(),
+                      Regexp('^[0-9A-Z]{4}$', message="Wrong Id format: #### (# => Letter or Digit)")
+                      ])
+    name = StringField('Name',validators=[DataRequired()])
+    achievement = StringField('Achievement',validators=[DataRequired()])
+    type = SelectField('Type',validators=[DataRequired()], choices=["Choose Type", "Mandatory", "Optional"])
     

@@ -3,19 +3,19 @@
     Add Competency
 {% endblock %}
 {% block headerTitle %}
-    Add Competency
 {% endblock %}
 {% block script %}
-    <script defer type="text/javascript" src="{{ url_for('static', filename='js/courseScript.js')}}"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
 {% endblock %}
 {% block sectionContent%}
     <h1>New Competency:</h1>
-    <form method="POST">
+    <form method="post">
         {{ form.csrf_token }}
-        {{ form.id.label }}             {{ form.id() }}
-        {{ form.name.label }}           {{ form.name()}}
-        {{ form.achievement.label }}    {{ form.achievement()}}
-        {{ form.type.label }}           {{ form.type()}}
-        <button type="button" class="add" id="addCompetency" name="addCompetency"> Add </button>
+        {{ form.id.label}}              {{ form.id() }}
+        {{ form.name.label}}            {{ form.name() }}
+        {{ form.achievement.label}}     {{ form.achievement() }}
+        {{ form.type.label}}            {{ form.type() }}
+        <button type="submit" id="addCompetency" name="addCompetency"> Submit </button>
     </form>
 {% endblock%}
+

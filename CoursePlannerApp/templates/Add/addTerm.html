@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-    Add Element
+    Add Term
 {% endblock %}
 {% block headerTitle %}
 {% endblock %}
@@ -8,15 +8,12 @@
     <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
 {% endblock %}
 {% block sectionContent%}
-    <h1>New Element:</h1>
+    <h1>New Term:</h1>
     <form method="post">
         {{ form.csrf_token }}
         {{ form.id.label}}              {{ form.id() }}
-        {{ form.order.label}}           {{ form.order() }}
         {{ form.name.label}}            {{ form.name() }}
-        {{ form.criteria.label}}        {{ form.criteria() }}
-        {{ form.competencyId.label}}    {{ form.competencyId() }}
-        <button type="submit" id="addElement" name="addElement"> Submit </button>
+        <button type="submit" id="addTerm" name="addTerm"> Submit </button>
     </form>
 {% endblock%}
 

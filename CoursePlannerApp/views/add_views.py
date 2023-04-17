@@ -9,5 +9,6 @@ dtb = LocalProxy(get_db)
 #Add Page
 @bp.route("/")
 def display():
-    return render_template('addEntities.html')
+    return render_template('Add/addEntities.html')
+
 
