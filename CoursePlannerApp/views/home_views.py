@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, flash, render_template, request
 from werkzeug.local import LocalProxy
 from CoursePlannerApp.dbmanager import get_db
+from flask_login import login_required
+from CoursePlannerApp.objects.course import CourseForm
 import oracledb
 
 dtb = LocalProxy(get_db)
@@ -41,5 +43,9 @@ def list_elements(competency_id):
             flash('There is no competency in the database')            
     return render_template('elements.html', elements = elements)
 
-
+@bp.route("/Add-Course/")
+@login_required
+def add_course():
+    form=CourseForm()
+    return render_template('/Add/addCourse.html',form=form)
 
