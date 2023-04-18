@@ -21,8 +21,18 @@ def get_competencies():
     if not competencies or len(competencies) == 0:
         flash("There are no competency in database")
         return render_template('display.html')
+    return render_template("competencies.html", competencies=competencies)
 
-    return render_template("competencies.html", banner=dtb.get_competencies())
+@bp.route("/<competency_id>", methods=['GET', 'POST'])
+def list_elements(competency_id):
+    if request.method == 'GET':
+        try:
+            elements = dtb.get_competency_elements(competency_id) 
+        except Exception as e:
+            flash('There is an issue with the Database')
+        if not elements or len(elements) == 0:
+            flash('There is no competency in the database')            
+    return render_template('elements.html', elements = elements)
 
 #Add Competency
 @bp.route('/new/', methods=['GET', 'POST'])
