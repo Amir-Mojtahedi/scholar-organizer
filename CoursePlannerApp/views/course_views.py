@@ -28,12 +28,13 @@ def list_competencies(course_id):
         try:
             course = dtb.get_specific_course(course_id)
             competencies = dtb.get_course_competencies(course_id)
+            elements_covered=dtb.get_elements_covered_by_a_course(course_id)
             domains = dtb.get_domains() 
         except Exception as e:
             flash('There is an issue with the Database')
         if not competencies or len(competencies) == 0:
             flash('There is no competency in the database')            
-    return render_template('competencies.html', competencies = competencies, course = course, domains= domains)
+    return render_template('competencies.html', competencies = competencies, course = course, domains = domains, elements_covered = elements_covered)
 
 #Add course
 @bp.route('/new/', methods=['GET', 'POST'])

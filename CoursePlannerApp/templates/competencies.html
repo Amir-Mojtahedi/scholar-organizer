@@ -41,6 +41,19 @@
                 <p>{{competency.achievement | safe}}</p>
                 <p>Type: {{competency.type | safe}}</p>
             </li>
+            <li>
+                <ol>
+                    {% for element in elements_covered%}
+                        {% if element.competencyId==competency.id%}
+                            <li>
+                                <p>Title: {{element.name | safe}}</p>
+                                <p>{{element.criteria | safe}}</p>
+                            </li>
+                        {% endif %}
+                        
+                    {% endfor %}
+                </ol>
+            </li>
             <hr>
         {% endfor %}
     </ul>

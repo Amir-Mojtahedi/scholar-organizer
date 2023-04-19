@@ -286,6 +286,16 @@ class Database:
                 newListElement.append(newElement)
             return newListElement
         
+    def get_elements_covered_by_a_course(self,courseId):
+        '''Returns all the Elements covered by a specific course'''
+        with self.__get_cursor() as cursor:
+            newListElement = []
+            results = cursor.execute("SELECT element_id, element_order, element, element_criteria, competency_id FROM ELEMENTS JOIN courses_elements USING(element_id) JOIN courses USING(course_id) JOIN competencies USING(competency_id) WHERE course_id=:courseId",courseId=courseId)
+            for result in results:
+                newElement = Element(id= result[0], order= result[1], name= result[2], criteria= result[3], competencyId= result[4])
+                newListElement.append(newElement)
+            return newListElement
+        
     def add_element(self, element): 
         '''Add an element to the DB for the given Element object'''
         with self.__get_cursor() as cursor:
