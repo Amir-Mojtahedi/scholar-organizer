@@ -3,7 +3,12 @@
     Competency List
 {% endblock %}
 {% block headerTitle %}
-    Competencies List
+    {% if course%}
+            Competencies of {{course.name}}, {{course.id}}
+        {% else %}
+            Competencies List
+    {% endif %}
+    
 {% endblock %}
 {% block script %}
 {% endblock %}

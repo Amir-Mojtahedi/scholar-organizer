@@ -20,7 +20,6 @@ def get_competencies():
 
     if not competencies or len(competencies) == 0:
         flash("There are no competency in database")
-        return render_template('display.html')
     return render_template("competencies.html", competencies=competencies)
 
 @bp.route("/<competency_id>", methods=['GET', 'POST'])

@@ -40,6 +40,14 @@ class Database:
                 newListCourse.append(newCourse)
             return newListCourse
     
+    def get_specific_course(self,courseId):
+        '''Returns a specific course'''
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES WHERE course_id=:courseId",courseId=courseId)
+            for result in results:
+                course = Course(id = result[0], name = result[1], theory_hours = result[2], lab_hours = result[3], work_hours = result[4], description = result[5], domainId = result[6], termId = result[7])
+            return course
+    
     def get_course_competencies(self,course_id):
         '''Returns a specific competencies for a course'''
         with self.__get_cursor() as cursor:
