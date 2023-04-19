@@ -23,9 +23,15 @@
                     {%else%}
                         <p>Session: Fall</p>
                 {% endif %}
+                <p>Term: {{course.termId | safe}}</p>
                 <p>Class hours: {{course.theory_hours | safe}}</p>
                 <p>Lab hours: {{course.lab_hours | safe}}</p>
                 <p>Homework hours: {{course.work_hours | safe}}</p>
+                {% for domain in domains %}
+                    {% if domain.id==course.domainId %}
+                        <p>Domain: <a></a>{{domain.name | safe}}</p>
+                    {% endif %}
+                {% endfor %}
             </li>
             <hr>
         {% endfor %}

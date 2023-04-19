@@ -14,12 +14,13 @@ dtb = LocalProxy(get_db)
 def get_courses():
     if request.method == 'GET':
         try:
-            courses = dtb.get_courses() 
+            courses = dtb.get_courses()
+            domains = dtb.get_domains() 
         except Exception as e:
             flash('There is an issue with the Database')
         if not courses or len(courses) == 0:
             flash('There is no course in database')            
-        return render_template('home.html', courses = courses)
+        return render_template('home.html', courses = courses, domains=domains)
     
 @bp.route("/<course_id>/", methods=['GET', 'POST'])
 def list_competencies(course_id):
