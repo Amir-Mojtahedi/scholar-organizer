@@ -29,7 +29,7 @@
                 <p>Homework hours: {{course.work_hours | safe}}</p>
                 {% for domain in domains %}
                     {% if domain.id==course.domainId %}
-                        <p>Domain: <a></a>{{domain.name | safe}}</p>
+                        <p>Domain: <a href="{{url_for('domains.get_domains')}}">{{domain.name | safe}}</a></p>
                     {% endif %}
                 {% endfor %}
             </li>
