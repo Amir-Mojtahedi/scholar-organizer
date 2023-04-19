@@ -232,6 +232,14 @@ class Database:
                 newListCompetency.append(newCompetency)
             return newListCompetency
         
+    def get_specific_competency(self,competencyId):
+        '''Returns a specific competency'''
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("SELECT competency_id, competency, competency_achievement, competency_type FROM COMPETENCIES WHERE competency_id=:competencyId",competencyId=competencyId)
+            for result in results:
+                competency = Competency(id = result[0], name = result[1], achievement= result[2], type= result[3])
+            return competency
+        
     def add_competency(self, competency): 
         '''Add a competency to the DB for the given Competency object'''
         with self.__get_cursor() as cursor:

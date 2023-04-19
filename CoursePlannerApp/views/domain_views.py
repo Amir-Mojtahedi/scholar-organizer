@@ -22,7 +22,7 @@ def get_domains():
             flash('There is no course in database')            
         return render_template('domains.html',domains=domains)
 
-@bp.route("/<int:domain_id>")
+@bp.route("/<int:domain_id>/")
 def get_specific_domain(domain_id):
     if request.method == 'GET':
         try:

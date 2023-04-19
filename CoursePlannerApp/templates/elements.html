@@ -3,12 +3,16 @@
     Element List
 {% endblock %}
 {% block headerTitle %}
-    Elements List
+    {% if competency%}
+        Elements of {{competency.name}}, {{competency.id}}
+        {% else %}
+            Competencies List
+    {% endif %}
 {% endblock %}
 {% block script %}
 {% endblock %}
 {% block sectionContent%}
-    <ul>
+    <ol>
         {% for element in elements %}
             <li>
                 <p>Title: {{element.name | safe}}</p>
@@ -16,5 +20,5 @@
             </li>
             <hr>
         {% endfor %}
-    </ul>
+    </ol>
 {% endblock%}
