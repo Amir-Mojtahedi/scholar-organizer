@@ -3,12 +3,26 @@
     Element List
 {% endblock %}
 {% block headerTitle %}
-    Elements List
+    {% if competency %}
+        <p>Code: {{competency.id | safe}}</p>
+        <a href="{{ url_for('competencies.list_elements', competency_id=competency.id) }}">{{competency.name | safe}}</a>
+        <p>{{competency.achievement | safe}}</p>
+        <p>Type: {{competency.type | safe}}</p>
+        <hr>
+        </ul>
+    {% endif %}
 {% endblock %}
 {% block script %}
 {% endblock %}
 {% block sectionContent%}
-    <ul>
+    <h1>
+        {% if competency%}
+            Elements of {{competency.name}}, {{competency.id}}
+            {% else %}
+                Competencies List
+        {% endif %}
+    </h1>
+    <ol>
         {% for element in elements %}
             <li>
                 <p>Title: {{element.name | safe}}</p>
@@ -16,5 +30,5 @@
             </li>
             <hr>
         {% endfor %}
-    </ul>
+    </ol>
 {% endblock%}
