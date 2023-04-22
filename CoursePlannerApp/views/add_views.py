@@ -10,9 +10,13 @@ from CoursePlannerApp.objects.domain import DomainForm
 from CoursePlannerApp.objects.term import TermForm
 from CoursePlannerApp.objects.element import ElementForm
 
-bp = Blueprint('add', __name__, url_prefix='/')
+bp = Blueprint('add', __name__, url_prefix='/add')
 
 dtb = LocalProxy(get_db)
+
+@bp.route("/")
+def index():
+    return render_template('/Add/add.html')
 
 @bp.route("/add-course/")
 @login_required
