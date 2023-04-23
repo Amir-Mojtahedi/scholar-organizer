@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import EmailField, PasswordField, StringField, BooleanField
 from wtforms.validators import DataRequired
 
@@ -28,6 +29,7 @@ class SignupForm(FlaskForm):
     email = EmailField("email", validators=[DataRequired()])
     password = PasswordField("password", validators=[DataRequired()])
     name = StringField("name", validators=[DataRequired()])
+    avatar = FileField('avatar')
 
 
 class LoginForm(FlaskForm):
