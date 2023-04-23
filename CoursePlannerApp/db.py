@@ -200,6 +200,23 @@ class Database:
                 newListTerm.append(newTerm)
             return newListTerm
         
+    def get_specific_term(self,termId):
+        '''Returns a specific term'''
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("SELECT term_id, term_name FROM TERMS WHERE term_id=:termId", termId=termId)
+            for result in results:
+                foundTerm = Term(id = result[0], name = result[1])
+            return foundTerm
+    
+    def get_courses_in_term(self,termId):
+            '''Returns a specific domain'''
+            with self.__get_cursor() as cursor:
+                impactedCourse = []
+                results = cursor.execute("SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES WHERE term_id = :termId",termId=termId)
+                for result in results:
+                    newCourse = Course(id = result[0], name = result[1], theory_hours = result[2], lab_hours = result[3], work_hours = result[4], description = result[5], domainId = result[6], termId = result[7])
+                    impactedCourse.append(newCourse)
+                return impactedCourse
             
     def add_term(self, term): 
         '''Add a term to the DB for the given Term object'''
@@ -234,7 +251,8 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(term, Term)):
                 raise ValueError
-            cursor.execute("CALL delete_term(:termId)", termId = term.id)            
+            
+            cursor.execute("DELETE FROM terms WHERE term_id = :termId", termId = term.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
     

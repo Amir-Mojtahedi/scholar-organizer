@@ -57,7 +57,7 @@ def create_element():
 
 #Delete
 @bp.route("/<int:element_id>/delete/", methods=["GET"])
-#@login_required
+@login_required
 def delete(element_id):
 
     # try to delete element
