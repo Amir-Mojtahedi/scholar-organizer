@@ -10,8 +10,13 @@
             <h1 class="logo"><a href="{{url_for('home.index')}}"><img src="{{url_for('static', filename='logo.png')}}"></a></h1>
             <ul class="main-nav">
                 <li> <a href="{{url_for('home.index')}}">Home</a> </li>
-                <li> <a href="{{url_for('auth.signup')}}">Sign Up</a> </li>
-                <li> <a href="{{url_for('auth.login')}}">Login</a> </li>
+                {% if not current_user.is_authenticated %}
+                    <li> <a href="{{url_for('auth.signup')}}">Sign Up</a> </li>
+                    <li> <a href="{{url_for('auth.login')}}">Login</a> </li>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{url_for('auth.logout')}}">Logout</a></li>
+                {% endif %}
                 <li> <a href="{{url_for('add.index')}}">Add</a> </li>
             </ul>
         </header>
