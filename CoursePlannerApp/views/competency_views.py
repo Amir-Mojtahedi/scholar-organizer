@@ -58,3 +58,9 @@ def create_competency():
         else:
             flash('Invalid input')
     return render_template('Add/addCompetency.html', form=form)
+
+# #Update Competency
+# @bp.route('/<int:id>/', methods=['GET', 'POST'])
+# @login_required
+# def update_competency():
+    
