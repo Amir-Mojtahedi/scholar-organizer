@@ -58,3 +58,22 @@ def create_competency():
         else:
             flash('Invalid input')
     return render_template('Add/addCompetency.html', form=form)
+
+#Delete
+@bp.route("/<competency_id>/delete/", methods=["GET"])
+@login_required
+def delete(competency_id):
+    
+    competency = dtb.get_specific_competency(competency_id)        
+    
+    #Make sure the user is aware he will also delete associated elements 
+    
+    # try to delete competency
+    try:
+        dtb.delete_competency(competency)
+    except oracledb.Error as e:
+        flash("Error: " + str(e))
+        return redirect(url_for('competency.list_elements', 'competency_id=competency.id'))
+
+    flash("Competency deleted successfully")
+    return redirect(url_for('competencies.get_competencies'))

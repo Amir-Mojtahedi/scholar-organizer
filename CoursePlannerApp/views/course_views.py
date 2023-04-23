@@ -83,10 +83,10 @@ def create_course():
                 
     return render_template('Add/addCourse.html', form=form)
 
+#Delete
 @bp.route("/<course_id>/delete/", methods=["GET"])
 @login_required
 def delete(course_id):
-    form = CourseForm()
     
     course = dtb.get_specific_course(course_id)
         
@@ -98,4 +98,4 @@ def delete(course_id):
         return redirect(url_for(".get_courses"))
 
     flash("Course deleted successfully")
-    return redirect(url_for(".get_courses"))
+    return redirect(url_for('courses.list_competencies', 'course_id=course.id'))

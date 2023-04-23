@@ -278,7 +278,13 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(competency, Competency)):
                 raise ValueError
-            cursor.execute(" CALL delete_competency(:competencyId)", competencyId = competency.id)            
+            
+            #Delete associated elements
+            cursor.execute("DELETE FROM elements WHERE competency_id = :competencyId", competencyId = competency.id)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
+            cursor.execute("DELETE FROM competencies WHERE competency_id = :competencyId", competencyId = competency.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
     
