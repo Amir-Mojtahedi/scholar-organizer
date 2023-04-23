@@ -73,3 +73,9 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("auth.login"))
+
+@bp.route('/avatars/<email>/avatar.png')
+def show_avatar(email):
+    path = os.path.join(current_app.config['IMAGE_PATH'], email)
+    return send_from_directory(path, 'avatar.png')
+
