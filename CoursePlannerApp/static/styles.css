@@ -11,6 +11,15 @@ img{
     width: 50%;
 }
 
+#site-logo{
+	width:100px;
+}
+
+#profile-picture{
+	border-radius: 50%;
+	width:40%;
+}
+
 h1{
 	font-size: 13pt;
 }
@@ -37,6 +46,7 @@ a {
 
 .logo {
 	margin: 0;
+	width:50%;
 	font-size: 1.45em;
 }
 
@@ -52,7 +62,14 @@ a {
 }
 .main-nav{
     display: flex;
+	justify-content: space-between;
 	margin-top: 5px
+}
+.main-nav li{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+    flex: 1
 }
 
 .logo a,
