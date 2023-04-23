@@ -64,9 +64,11 @@ def create_competency():
 @login_required
 def delete(competency_id):
     
-    competency = dtb.get_specific_competency(competency_id)        
-    
-    #Make sure the user is aware he will also delete associated elements 
+    try:
+        competency = dtb.get_specific_competency(competency_id)        
+    except Exception as e:
+        flash("Could not acces the competency")
+        return redirect(url_for('competency.list_elements', 'competency_id=competency.id'))
     
     # try to delete competency
     try:

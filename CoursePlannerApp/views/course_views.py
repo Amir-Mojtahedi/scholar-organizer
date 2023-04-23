@@ -87,9 +87,11 @@ def create_course():
 @bp.route("/<course_id>/delete/", methods=["GET"])
 @login_required
 def delete(course_id):
-    
-    course = dtb.get_specific_course(course_id)
-        
+    try:
+        course = dtb.get_specific_course(course_id)
+    except Exception as e:
+        flash("Couldn't access the course")
+        return redirect(url_for(".get_courses"))
     # try to delete course
     try:
         dtb.delete_course(course)

@@ -49,3 +49,31 @@ def create_domain():
     return render_template('Add/addDomain.html', form=form)
 
 
+#Delete
+@bp.route("/<domain_id>/delete/", methods=["GET"])
+#@login_required
+def delete(domain_id):
+
+    try:    
+        domain = dtb.get_specific_domain(domain_id)
+        courseImpacted = dtb.get_courses_in_domain(domain_id) 
+    except Exception as e:
+        flash("Could not acces the domain")
+        flash("Error: " + str(e))
+        return redirect(url_for('domains.get_domains'))
+
+    # try to delete domain
+    try:
+        dtb.delete_domain(domain) 
+        flash("Domain deleted successfully")
+    except oracledb.Error as e:
+        flash("You can't delete this domain until you delete the following courses or change their domains")
+        courseImpactedString = ""
+        for course in courseImpacted:
+            courseImpactedString = f'-- {course.name} --'+ courseImpactedString
+        flash(courseImpactedString)
+    except Exception as e:
+        flash("Error: " + str(e))
+        return redirect(url_for("domains.get_domains"))
+
+    return redirect(url_for('domains.get_domains'))
