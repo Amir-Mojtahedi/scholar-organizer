@@ -87,28 +87,15 @@ def create_course():
 @login_required
 def delete(course_id):
     form = CourseForm()
-
-    # get user
-    user = current_user
-    manages = user.group_id == 1 or user.group_id == 2
-
-    if not manages:
-        flash("You don't have permission to delete courses")
-        return redirect(url_for(".get_courses"))
-
-    if form.validate_on_submit():
-        course = dtb.get_specific_course(course_id)
+    
+    course = dtb.get_specific_course(course_id)
         
-        # try to delete course
-        try:
-            dtb.delete_course(course)
-        except oracledb.Error:
-            flash("There was an error deleting the course from the database")
-            return redirect(url_for(".get_courses"))
-
-        flash("Course deleted successfully")
+    # try to delete course
+    try:
+        dtb.delete_course(course)
+    except oracledb.Error as e:
+        flash("Error: " + str(e))
         return redirect(url_for(".get_courses"))
 
-    else:
-        flash("Invalid form data")
-        return redirect(url_for(".get_courses"))
+    flash("Course deleted successfully")
+    return redirect(url_for(".get_courses"))

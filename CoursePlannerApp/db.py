@@ -115,11 +115,11 @@ class Database:
             
             #Check if course exists in course_element table
             results = cursor.execute("SELECT * FROM COURSES_ELEMENTS where course_id = :courseId", courseId = course.id)
-            course = [result for result in results if result[0] == course.domainId]
-            if course is not None:
+            nCourse = [result for result in results if result[0] == course.id]
+            if nCourse is not []:
                 cursor.execute("DELETE FROM courses_elements WHERE course_id = :courseId", courseId = course.id)
             
-            cursor.execute("DELETE FROM courses WHERE course_id = :courseId;",  courseId = course.id)            
+            cursor.execute("DELETE FROM courses WHERE course_id = :courseId",  courseId = course.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
     
