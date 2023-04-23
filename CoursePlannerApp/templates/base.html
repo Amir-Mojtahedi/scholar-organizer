@@ -17,7 +17,7 @@
                 <li> <a href="{{url_for('add.index')}}">Add</a> </li>
                 {% if current_user.is_authenticated %}
                     <li><a href="{{url_for('auth.logout')}}">Logout</a></li>
-                    <li><img id="profile-picture" src="{{url_for('auth.show_avatar',email=current_user.email)}}"/></li>
+                    <li><a href="{{url_for('auth.change_avatar',email=current_user.email)}}"><img id="profile-picture" src="{{url_for('auth.show_avatar',email=current_user.email)}}"/></a></li>
                 {% endif %}
             </ul>
         </header>

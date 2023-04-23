@@ -74,6 +74,18 @@ def logout():
     logout_user()
     return redirect(url_for("auth.login"))
 
+@bp.route('/avatars/<email>/', methods=["GET", "POST"])
+@login_required
+def change_avatar(email):
+    form=SignupForm()
+    if request.method == "POST":
+        file = form.avatar.data
+        avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], email)
+        avatar_path = os.path.join(avatar_dir, 'avatar.png')
+        file.save(avatar_path)
+    return render_template("avatar.html", form=form)
+
+
 @bp.route('/avatars/<email>/avatar.png')
 def show_avatar(email):
     path = os.path.join(current_app.config['IMAGE_PATH'], email)
