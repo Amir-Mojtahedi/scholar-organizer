@@ -112,7 +112,14 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(course, Course)):
                 raise ValueError
-            cursor.execute("DECLARE ce_exists NUMBER;   BEGIN SELECT COUNT(*) INTO ce_exists FROM courses_elements WHERE course_id = :courseId; IF ce_exists !=0 THEN DELETE FROM courses_elements WHERE course_id = vcourse_id; END IF; DELETE FROM courses WHERE course_id = vcourse_id; END;",  courseId = course.id)            
+            
+            #Check if course exists in course_element table
+            results = cursor.execute("SELECT * FROM COURSES_ELEMENTS where course_id = :courseId", courseId = course.id)
+            course = [result for result in results if result[0] == course.domainId]
+            if course is not None:
+                cursor.execute("DELETE FROM courses_elements WHERE course_id = :courseId", courseId = course.id)
+            
+            cursor.execute("DELETE FROM courses WHERE course_id = :courseId;",  courseId = course.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
     

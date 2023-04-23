@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template, flash, render_template, request, url_for
-from flask_login import login_required
+from flask_login import current_user, login_required
 from werkzeug.local import LocalProxy
 from CoursePlannerApp.dbmanager import get_db
 import oracledb
@@ -27,7 +27,7 @@ def list_competencies(course_id):
     if request.method == 'GET':
         try:
             course = dtb.get_specific_course(course_id)
-            competencies = dtb.get_course_competencies(course_id)
+            competencies = dtb.get_course_competencies(course_id) 
             elements_covered=dtb.get_elements_covered_by_a_course(course_id)
             domains = dtb.get_domains() 
         except Exception as e:
@@ -40,7 +40,7 @@ def list_competencies(course_id):
 def get_specific_domain(course_id,domain_id):
     if request.method == 'GET':
         try:
-            course=dtb.get_specific_course(course_id)
+            course = dtb.get_specific_course(course_id)
             domain = dtb.get_specific_domain(domain_id) 
         except Exception as e:
             flash('There is an issue with the Database')
@@ -83,3 +83,32 @@ def create_course():
                 
     return render_template('Add/addCourse.html', form=form)
 
+@bp.route("/<course_id>/delete/", methods=["GET"])
+@login_required
+def delete(course_id):
+    form = CourseForm()
+
+    # get user
+    user = current_user
+    manages = user.group_id == 1 or user.group_id == 2
+
+    if not manages:
+        flash("You don't have permission to delete courses")
+        return redirect(url_for(".get_courses"))
+
+    if form.validate_on_submit():
+        course = dtb.get_specific_course(course_id)
+        
+        # try to delete course
+        try:
+            dtb.delete_course(course)
+        except oracledb.Error:
+            flash("There was an error deleting the course from the database")
+            return redirect(url_for(".get_courses"))
+
+        flash("Course deleted successfully")
+        return redirect(url_for(".get_courses"))
+
+    else:
+        flash("Invalid form data")
+        return redirect(url_for(".get_courses"))

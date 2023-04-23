@@ -5,6 +5,7 @@
 {% block headerTitle %}
     {% if course %}
         <a href="{{ url_for('courses.list_competencies', course_id=course.id) }}">{{course.name | safe}}</a>
+        <a class='delete' href="{{url_for('courses.delete', course_id=course.id)}}"><img class='icon' src={{url_for('static', filename='media/delete.png')}}></a> 
         <p>{{course.description | safe}}</p>
         {% if course.termId%2==0 %}
             <p>Session: Winter</p>

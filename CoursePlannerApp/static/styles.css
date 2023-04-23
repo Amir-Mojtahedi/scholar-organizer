@@ -78,9 +78,8 @@ a {
 	list-style-type: disc;
 }
 
-.editBtn, .deleteBtn{
-	display: inline-block;
-	width: 20px;
-	height: 20px;
+.icon{
+	display: block;
+	width: 5vh;
 	margin-left: 10px;
 }
