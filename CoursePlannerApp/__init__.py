@@ -1,6 +1,7 @@
 import secrets
+import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, current_app
 from flask_login import LoginManager
 
 from CoursePlannerApp.views.auth_views import bp as auth_bp
@@ -22,7 +23,7 @@ from .dbmanager import close_db, init_db_command, get_db
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(SECRET_KEY=secrets.token_urlsafe(32))
+    app.config.from_mapping(SECRET_KEY=secrets.token_urlsafe(32),IMAGE_PATH=os.path.join(app.instance_path,'images'))
 
     if test_config is None:
         app.config.from_pyfile("config.py", silent=True)
@@ -40,6 +41,10 @@ def create_app(test_config=None):
     @app.errorhandler(404)
     def page_not_found(_):
         return render_template("custom404.html"), 404
+    
+    os.makedirs(app.instance_path, exist_ok=True)
+    os.makedirs(app.config['IMAGE_PATH'], exist_ok=True)
+
 
     init_app(app)
     return app
