@@ -22,7 +22,8 @@ def index():
 @login_required
 def add_course():
     form=CourseForm()
-    form.termId.choices = dtb.get_terms()
+    options= dtb.get_terms()
+    form.termId.choices=options
     return render_template('/Add/addCourse.html',form=form)
 
 @bp.route("/add-competency/")
