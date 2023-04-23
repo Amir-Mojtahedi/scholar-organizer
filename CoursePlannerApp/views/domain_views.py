@@ -13,17 +13,16 @@ dtb = LocalProxy(get_db)
 #Get * Domains
 @bp.route("/")
 def get_domains():
-    try:
-        domains = dtb.get_domains() 
-    except Exception as e:
-        flash("Error: " + str(e))
-        return render_template("competencies.html", banner=[])
-        
-    if not domains or len(domains) == 0:
-        flash('There is no domain in database')            
-        return render_template('display.html')
-    
-    return render_template('domains.html', banner = dtb.get_domains())
+    if request.method == 'GET':
+        try:
+            domains = dtb.get_domains() 
+        except Exception as e:
+            flash('There is an issue with the Database')
+        if not domains or len(domains) == 0:
+            flash('There is no course in database')            
+        return render_template('domains.html',domains=domains)
+
+
 
 #Add Domain
 @bp.route('/new/', methods=['GET', 'POST'])

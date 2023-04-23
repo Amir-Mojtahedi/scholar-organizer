@@ -40,6 +40,14 @@ class Database:
                 newListCourse.append(newCourse)
             return newListCourse
     
+    def get_specific_course(self,courseId):
+        '''Returns a specific course'''
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES WHERE course_id=:courseId",courseId=courseId)
+            for result in results:
+                course = Course(id = result[0], name = result[1], theory_hours = result[2], lab_hours = result[3], work_hours = result[4], description = result[5], domainId = result[6], termId = result[7])
+            return course
+    
     def get_course_competencies(self,course_id):
         '''Returns a specific competencies for a course'''
         with self.__get_cursor() as cursor:
@@ -118,7 +126,17 @@ class Database:
                 newDomain = Domain(id = result[0], name = result[1], description= result[2])
                 newListDomain.append(newDomain)
             return newListDomain
-        
+
+    def get_specific_domain(self,domainId):
+        '''Returns a specific domain'''
+        with self.__get_cursor() as cursor:
+            domain=[]
+            results = cursor.execute("SELECT domain_id, domain, domain_description FROM DOMAINS WHERE domain_id = :domainId",domainId=domainId)
+            for result in results:
+                foundDomain = Domain(id = result[0], name = result[1], description= result[2])
+                domain.append(foundDomain)
+            return domain
+
     def add_domain(self, domain): 
         '''Add a domain to the DB for the given Domain object'''
         with self.__get_cursor() as cursor:
@@ -214,6 +232,14 @@ class Database:
                 newListCompetency.append(newCompetency)
             return newListCompetency
         
+    def get_specific_competency(self,competencyId):
+        '''Returns a specific competency'''
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("SELECT competency_id, competency, competency_achievement, competency_type FROM COMPETENCIES WHERE competency_id=:competencyId",competencyId=competencyId)
+            for result in results:
+                competency = Competency(id = result[0], name = result[1], achievement= result[2], type= result[3])
+            return competency
+        
     def add_competency(self, competency): 
         '''Add a competency to the DB for the given Competency object'''
         with self.__get_cursor() as cursor:
@@ -255,6 +281,16 @@ class Database:
         with self.__get_cursor() as cursor:
             newListElement = []
             results = cursor.execute("SELECT element_id, element_order, element, element_criteria, competency_id FROM ELEMENTS")
+            for result in results:
+                newElement = Element(id= result[0], order= result[1], name= result[2], criteria= result[3], competencyId= result[4])
+                newListElement.append(newElement)
+            return newListElement
+        
+    def get_elements_covered_by_a_course(self,courseId):
+        '''Returns all the Elements covered by a specific course'''
+        with self.__get_cursor() as cursor:
+            newListElement = []
+            results = cursor.execute("SELECT element_id, element_order, element, element_criteria, competency_id FROM ELEMENTS JOIN courses_elements USING(element_id) JOIN courses USING(course_id) JOIN competencies USING(competency_id) WHERE course_id=:courseId",courseId=courseId)
             for result in results:
                 newElement = Element(id= result[0], order= result[1], name= result[2], criteria= result[3], competencyId= result[4])
                 newListElement.append(newElement)

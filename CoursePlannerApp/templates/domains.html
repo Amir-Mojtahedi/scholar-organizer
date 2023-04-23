@@ -3,16 +3,45 @@
     Domain List
 {% endblock %}
 {% block headerTitle %}
-    Domain List
+    {% if course %}
+        <a href="{{ url_for('courses.list_competencies', course_id=course.id) }}">{{course.name | safe}}</a>
+        <p>{{course.description | safe}}</p>
+        {% if course.termId%2==0 %}
+            <p>Session: Winter</p>
+            {%else%}
+                <p>Session: Fall</p>
+        {% endif %}
+        <p>Term: {{course.termId | safe}}</p>
+        <p>Class hours: {{course.theory_hours | safe}}</p>
+        <p>Lab hours: {{course.lab_hours | safe}}</p>
+        <p>Homework hours: {{course.work_hours | safe}}</p>
+        {% for domain in domains %}
+            {% if domain.id==course.domainId %}
+                <p>Domain: <a href="{{url_for('courses.get_specific_domain',domain_id=domain.id,course_id=course.id)}}">{{domain.name | safe}}</a></p>
+            {% endif %}
+        {% endfor %}
+        <p>Total hours: {{(course.lab_hours+course.theory_hours)*15}}</p>
+        <p>Credits: {{(course.lab_hours+course.theory_hours+course.work_hours)/3}}</p>
+        <hr>
+    {% endif %}
 {% endblock %}
 {% block script %}
 {% endblock %}
 {% block sectionContent%}
-    <h1>Domains:</h1>
-    <ul class="domainList">
-        {% for domain in banner %}
-        <li class="domainItem"> <a href={{url_for('domains.get_domains')}}> {{domain | safe}} </a>   </li>
+    <h1>
+        {% if course%}
+            Domain of {{course.name}}, {{course.id}}
+            {% else %}
+                Domains List
+        {% endif %}
+    </h1>
+    <ul>
+        {% for domain in domains %}
+            <li>
+                <p>Name: {{domain.name | safe}}</p>
+                <p>{{domain.description | safe}}</p>
+            </li>
+            <hr>
         {% endfor %}
     </ul>
-    <button type="button" id="addDomain" name="addDomain"> <a href={{url_for('domains.create_domain')}}> Add </a> </button>
 {% endblock%}
