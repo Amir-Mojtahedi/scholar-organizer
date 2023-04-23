@@ -1,5 +1,6 @@
 import oracledb
-from flask import Blueprint, redirect, render_template, request, url_for, flash
+import os
+from flask import Blueprint, redirect, render_template, request, url_for, flash, send_from_directory, current_app
 from flask_login import login_user, logout_user, login_required
 from werkzeug.local import LocalProxy
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -27,6 +28,12 @@ def signup():
             if db_user:
                 flash("User with this email already exists")
             else:
+                file = form.avatar.data
+                avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], form.email.data)
+                avatar_path = os.path.join(avatar_dir, 'avatar.png')
+                if not os.path.exists(avatar_dir):
+                    os.makedirs(avatar_dir)
+                file.save(avatar_path)
                 _hash = generate_password_hash(form.password.data)
                 user = User(form.email.data, form.name.data, _hash)
                 dtb.add_user(user)
