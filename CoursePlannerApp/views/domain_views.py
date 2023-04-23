@@ -51,7 +51,7 @@ def create_domain():
 
 #Delete
 @bp.route("/<domain_id>/delete/", methods=["GET"])
-#@login_required
+@login_required
 def delete(domain_id):
 
     try:    

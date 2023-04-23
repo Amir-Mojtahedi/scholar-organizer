@@ -342,14 +342,16 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
             
-    def delete_element(self, element): 
+    def delete_element(self, element_id): 
             '''Delete a element for the given Element object'''
             with self.__get_cursor() as cursor:
-                if (not isinstance(element, Element)):
-                    raise ValueError
-                cursor.execute(" CALL delete_element(:elementId)", elementId = element.id)                  
+                if not isinstance(element_id, int):
+                    raise ValueError("Should be an int")
+                    
+                cursor.execute("DELETE FROM elements WHERE element_id = :elementId", elementId = element_id)            
                 if not cursor.rowcount:
                     raise oracledb.Error
+                
             
             
     def close(self):
