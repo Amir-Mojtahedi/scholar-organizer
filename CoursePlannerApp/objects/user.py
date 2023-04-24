@@ -1,7 +1,7 @@
 from flask_login import UserMixin
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import EmailField, PasswordField, StringField, BooleanField
+from wtforms import EmailField, PasswordField, StringField, BooleanField, IntegerField
 from wtforms.validators import DataRequired
 
 
@@ -23,6 +23,12 @@ class User(UserMixin):
         self.name = name
         self.id = id
         self.group_id = group_id
+
+
+class UserForm(FlaskForm):
+    id = IntegerField("id")
+    group_id = IntegerField("group_id")
+    name = StringField("Name")
 
 
 class SignupForm(FlaskForm):

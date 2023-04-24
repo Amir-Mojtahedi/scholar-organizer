@@ -23,8 +23,8 @@
                             <td>{{ user.name }}</td>
                             {% if manages %}
                                 <td class="buttons">
-                                    <button class="orange">Edit</button>
-                                    <button class="red">Delete</button>
+                                    <button class="orange" data-user-id="{{ user.id }}" data-user-name="{{ user.name }}" data-group-id="{{ user.group_id }}" data-group-name="{{ group.name }}">Edit</button>
+                                    <button class="red" data-user-id="{{ user.id }}" data-user-name="{{ user.name }}" data-group-id="{{ user.group_id }}" data-group-name="{{ group.name }}">Delete</button>
                                 </td>
                             {% endif %}
                         </tr>
@@ -33,4 +33,32 @@
             </table>
         </div>
     {% endfor %}
+
+    <!-- popup form -->
+    <main class="container-fluid overlay">
+        <button class="close red">🗙</button>
+        <form method="POST">
+            {{ form.csrf_token }} 
+            {{ form.hidden_tag() }} 
+            {{ form.name.label }} {{ form.name() }}
+
+            <details role="list">
+                <summary aria-haspopup="listbox"></summary>
+                <ul role="listbox">
+                  {% for group in groups %}
+                    <li>
+                      <label for="{{ group.name }}">
+                        <input type="radio" id="{{ group.name }}" name="group_id" value="{{ group.id }}">
+                        {{ group.name }}
+                      </label>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </details>
+
+            <input name="id" type="hidden" value=-1>
+            <input name="group_id" type="hidden" value=-1>
+            <button type="submit"></button>
+        </form>
+    </main>
 {% endblock %}

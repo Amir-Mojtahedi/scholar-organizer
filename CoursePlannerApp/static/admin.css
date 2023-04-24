@@ -28,6 +28,10 @@ td {
     padding-right: 0;
 }
 
+ul[role=listbox] {
+    width: 100%;
+}
+
 #header {
     display: flex;
     justify-content: space-between;
