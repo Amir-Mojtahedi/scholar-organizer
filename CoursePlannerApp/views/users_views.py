@@ -24,20 +24,21 @@ def index():
         flash("There was an error retrieving the users from the database")
         users = []
 
+    # get all groups
+    try:
+        groups = dtb.get_groups()
+    except oracledb.Error:
+        flash("There was an error retrieving the groups from the database")
+        groups = []
+
     if level == 0 or level == 1:  # members and admin_user_gp can see members
-        users = [u for u in users if u.group_id == 0]
-        return render_template("users.html", manages=level == 1, groups=[], users=users)
+        group = [g for g in groups if g.id == 0]
+        group.users = [u for u in users if u.group_id == 0]
+        return render_template("users.html", manages=level == 1, groups=[group], users=users)
 
     elif level == 2:  # admin_gp can see all users and groups
-        # get all groups
-        try:
-            groups = dtb.get_groups()
-        except oracledb.Error:
-            flash("There was an error retrieving the groups from the database")
-            groups = []
+        # insert users into each group
+        for group in groups:
+            group.users = [u for u in users if u.group_id == group.id]
 
-        # insert a group into each user
-        for u in users:
-            u.group = next(g for g in groups if g.id == u.group_id)
-
-        return render_template("users.html", manages=True, groups=groups, users=users)
+        return render_template("users.html", manages=True, groups=groups)
