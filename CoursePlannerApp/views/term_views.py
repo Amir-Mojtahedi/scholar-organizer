@@ -48,6 +48,36 @@ def create_term():
             flash('Invalid input')
     return render_template('Add/addTerm.html', form=form)
 
+#Update term
+@bp.route('/<term_id>/update/', methods=['GET', 'POST'])
+@login_required
+def update_term(term_id):
+    
+    #Check if term exist
+    try:
+        term = dtb.get_specific_term(term_id)
+    except Exception as e:
+        flash("Error: "+ str(e))
+    
+    if term is None:
+        flash("Term not found")
+        return redirect(url_for('terms.get_terms'))
+    
+    form = TermForm(obj=term) #Prefill the form
+    
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            
+            updatedTerm = Term(form.id.data, form.name.data)
+            try:
+                dtb.update_term(updatedTerm)
+                flash("Term has been updated")    
+                return redirect(url_for('terms.get_terms'))
+            except Exception as e:
+                flash("Error: " + str(e))
+
+    return render_template('Update/updateTerm.html', form=form, term=term)
+
 #Delete
 @bp.route("/<term_id>/delete/", methods=["GET"])
 @login_required

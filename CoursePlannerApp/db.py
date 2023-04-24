@@ -242,7 +242,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(term, Term)):
                 raise ValueError
-            cursor.execute("UPDATE terms SET term_id = :termId, term_name = :termName WHERE term_id = :termId;", termId = term.id, termName = term.name)            
+            cursor.execute("UPDATE terms SET term_name = :termName WHERE term_id = :termId", termId = term.id, termName = term.name)            
             if not cursor.rowcount:
                 raise oracledb.Error
             
@@ -368,12 +368,12 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
        
-    def update_elmeent(self, element): 
+    def update_element(self, element): 
         '''Update a element for the given Competency object'''
         with self.__get_cursor() as cursor:
             if (not isinstance(element, Element)):
                 raise ValueError
-            cursor.execute("UPDATE elements SET element_id  = :elementId, element_order = :elementOrder, element = :elementName, element_criteria = :elementCriteria, competency_Id = :competencyId)", elementId = element.id, elementOrder = element.order, elementName = element.name, elementCriteria = element.criteria,  competencyId = element.competencyId)            
+            cursor.execute("UPDATE elements SET element_order = :elementOrder, element = :elementName, element_criteria = :elementCriteria, competency_Id = :competencyId WHERE element_id  = :elementId", elementId = element.id, elementOrder = element.order, elementName = element.name, elementCriteria = element.criteria,  competencyId = element.competencyId)            
             if not cursor.rowcount:
                 raise oracledb.Error
  
