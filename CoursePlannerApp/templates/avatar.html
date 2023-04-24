@@ -3,14 +3,16 @@
     Change Avatar
 {% endblock %}
 {% block headerTitle %}
-    Change your profile picture
+    Change your profile details
 {% endblock %}
 {% block script %}
 {% endblock %}
 {% block sectionContent%}
     <form method="post" enctype="multipart/form-data">
+        <h2>Change your profile picture</h2>
         {{ form.csrf_token }}
         {{ form.avatar.label}} {{form.avatar() }}
         <input type="submit" />
     </form>
+    <a href="{{url_for('auth.change_password',email=current_user.email)}}"><button>Change your password</button></a> 
 {% endblock%}

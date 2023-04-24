@@ -6,7 +6,7 @@ from werkzeug.local import LocalProxy
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from CoursePlannerApp.dbmanager import get_db
-from CoursePlannerApp.objects.user import LoginForm, SignupForm, User
+from CoursePlannerApp.objects.user import LoginForm, SignupForm, ChangePasswordForm, User
 
 bp = Blueprint("auth", __name__, url_prefix="/auth/")
 
@@ -74,7 +74,28 @@ def logout():
     logout_user()
     return redirect(url_for("auth.login"))
 
-@bp.route('/avatars/<email>/', methods=["GET", "POST"])
+@bp.route('/profile/<email>/change-password/', methods=["GET", "POST"])
+@login_required
+def change_password(email):
+    form=ChangePasswordForm()
+    if request.method=='POST':
+        if form.validate_on_submit():
+                try:
+                    user = dtb.get_user_by_email(email)
+                    if check_password_hash(user.password, form.old_password.data):
+                        _hash = generate_password_hash(form.new_password.data)
+                        user.password=_hash
+                        flash("Password was changed successfuly")
+                    else:
+                        flash("Incorrect password")
+                except oracledb.Error as e:
+                    flash("Error: " + str(e))
+                    return redirect("profile.html")  
+        else:
+            flash("Form isn't valid")
+    return render_template("change_password.html", form=form)
+
+@bp.route('/profile/<email>/', methods=["GET", "POST"])
 @login_required
 def change_avatar(email):
     form=SignupForm()
