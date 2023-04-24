@@ -3,18 +3,30 @@ const form = container.querySelector("form")
 const submit = form.querySelector("button[type=submit]")
 
 //edit
-document.querySelectorAll("button.orange").forEach(button => button.addEventListener("click", () => {
+document.querySelectorAll(".buttons button.orange").forEach(button => button.addEventListener("click", () => {
     openForm(1, button.getAttribute("data-group-id"), button.getAttribute("data-group-name"))
 }))
 
 //delete is a bit special because it doesn't need a form
-document.querySelectorAll("button.red").forEach(button => button.addEventListener("click", () => {
+document.querySelectorAll(".buttons button.red").forEach(button => button.addEventListener("click", () => {
     button.setAttribute("aria-busy", "true")
     openForm(2, button.getAttribute("data-group-id"), button.getAttribute("data-group-name"))
 }))
 
+//close form
+container.querySelector("button.close").addEventListener("click", () => {
+    container.style.animation = "slideFadeOut 0.5s"
+    setTimeout(() => {
+        container.style.display = "none"
+        container.classList.remove("active")
+        container.style.animation = "slideFadeIn 0.5s"
+    }, 500)
+})
+
 //reuse this function for 3 different forms
 const openForm = (actionId, groupId, groupName) => {
+    submit.innerText = "Create Group"
+
     if (actionId === 1) { //edit
         submit.innerText = "Edit Group"
 
