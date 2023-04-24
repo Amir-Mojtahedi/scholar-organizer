@@ -13,7 +13,10 @@
         {% for term in banner %}
         <li class="termItem"> 
             <a href={{url_for('terms.get_terms')}}> {{term | safe}} </a>   
-            <a class='delete' href="{{url_for('terms.delete', term_id=term.id)}}"><img class='icon' src={{url_for('static', filename='media/delete.png')}}></a>
+            <div class='icon'>
+                <a class='delete' href="{{url_for('terms.delete', term_id=term.id)}}"><img src={{url_for('static', filename='media/delete.png')}}></a>
+                <a class='edit' href="{{url_for('terms.update_term', term_id=term.id)}}"><img src={{url_for('static', filename='media/edit.png')}}></a>
+            </div>
             <hr>
         </li>
         {% endfor %}

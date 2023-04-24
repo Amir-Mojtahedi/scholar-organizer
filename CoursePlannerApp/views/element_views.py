@@ -55,6 +55,42 @@ def create_element():
             flash('Invalid input')
     return render_template('Add/addElement.html', form=form)
 
+#Update element
+@bp.route('/<element_id>/update/', methods=['GET', 'POST'])
+#@login_required
+def update_element(element_id):
+    
+    #Check if element exist
+    try:
+        element = dtb.get_specific_element(element_id)
+    except Exception as e:
+        flash("Error: "+ str(e))
+    
+    if element is None:
+        flash("Element not found")
+        return redirect(url_for('elements.get_elements'))
+    
+    form = ElementForm(obj=element) #Prefill the form
+    #Fill competency drop list
+    form.competencyId.choices = sorted([(competency.id, str(competency.id)+" - "+competency.name) for competency in dtb.get_competencies()]) #Getting data for Select field for competencyId  (Circular import error)
+    form.competencyId.choices.append(['newCompetency', 'Create new competency'])
+    form.competencyId.choices.insert(0, [0, "Choose Competency"])
+    
+    
+    if request.method == 'POST':
+        if form.validate_on_submit():
+
+            updatedElement = Element(form.id.data, form.order.data, form.name.data, 
+                                    form.criteria.data, form.competencyId.data)
+            try:
+                dtb.update_element(updatedElement)
+                flash("Element has been updated")    
+                return redirect(url_for('elements.get_elements'))
+            except Exception as e:
+                flash("Error: " + str(e))
+
+    return render_template('Update/updateElement.html', form=form, element=element)
+
 #Delete
 @bp.route("/<int:element_id>/delete/", methods=["GET"])
 @login_required

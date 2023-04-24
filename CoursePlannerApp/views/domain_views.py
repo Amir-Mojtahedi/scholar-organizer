@@ -48,6 +48,35 @@ def create_domain():
             flash('Invalid input')
     return render_template('Add/addDomain.html', form=form)
 
+#Update Domain
+@bp.route('/<domain_id>/update/', methods=['GET', 'POST'])
+#@login_required
+def update_domain(domain_id):
+    
+    #Check if domain exist
+    try:
+        domain = dtb.get_specific_domain(domain_id)
+    except Exception as e:
+        flash("Error: "+ str(e))
+    
+    if domain is None:
+        flash("Domain not found")
+        return redirect(url_for('domains.get_domains'))
+    
+    form = DomainForm(obj=domain) #Prefill the form
+    
+    if request.method == 'POST':
+        if form.validate_on_submit():
+
+            updatedDomain = Domain(form.id.data, form.name.data, form.description.data)
+            try:
+                dtb.update_domain(updatedDomain)
+                flash("Domain has been updated")    
+                return redirect(url_for('domains.get_domains'))
+            except Exception as e:
+                flash("Error: " + str(e))
+
+    return render_template('Update/updateDomain.html', form=form, domain=domain)
 
 #Delete
 @bp.route("/<domain_id>/delete/", methods=["GET"])

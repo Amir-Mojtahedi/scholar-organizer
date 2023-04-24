@@ -83,6 +83,49 @@ def create_course():
                 
     return render_template('Add/addCourse.html', form=form)
 
+
+#Update course
+@bp.route('/<course_id>/update/', methods=['GET', 'POST'])
+@login_required
+def update_course(course_id):
+    
+    #Cheack if course exist
+    try:
+        course = dtb.get_specific_course(course_id)
+    except Exception as e:
+        flash("Error: "+ str(e))
+    
+    if course is None:
+        flash("Course not found")
+        return redirect(url_for('courses.get_courses'))
+    
+    form = CourseForm(obj=course) #Prefill the form
+      
+    #Creating a new one based on the updated form
+    #Fill term drop list
+    form.termId.choices = sorted([(term.id, str(term.id)+" - "+term.name) for term in dtb.get_terms()]) #Getting data for Select field for termId  (Circular import error)
+    form.termId.choices.insert(0, [0, "Choose a term"])
+
+    #Fill domain drop list
+    form.domainId.choices = sorted([(domain.id, str(domain.id)+" - "+domain.name) for domain in dtb.get_domains()]) #Getting data for Select field for domainId  (Circular import error)
+    form.domainId.choices.insert(0, [0, "Choose a domain"])
+    
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            
+            updatedCourse = Course(form.id.data, form.name.data, form.description.data, 
+                               form.termId.data, form.domainId.data, 
+                               form.lab_hours.data, form.theory_hours.data, 
+                               form.work_hours.data)
+            try:
+                dtb.update_course(updatedCourse)
+                flash("Course has been updated")    
+                return redirect(url_for('courses.get_courses'))      
+            except Exception as e:
+                flash("Error: " + str(e))
+                
+    return render_template('Update/updateCourse.html', form=form, course=course)
+
 #Delete
 @bp.route("/<course_id>/delete/", methods=["GET"])
 @login_required

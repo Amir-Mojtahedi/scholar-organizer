@@ -76,13 +76,13 @@ class Database:
                 raise ValueError("Should be a Course obj")
             
             #Check if course doesn't already exist
-            results = cursor.execute("SELECT * FROM COURSES where course_id = :courseId or course_title = :courseName", courseId = course.id, courseName = course.name)
+            results = cursor.execute("SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES where course_id = :courseId or course_title = :courseName", courseId = course.id, courseName = course.name)
             nCourse = [result for result in results if (result[0] == course.id or result[1] == course.name)]
             if not (nCourse == []):
                 raise ValueError("Course already exist")
             
             #Check if domain exists
-            results = cursor.execute("SELECT * FROM DOMAINS where domain_id = :domainId", domainId = course.domainId)
+            results = cursor.execute("SELECT domain_id, domain, domain_description FROM DOMAINS where domain_id = :domainId", domainId = course.domainId)
             domain = [result for result in results if result[0] == course.domainId]
             if domain is None:
                 raise ValueError("Domain doesn't exist. Create a domain first")
@@ -103,7 +103,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(course, Course)):
                 raise ValueError
-            cursor.execute("UPDATE COURSES SET course_title = :title, theory_hours = :theory, lab_hours = :lab, work_hours = :work, description = :description, domain_id = :domainId, term_id = :termId WHERE course_id = :courseId",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domain.id, termId = course.term.id)            
+            cursor.execute("UPDATE COURSES SET course_title = :title, theory_hours = :theory, lab_hours = :lab, work_hours = :work, description = :description, domain_id = :domainId, term_id = :termId WHERE course_id = :courseId",  courseId = course.id, title = course.name, theory = course.theory_hours, lab = course.lab_hours, work = course.work_hours, description = course.description, domainId = course.domainId, termId = course.termId)            
             if not cursor.rowcount:
                 raise oracledb.Error
     
@@ -242,7 +242,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(term, Term)):
                 raise ValueError
-            cursor.execute("CALL update_term(:termToUpdate)", termToUpdate = term)            
+            cursor.execute("UPDATE terms SET term_name = :termName WHERE term_id = :termId", termId = term.id, termName = term.name)            
             if not cursor.rowcount:
                 raise oracledb.Error
             
@@ -297,7 +297,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(competency, Competency)):
                 raise ValueError
-            cursor.execute("CALL update_competency(:competencyId, :competency, :competency_achievement)", competencyId = competency.id, competency = competency.name, competency_achievement = competency.achievement, competency_type = competency.type)            
+            cursor.execute("UPDATE COMPETENCIES SET competency = :competencyName, competency_achievement = :competencyAchievement, competency_type = :competencyType WHERE competency_id = :competencyId", competencyId = competency.id, competencyName = competency.name, competencyAchievement = competency.achievement, competencyType = competency.type)            
             if not cursor.rowcount:
                 raise oracledb.Error
     
@@ -367,6 +367,16 @@ class Database:
             cursor.execute("INSERT INTO ELEMENTS (element_id, element_order, element, element_criteria, competency_id) VALUES (:elementId, :elementOrder, :elementName, :elementCriteria, :competencyId)", elementId = element.id, elementOrder = element.order, elementName = element.name, elementCriteria = element.criteria, competencyId = element.competencyId )            
             if not cursor.rowcount:
                 raise oracledb.Error
+       
+    def update_element(self, element): 
+        '''Update a element for the given Competency object'''
+        with self.__get_cursor() as cursor:
+            if (not isinstance(element, Element)):
+                raise ValueError
+            cursor.execute("UPDATE elements SET element_order = :elementOrder, element = :elementName, element_criteria = :elementCriteria, competency_Id = :competencyId WHERE element_id  = :elementId", elementId = element.id, elementOrder = element.order, elementName = element.name, elementCriteria = element.criteria,  competencyId = element.competencyId)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+ 
             
     def delete_element(self, element): 
             '''Delete a element for the given Element object'''
