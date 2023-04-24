@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}
+    Change Avatar
+{% endblock %}
+{% block headerTitle %}
+    Change your profile picture
+{% endblock %}
+{% block script %}
+{% endblock %}
+{% block sectionContent%}
+    <form method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        {{ form.avatar.label}} {{form.avatar() }}
+        <input type="submit" />
+    </form>
+{% endblock%}

@@ -29,16 +29,13 @@
                 <p>Homework hours: {{course.work_hours | safe}}</p>
                 {% for domain in domains %}
                     {% if domain.id==course.domainId %}
-                        <p>Domain: <a href="{{url_for('domains.get_specific_domain',domain_id=domain.id)}}">{{domain.name | safe}}</a></p>
+                        <p>Domain: <a href="{{url_for('courses.get_specific_domain',domain_id=domain.id,course_id=course.id)}}">{{domain.name | safe}}</a></p>
                     {% endif %}
                 {% endfor %}
+                <p>Total hours: {{(course.lab_hours+course.theory_hours)*15}}</p>
+                <p>Credits: {{(course.lab_hours+course.theory_hours+course.work_hours)/3}}</p>
             </li>
             <hr>
         {% endfor %}
-        <a href="{{url_for('add.add_course')}}"><button>Add a new course</button></a>
-        <a href="{{url_for('add.add_competency')}}"><button>Add a new competency</button></a>
-        <a href="{{url_for('add.add_domain')}}"><button>Add a new domain</button></a>
-        <a href="{{url_for('add.add_element_competency')}}"><button>Add a new element of competency</button></a>
-        <a href="{{url_for('add.add_term')}}"><button>Add a new term</button></a>
     </ul>
 {% endblock%}
