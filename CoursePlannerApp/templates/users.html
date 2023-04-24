@@ -11,7 +11,7 @@
 
 {% block sectionContent%}
     <main id="header" class="container-fluid">
-        <h1>Users</h1>
+        <h1>{% if groups == [] %} Members {% else %} Users {% endif %}</h1>
     </main>
 
     <div>
@@ -19,7 +19,7 @@
             <tbody>
                 {% for user in users %}
                     <tr>
-                        <td>{{ user.name }}</td>
+                        <td>{% if user.group != None %} <kbd>{{ user.group.name }}</kbd>{% endif %} - {{ user.name }}</td>
                         {% if manages %}
                             <td class="buttons">
                                 <button class="orange">Edit</button>

@@ -14,6 +14,16 @@
                     <li> <a href="{{url_for('auth.signup')}}">Sign Up</a> </li>
                     <li> <a href="{{url_for('auth.login')}}">Login</a> </li>
                 {% endif %}
+
+                {% if manages %}
+                    <li><a href="{{url_for('groups.index')}}">Groups</a></li>
+                {% endif %}
+
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{url_for('users.index')}}">Users</a></li>
+                {% endif %}
+
+
                 <li> <a href="{{url_for('add.index')}}">Add</a> </li>
                 {% if current_user.is_authenticated %}
                     <li><a href="{{url_for('auth.logout')}}">Logout</a></li>
