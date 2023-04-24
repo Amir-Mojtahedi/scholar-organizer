@@ -50,7 +50,7 @@ def create_term():
 
 #Delete
 @bp.route("/<term_id>/delete/", methods=["GET"])
-#@login_required
+@login_required
 def delete(term_id):
     
     try:

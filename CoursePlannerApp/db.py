@@ -327,6 +327,14 @@ class Database:
                 newListElement.append(newElement)
             return newListElement
         
+    def get_specific_element(self, elementId):
+        '''Returns a specific domain'''
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("SELECT element_id, element_order, element, element_criteria, competency_id FROM ELEMENTS WHERE element_id = :elementId",elementId=elementId)
+            for result in results:
+                foundElement = Element(id = result[0], order = result[1], name= result[2], criteria= result[3], competencyId= result[4])
+            return foundElement
+                
     def get_elements_covered_by_a_course(self,courseId):
         '''Returns all the Elements covered by a specific course'''
         with self.__get_cursor() as cursor:
@@ -360,13 +368,13 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
             
-    def delete_element(self, element_id): 
+    def delete_element(self, element): 
             '''Delete a element for the given Element object'''
             with self.__get_cursor() as cursor:
-                if not isinstance(element_id, int):
-                    raise ValueError("Should be an int")
+                if not isinstance(element, Element):
+                    raise ValueError("Should be an Element obj")                
                     
-                cursor.execute("DELETE FROM elements WHERE element_id = :elementId", elementId = element_id)            
+                cursor.execute("DELETE FROM elements WHERE element_id = :elementId", elementId = element.id)            
                 if not cursor.rowcount:
                     raise oracledb.Error
                 

@@ -60,11 +60,12 @@ def create_element():
 @login_required
 def delete(element_id):
 
-    # try to delete element
     try:
-        dtb.delete_element(element_id) 
+        element = dtb.get_specific_element(element_id)        
+        # try to delete element
+        dtb.delete_element(element)
         flash("Element deleted successfully")
     except Exception as e:
         flash("Error: " + str(e))
-
+    
     return redirect(url_for('elements.get_elements'))

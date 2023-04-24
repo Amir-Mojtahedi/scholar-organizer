@@ -60,7 +60,7 @@ def create_competency():
     return render_template('Add/addCompetency.html', form=form)
 
 #Delete
-@bp.route("/<competency_id>/delete/", methods=["GET"])
+@bp.route("/<int:competency_id>/delete/", methods=["GET"])
 @login_required
 def delete(competency_id):
     
