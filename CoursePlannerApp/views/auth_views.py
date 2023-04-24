@@ -85,6 +85,7 @@ def change_password(email):
                     if check_password_hash(user.password, form.old_password.data):
                         _hash = generate_password_hash(form.new_password.data)
                         user.password=_hash
+                        dtb.update_user(user)
                         flash("Password was changed successfuly")
                     else:
                         flash("Incorrect password")

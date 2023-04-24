@@ -12,6 +12,7 @@
         <h2>Change your profile picture</h2>
         {{ form.csrf_token }}
         {{ form.avatar.label}} {{form.avatar() }}
+        <br>
         <input type="submit" />
     </form>
     <a href="{{url_for('auth.change_password',email=current_user.email)}}"><button>Change your password</button></a> 
