@@ -10,19 +10,26 @@ bp = Blueprint("users", __name__, url_prefix="/users/")
 dtb = LocalProxy(get_db)
 
 
-@bp.route("/", methods=["GET", "POST"])
+@bp.route("/")
 @login_required
 def index():
     # get user
     user = current_user
     manages = user.group_id == 1 or user.group_id == 2  # admin_user_gp or admin_gp (respectively)
 
-    # get all groups
+    # get all users
     try:
         users = dtb.get_users()
     except oracledb.Error:
         flash("There was an error retrieving the users from the database")
         users = []
 
+    # get all groups
+    try:
+        groups = dtb.get_groups()
+    except oracledb.Error:
+        flash("There was an error retrieving the groups from the database")
+        groups = []
+
     if request.method == "GET":
-        return render_template("users.html", manages=manages, users=users)
+        return render_template("users.html", manages=manages, groups=groups, users=users)
