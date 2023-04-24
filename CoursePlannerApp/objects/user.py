@@ -36,3 +36,7 @@ class LoginForm(FlaskForm):
     email = EmailField("email", validators=[DataRequired()])
     password = PasswordField("password", validators=[DataRequired()])
     remember_me = BooleanField("remember me")
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField("Enter your old password: ", validators=[DataRequired()])
+    new_password = PasswordField("Enter your new password: ", validators=[DataRequired()])
