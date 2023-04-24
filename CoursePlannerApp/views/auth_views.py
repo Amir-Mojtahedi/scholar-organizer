@@ -105,7 +105,7 @@ def change_password(email):
                         flash("Incorrect password")
                 except oracledb.Error as e:
                     flash("Error: " + str(e))
-                    return redirect("profile.html")  
+                    return redirect("change_password.html")  
         else:
             flash("Form isn't valid")
     return render_template("change_password.html", form=form)
