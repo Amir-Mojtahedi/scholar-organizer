@@ -1,3 +1,4 @@
+import shutil
 import oracledb
 import os
 from flask import Blueprint, redirect, render_template, request, url_for, flash, send_from_directory, current_app
@@ -16,7 +17,6 @@ dtb = LocalProxy(get_db)
 @bp.route("/signup/", methods=["GET", "POST"])
 def signup():
     form = SignupForm()
-
     if request.method == "POST":
         if form.validate_on_submit():
             try:
@@ -29,11 +29,25 @@ def signup():
                 flash("User with this email already exists")
             else:
                 file = form.avatar.data
-                avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], form.email.data)
-                avatar_path = os.path.join(avatar_dir, 'avatar.png')
-                if not os.path.exists(avatar_dir):
-                    os.makedirs(avatar_dir)
-                file.save(avatar_path)
+                if file:
+                    avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], form.email.data)
+                    avatar_path = os.path.join(avatar_dir, 'avatar.png')
+                    if not os.path.exists(avatar_dir):
+                        os.makedirs(avatar_dir)
+                    file.save(avatar_path)
+                else:
+                    # If no file for the profile picture is provided by the user, the default path will
+                    # be set to a profile icon which is saved in images directory(not the one in instance).
+                    # os.getcwd() gets the current working directory which in our case is the root of the repository
+                    default_avatar_path=os.path.join(os.getcwd(),'CoursePlannerApp\\images\\avatar.png')
+                    avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], form.email.data)
+                    avatar_path = os.path.join(avatar_dir,'avatar.png')
+                    if not os.path.exists(avatar_dir):
+                        os.makedirs(avatar_dir)
+                    # shutil.copy() is like save() but the big difference is that it does not need a file, however, it retrieves the file that the path is pointing to e.g. avatar.png.
+                    # Using it, we retrieve the default profile picture and set it to avatar_path which will allow show_avatar()
+                    # to successfuly retrieve the right image which in this case is the default one.
+                    shutil.copy(default_avatar_path, avatar_path)
                 _hash = generate_password_hash(form.password.data)
                 user = User(form.email.data, form.name.data, _hash)
                 dtb.add_user(user)
@@ -112,4 +126,3 @@ def change_avatar(email):
 def show_avatar(email):
     path = os.path.join(current_app.config['IMAGE_PATH'], email)
     return send_from_directory(path, 'avatar.png')
-
