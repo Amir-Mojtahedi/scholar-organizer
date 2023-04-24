@@ -262,7 +262,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(competency, Competency)):
                 raise ValueError
-            cursor.execute("UPDATE competencies SET competency_id  = :competencyId, competency = :competency, competency_achievement = :competency_achievement, competency_type = :competencyType)", competencyId = competency.id, competency = competency.name, competency_achievement = competency.achievement, competency_type = competency.type)            
+            cursor.execute("UPDATE COMPETENCIES SET competency = :competencyName, competency_achievement = :competencyAchievement, competency_type = :competencyType WHERE competency_id = :competencyId", competencyId = competency.id, competencyName = competency.name, competencyAchievement = competency.achievement, competencyType = competency.type)            
             if not cursor.rowcount:
                 raise oracledb.Error
     

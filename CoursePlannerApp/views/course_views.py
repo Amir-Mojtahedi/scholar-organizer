@@ -86,7 +86,7 @@ def create_course():
 
 #Update course
 @bp.route('/<course_id>/update/', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def update_course(course_id):
     
     #Cheack if course exist

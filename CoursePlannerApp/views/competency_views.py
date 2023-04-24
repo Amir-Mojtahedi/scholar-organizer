@@ -59,8 +59,33 @@ def create_competency():
             flash('Invalid input')
     return render_template('Add/addCompetency.html', form=form)
 
-# #Update Competency
-# @bp.route('/<int:id>/', methods=['GET', 'POST'])
-# @login_required
-# def update_competency():
+#Update competency
+@bp.route('/<competency_id>/update/', methods=['GET', 'POST'])
+#@login_required
+def update_competency(competency_id):
     
+    #Check if competency exist
+    try:
+        competency = dtb.get_specific_competency(competency_id)
+    except Exception as e:
+        flash("Error: "+ str(e))
+    
+    if competency is None:
+        flash("Competency not found")
+        return redirect(url_for('competencies.get_competencies'))
+    
+    form = CompetencyForm(obj=competency) #Prefill the form
+    
+    if request.method == 'POST':
+        if form.validate_on_submit():
+
+            updatedCompetency = Competency(form.id.data, form.name.data, form.achievement.data, 
+                                       form.type.data)
+            try:
+                dtb.update_competency(updatedCompetency)
+                flash("Competency has been updated")    
+                return redirect(url_for('competencies.get_competencies'))
+            except Exception as e:
+                flash("Error: " + str(e))
+
+    return render_template('Update/updateCompetency.html', form=form, competency=competency)

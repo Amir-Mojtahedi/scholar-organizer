@@ -6,6 +6,7 @@
     {% if competency %}
         <p>Code: {{competency.id | safe}}</p>
         <a href="{{ url_for('competencies.list_elements', competency_id=competency.id) }}">{{competency.name | safe}}</a>
+        <a class='edit' href="{{url_for('competencies.update_competency',  competency_id=competency.id)}}"><img class='icon' src={{url_for('static', filename='media/edit.png')}}></a>
         <p>{{competency.achievement | safe}}</p>
         <p>Type: {{competency.type | safe}}</p>
         <hr>
