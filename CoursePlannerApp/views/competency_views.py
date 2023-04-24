@@ -93,7 +93,6 @@ def update_competency(competency_id):
 @bp.route("/<competency_id>/delete/", methods=["GET"])
 @login_required
 def delete(competency_id):
-    
     try:
         competency = dtb.get_specific_competency(competency_id)        
     except Exception as e:

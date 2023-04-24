@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired
 
 
 class User(UserMixin):
-    def __init__(self, email, name, password=None, id=None, group_id=None):
+    def __init__(self, email, name, password=None, id=None, group_id=0):
         if not isinstance(email, str):
             raise TypeError("E-mail must be a string")
         if not isinstance(password, str):
