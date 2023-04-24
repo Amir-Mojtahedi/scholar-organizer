@@ -61,7 +61,7 @@ def create_competency():
 
 #Update competency
 @bp.route('/<competency_id>/update/', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def update_competency(competency_id):
     
     #Check if competency exist
