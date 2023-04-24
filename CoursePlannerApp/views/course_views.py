@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template, flash, render_template, request, url_for
-from flask_login import login_required
+from flask_login import current_user, login_required
 from werkzeug.local import LocalProxy
 from CoursePlannerApp.dbmanager import get_db
 import oracledb
@@ -27,7 +27,7 @@ def list_competencies(course_id):
     if request.method == 'GET':
         try:
             course = dtb.get_specific_course(course_id)
-            competencies = dtb.get_course_competencies(course_id)
+            competencies = dtb.get_course_competencies(course_id) 
             elements_covered=dtb.get_elements_covered_by_a_course(course_id)
             domains = dtb.get_domains() 
         except Exception as e:
@@ -40,7 +40,7 @@ def list_competencies(course_id):
 def get_specific_domain(course_id,domain_id):
     if request.method == 'GET':
         try:
-            course=dtb.get_specific_course(course_id)
+            course = dtb.get_specific_course(course_id)
             domain = dtb.get_specific_domain(domain_id) 
         except Exception as e:
             flash('There is an issue with the Database')
@@ -83,3 +83,21 @@ def create_course():
                 
     return render_template('Add/addCourse.html', form=form)
 
+#Delete
+@bp.route("/<course_id>/delete/", methods=["GET"])
+@login_required
+def delete(course_id):
+    try:
+        course = dtb.get_specific_course(course_id)
+    except Exception as e:
+        flash("Couldn't access the course")
+        return redirect(url_for(".get_courses"))
+    # try to delete course
+    try:
+        dtb.delete_course(course)
+    except oracledb.Error as e:
+        flash("Error: " + str(e))
+        return redirect(url_for(".get_courses"))
+
+    flash("Course deleted successfully")
+    return redirect(url_for('courses.list_competencies', 'course_id=course.id'))

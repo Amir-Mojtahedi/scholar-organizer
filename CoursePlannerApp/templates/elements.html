@@ -6,6 +6,7 @@
     {% if competency %}
         <p>Code: {{competency.id | safe}}</p>
         <a href="{{ url_for('competencies.list_elements', competency_id=competency.id) }}">{{competency.name | safe}}</a>
+        <a class='delete' onclick="return confirm('Deleting this Competency will also delete his Elements. Continue?')" href="{{url_for('competencies.delete', competency_id=competency.id)}}"><img class='icon' src={{url_for('static', filename='media/delete.png')}}></a> 
         <p>{{competency.achievement | safe}}</p>
         <p>Type: {{competency.type | safe}}</p>
         <hr>
@@ -26,6 +27,9 @@
         {% for element in elements %}
             <li>
                 <p>Title: {{element.name | safe}}</p>
+                <a class='delete' href="{{url_for('elements.delete', element_id=element.id)}}"><img class='icon' src={{url_for('static', filename='media/delete.png')}}></a> 
+                <p>ID: {{element.id | safe}}</p>
+                <p>Order: {{element.order | safe}}</p>
                 <p>{{element.criteria | safe}}</p>
             </li>
             <hr>
