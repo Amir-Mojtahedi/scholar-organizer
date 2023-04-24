@@ -39,6 +39,7 @@
         {% for domain in domains %}
             <li>
                 <p>Name: {{domain.name | safe}}</p>
+                <a class='edit' href="{{url_for('domains.update_domain', domain_id=domain.id)}}"><img class='icon' src={{url_for('static', filename='media/edit.png')}}></a>
                 <a class='delete' href="{{url_for('domains.delete', domain_id=domain.id)}}"><img class='icon' src={{url_for('static', filename='media/delete.png')}}></a> 
                 <p>{{domain.description | safe}}</p>
             </li>
