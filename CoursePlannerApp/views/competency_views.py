@@ -89,3 +89,23 @@ def update_competency(competency_id):
                 flash("Error: " + str(e))
 
     return render_template('Update/updateCompetency.html', form=form, competency=competency)
+#Delete
+@bp.route("/<int:competency_id>/delete/", methods=["GET"])
+@login_required
+def delete(competency_id):
+    
+    try:
+        competency = dtb.get_specific_competency(competency_id)        
+    except Exception as e:
+        flash("Could not acces the competency")
+        return redirect(url_for('competency.list_elements', 'competency_id=competency.id'))
+    
+    # try to delete competency
+    try:
+        dtb.delete_competency(competency)
+    except oracledb.Error as e:
+        flash("Error: " + str(e))
+        return redirect(url_for('competency.list_elements', 'competency_id=competency.id'))
+
+    flash("Competency deleted successfully")
+    return redirect(url_for('competencies.get_competencies'))

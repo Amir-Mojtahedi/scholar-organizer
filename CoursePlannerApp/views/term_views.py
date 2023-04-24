@@ -48,5 +48,30 @@ def create_term():
             flash('Invalid input')
     return render_template('Add/addTerm.html', form=form)
 
+#Delete
+@bp.route("/<term_id>/delete/", methods=["GET"])
+@login_required
+def delete(term_id):
+    
+    try:
+        term = dtb.get_specific_term(term_id)  
+        courseImpacted = dtb.get_courses_in_term(term_id)      
+    except Exception as e:
+        flash("Could not acces the term")
+        
+           
+    # try to delete term
+    try:
+        dtb.delete_term(term) 
+        flash("Term deleted successfully")
+    except oracledb.Error as e:
+        flash("You can't delete this term until you delete the following courses or change their domains")
+        courseImpactedString = ""
+        for course in courseImpacted:
+            courseImpactedString = f'-- {course.name} --'+ courseImpactedString
+        flash(courseImpactedString)
+    except Exception as e:
+        flash("Error: " + str(e))
+        return redirect(url_for("terms.get_terms"))
 
-
+    return redirect(url_for("terms.get_terms"))

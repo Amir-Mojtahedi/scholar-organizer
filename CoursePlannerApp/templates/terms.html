@@ -11,7 +11,11 @@
     <h1>Terms:</h1>
     <ul class="termList">
         {% for term in banner %}
-        <li class="termItem"> <a href={{url_for('terms.get_terms')}}> {{term | safe}} </a>   </li>
+        <li class="termItem"> 
+            <a href={{url_for('terms.get_terms')}}> {{term | safe}} </a>   
+            <a class='delete' href="{{url_for('terms.delete', term_id=term.id)}}"><img class='icon' src={{url_for('static', filename='media/delete.png')}}></a>
+            <hr>
+        </li>
         {% endfor %}
     </ul>
     <button type="button" id="addTerm" name="addTerm"> <a href={{url_for('terms.create_term')}}> Add </a> </button>

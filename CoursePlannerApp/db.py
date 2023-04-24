@@ -112,7 +112,14 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(course, Course)):
                 raise ValueError
-            cursor.execute("DECLARE ce_exists NUMBER;   BEGIN SELECT COUNT(*) INTO ce_exists FROM courses_elements WHERE course_id = :courseId; IF ce_exists !=0 THEN DELETE FROM courses_elements WHERE course_id = vcourse_id; END IF; DELETE FROM courses WHERE course_id = vcourse_id; END;",  courseId = course.id)            
+            
+            #Check if course exists in course_element table
+            results = cursor.execute("SELECT * FROM COURSES_ELEMENTS where course_id = :courseId", courseId = course.id)
+            nCourse = [result for result in results if result[0] == course.id]
+            if nCourse is not []:
+                cursor.execute("DELETE FROM courses_elements WHERE course_id = :courseId", courseId = course.id)
+            
+            cursor.execute("DELETE FROM courses WHERE course_id = :courseId",  courseId = course.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
     
@@ -130,12 +137,22 @@ class Database:
     def get_specific_domain(self,domainId):
         '''Returns a specific domain'''
         with self.__get_cursor() as cursor:
-            domain=[]
             results = cursor.execute("SELECT domain_id, domain, domain_description FROM DOMAINS WHERE domain_id = :domainId",domainId=domainId)
             for result in results:
                 foundDomain = Domain(id = result[0], name = result[1], description= result[2])
-                domain.append(foundDomain)
-            return domain
+            return foundDomain
+    
+    def get_courses_in_domain(self,domainId):
+        '''Returns a specific domain'''
+        with self.__get_cursor() as cursor:
+            impactedCourse = []
+            results = cursor.execute("SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES WHERE domain_id = :domainId",domainId=domainId)
+            for result in results:
+                newCourse = Course(id = result[0], name = result[1], theory_hours = result[2], lab_hours = result[3], work_hours = result[4], description = result[5], domainId = result[6], termId = result[7])
+                impactedCourse.append(newCourse)
+            return impactedCourse
+
+    
 
     def add_domain(self, domain): 
         '''Add a domain to the DB for the given Domain object'''
@@ -159,7 +176,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
-            cursor.execute("UPDATE domains SET domain = :domainName, domain_description = :domainDescription WHERE domain_id = :domainId;", domainName = domain.name, domainDescription = domain.description, domainId = domain.id)            
+            cursor.execute("UPDATE domains SET domain = :domainName, domain_description = :domainDescription WHERE domain_id = :domainId", domainName = domain.name, domainDescription = domain.description, domainId = domain.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
             
@@ -168,7 +185,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
-            cursor.execute("DELETE FROM domains WHERE domain_id = domainId;", domainId = domain.id)            
+            cursor.execute("DELETE FROM domains WHERE domain_id = :domainId", domainId = domain.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
             
@@ -183,6 +200,23 @@ class Database:
                 newListTerm.append(newTerm)
             return newListTerm
         
+    def get_specific_term(self,termId):
+        '''Returns a specific term'''
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("SELECT term_id, term_name FROM TERMS WHERE term_id=:termId", termId=termId)
+            for result in results:
+                foundTerm = Term(id = result[0], name = result[1])
+            return foundTerm
+    
+    def get_courses_in_term(self,termId):
+            '''Returns a specific domain'''
+            with self.__get_cursor() as cursor:
+                impactedCourse = []
+                results = cursor.execute("SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES WHERE term_id = :termId",termId=termId)
+                for result in results:
+                    newCourse = Course(id = result[0], name = result[1], theory_hours = result[2], lab_hours = result[3], work_hours = result[4], description = result[5], domainId = result[6], termId = result[7])
+                    impactedCourse.append(newCourse)
+                return impactedCourse
             
     def add_term(self, term): 
         '''Add a term to the DB for the given Term object'''
@@ -217,7 +251,8 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(term, Term)):
                 raise ValueError
-            cursor.execute("CALL delete_term(:termId)", termId = term.id)            
+            
+            cursor.execute("DELETE FROM terms WHERE term_id = :termId", termId = term.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
     
@@ -271,7 +306,13 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(competency, Competency)):
                 raise ValueError
-            cursor.execute(" CALL delete_competency(:competencyId)", competencyId = competency.id)            
+            
+            #Delete associated elements
+            cursor.execute("DELETE FROM elements WHERE competency_id = :competencyId", competencyId = competency.id)            
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
+            cursor.execute("DELETE FROM competencies WHERE competency_id = :competencyId", competencyId = competency.id)            
             if not cursor.rowcount:
                 raise oracledb.Error
     
@@ -286,6 +327,14 @@ class Database:
                 newListElement.append(newElement)
             return newListElement
         
+    def get_specific_element(self, elementId):
+        '''Returns a specific domain'''
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("SELECT element_id, element_order, element, element_criteria, competency_id FROM ELEMENTS WHERE element_id = :elementId",elementId=elementId)
+            for result in results:
+                foundElement = Element(id = result[0], order = result[1], name= result[2], criteria= result[3], competencyId= result[4])
+            return foundElement
+                
     def get_elements_covered_by_a_course(self,courseId):
         '''Returns all the Elements covered by a specific course'''
         with self.__get_cursor() as cursor:
@@ -332,11 +381,13 @@ class Database:
     def delete_element(self, element): 
             '''Delete a element for the given Element object'''
             with self.__get_cursor() as cursor:
-                if (not isinstance(element, Element)):
-                    raise ValueError
-                cursor.execute(" CALL delete_element(:elementId)", elementId = element.id)                  
+                if not isinstance(element, Element):
+                    raise ValueError("Should be an Element obj")                
+                    
+                cursor.execute("DELETE FROM elements WHERE element_id = :elementId", elementId = element.id)            
                 if not cursor.rowcount:
                     raise oracledb.Error
+                
             
             
     def close(self):

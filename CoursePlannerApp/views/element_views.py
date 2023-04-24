@@ -55,3 +55,17 @@ def create_element():
             flash('Invalid input')
     return render_template('Add/addElement.html', form=form)
 
+#Delete
+@bp.route("/<int:element_id>/delete/", methods=["GET"])
+@login_required
+def delete(element_id):
+
+    try:
+        element = dtb.get_specific_element(element_id)        
+        # try to delete element
+        dtb.delete_element(element)
+        flash("Element deleted successfully")
+    except Exception as e:
+        flash("Error: " + str(e))
+    
+    return redirect(url_for('elements.get_elements'))
