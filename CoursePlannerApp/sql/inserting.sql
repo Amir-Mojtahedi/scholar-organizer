@@ -1,6 +1,24 @@
 INSERT INTO courseapp_groups(id, name) VALUES(0, 'Members');
 INSERT INTO courseapp_groups(id, name) VALUES(1, 'Admin_user_gp');
 INSERT INTO courseapp_groups(id, name) VALUES(2, 'Admin_gp');
+
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(2, 'Instructor', 'instructor@dawsoncollege.qc.ca', 'pbkdf2:sha256:260000$YPhvHFnzU6CDfaWc$b48c6049b93a7b9e1dc5cfe44c48e589a202fc430cf31694dc85ac2f59d36493');
+
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(0, 'Testsubject1', 'testsubject1@dreamys.studio', 'pbkdf2:sha256:260000$gE0TgFCJYqgWLb6q$045358176cae301735a79f77fe92ef8452d2e74b0bb87fc6e5c65b15acbf4500');
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(0, 'Testsubject2', 'testsubject2@dreamys.studio', 'pbkdf2:sha256:260000$UjIFjAgiylZqgnBl$f1ab1aa9347bb891b92a261bfd453369f9dd11cd062dd8c78c16cc871797a470');
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(0, 'Testsubject3', 'testsubject3@dreamys.studio', 'pbkdf2:sha256:260000$8R5a5NvPNhN7mSmD$449e1d35c29f1a05ebce29f04e605a57d8e9210fff50e9bafee334d2bfb3b12a');
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(0, 'Testsubject4', 'testsubject4@dreamys.studio', 'pbkdf2:sha256:260000$sZuzzMAdEG57X69z$a56118142dde43229c512302d649a1e48365c050ef5806880be7ce72bbaf3ce6');
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(0, 'Testsubject5', 'testsubject5@dreamys.studio', 'pbkdf2:sha256:260000$0w6s1rOL2rygaUob$f36b97267020621a31b97ebf960c3075c06b3e2526d0dbd93509279d85fe27c1');
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(0, 'Testsubject6', 'testsubject6@dreamys.studio', 'pbkdf2:sha256:260000$5JEb7zGhgLBiafdv$7815f1eefb927b592f4393723c3d791f3a0b92942ad546b0a0417088b9c12307');
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(0, 'Testsubject7', 'testsubject7@dreamys.studio', 'pbkdf2:sha256:260000$1wAvP3j8bIzmBnhr$b30e6c83fea93235f28b92128f45514d8416cc5239fb4dfa65c9c883a48f1587');
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(0, 'Testsubject8', 'testsubject8@dreamys.studio', 'pbkdf2:sha256:260000$vWn637yq2Hde3K7G$e5db664b18353f2f250af1cfefc862a8aa9172e05fdca58a37744fc85024df38');
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(0, 'Testsubject9', 'testsubject9@dreamys.studio', 'pbkdf2:sha256:260000$5EH6z9QkyDhsBuvk$a59a0cfca9dafa00c78692c230661c48ee6d027a6f5013de4c9174d1f5797f10');
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(0, 'Testsubject10', 'testsubject10@dreamys.studio', 'pbkdf2:sha256:260000$1XrgRvjVSg6vQOu8$5e90e43749512734ef942bda6815047ae0e1d109900d664e4e6ac3d00bab2fa7');
+
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(1, 'Useradmin1', 'useradmin1@dreamys.studio', 'pbkdf2:sha256:260000$UGbCIjnQJ2OxZu1z$8fde08157d7400c5feef78f4017a5af64b12ab5cd3663ba0be854f85572293df');
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(1, 'Useradmin2', 'useradmin2@dreamys.studio', 'pbkdf2:sha256:260000$CmvIHgRrOCe1r084$b1894de6186ad4b290e11b0e005aa7be70071043c93f1212f1a4f86f34eb73de');
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(2, 'Admin1', 'admin1@dreamys.studio', 'pbkdf2:sha256:260000$D4ow6S4UUcLCHgpu$8fb6ea4e86eb54fff721929ea7cd86dc0062832f99f120ea0cb193d7953a285c');
+INSERT INTO COURSEAPP_USERS(group_id, name, email, password) VALUES(2, 'Admin2', 'admin2@dreamys.studio', 'pbkdf2:sha256:260000$Q4UOkp2EQgWlYxOX$b66d2942edbe7d66c6810969445236647b5cd73b74609665e04997f21c695a7b');
 --Sample Data
 --base course
 --PROGRAMMING I----------------------------------------------------------------------------------------------------------------------
