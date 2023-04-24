@@ -19,7 +19,7 @@
             {% for group in groups %}
             <tr>
                 <td><a href="#" class="outline">{{ group.name }}</a></td>
-                {% if manages %}
+                {% if manages and group.id not in [1, 2] %}
                 <td class="buttons">
                     <button class="orange" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Edit</button>
                     <button class="red" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Delete</button>
