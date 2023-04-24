@@ -90,7 +90,7 @@ def update_competency(competency_id):
 
     return render_template('Update/updateCompetency.html', form=form, competency=competency)
 #Delete
-@bp.route("/<int:competency_id>/delete/", methods=["GET"])
+@bp.route("/<competency_id>/delete/", methods=["GET"])
 @login_required
 def delete(competency_id):
     
