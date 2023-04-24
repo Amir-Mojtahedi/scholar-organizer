@@ -96,8 +96,9 @@ a {
 	list-style-type: disc;
 }
 
+/* Delete/Edit Btn */
 .icon{
-	display: block;
-	width: 5vh;
+	display: inline-flex;
+	width: 15vh;
 	margin-left: 10px;
 }

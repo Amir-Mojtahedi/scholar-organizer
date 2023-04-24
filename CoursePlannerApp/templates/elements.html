@@ -28,8 +28,10 @@
         {% for element in elements %}
             <li>
                 <p>Title: {{element.name | safe}}</p>
-                <a class='edit' href="{{url_for('elements.update_element',  element_id=element.id)}}"><img class='icon' src={{url_for('static', filename='media/edit.png')}}></a>
-                <a class='delete' href="{{url_for('elements.delete', element_id=element.id)}}"><img class='icon' src={{url_for('static', filename='media/delete.png')}}></a> 
+                <div class='icon'>
+                    <a class='edit' href="{{url_for('elements.update_element',  element_id=element.id)}}"><img src={{url_for('static', filename='media/edit.png')}}></a>
+                    <a class='delete' href="{{url_for('elements.delete', element_id=element.id)}}"><img src={{url_for('static', filename='media/delete.png')}}></a> 
+                </div>
                 <p>ID: {{element.id | safe}}</p>
                 <p>Order: {{element.order | safe}}</p>
                 <p>{{element.criteria | safe}}</p>
