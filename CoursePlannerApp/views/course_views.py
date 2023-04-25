@@ -36,17 +36,7 @@ def list_competencies(course_id):
             flash('There is no competency in the database')            
     return render_template('course.html', competencies = competencies, course = course, domains = domains, elements_covered = elements_covered)
 
-@bp.route("/<course_id>/<int:domain_id>/")
-def get_specific_domain(course_id,domain_id):
-    if request.method == 'GET':
-        try:
-            course = dtb.get_specific_course(course_id)
-            domain = dtb.get_specific_domain(domain_id) 
-        except Exception as e:
-            flash('There is an issue with the Database')
-        if not domain:
-            flash('There is no course in database')            
-        return render_template('domains.html',domains=domain,course=course)
+
 
 #Add course
 @bp.route('/new/', methods=['GET', 'POST'])

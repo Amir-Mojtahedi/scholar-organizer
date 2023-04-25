@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}
+    Domain 
+{% endblock %}
+{% block headerTitle %}
+{% endblock %}
+{% block script %}
+{% endblock %}
+{% block sectionContent%}
+    {% for domain in domains %}
+        <p>Name: {{domain.name | safe}}</p>
+        <div class='icon'>
+            <a class='edit' href="{{url_for('domains.update_domain', domain_id=domain.id)}}"><img src={{url_for('static', filename='media/edit.png')}}></a>
+            <a class='delete' href="{{url_for('domains.delete', domain_id=domain.id)}}"><img src={{url_for('static', filename='media/delete.png')}}></a> 
+        </div>
+        <p>{{domain.description | safe}}</p>
+        <hr>
+    {% endfor %}
+{% endblock%}
