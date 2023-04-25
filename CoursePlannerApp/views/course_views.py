@@ -10,7 +10,7 @@ bp = Blueprint('courses', __name__, url_prefix='/courses')
 dtb = LocalProxy(get_db)
 
 #Get * Courses 
-@bp.route("/")
+@bp.route('/')
 def get_courses():
     if request.method == 'GET':
         try:
@@ -20,7 +20,7 @@ def get_courses():
             flash('There is an issue with the Database')
         if not courses or len(courses) == 0:
             flash('There is no course in database')            
-        return render_template('home.html', courses = courses, domains=domains)
+        return render_template('courses.html', courses = courses, domains=domains)
     
 @bp.route("/<course_id>/", methods=['GET', 'POST'])
 def list_competencies(course_id):
@@ -60,6 +60,7 @@ def create_course():
     #Fill domain drop list
     form.domainId.choices = sorted([(domain.id, str(domain.id)+" - "+domain.name) for domain in dtb.get_domains()]) #Getting data for Select field for domainId  (Circular import error)
     form.domainId.choices.insert(0, [0, "Choose a domain"])
+    form.domainId.choices.append([])
     
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -68,6 +69,9 @@ def create_course():
                                form.termId.data, form.domainId.data, 
                                form.lab_hours.data, form.theory_hours.data, 
                                form.work_hours.data)
+            
+            
+            
             try:
                 dtb.add_course(newCourse)
                 flash("Course has been added")    
@@ -80,7 +84,7 @@ def create_course():
         
             except Exception as e:
                 flash("Error: " + str(e))
-                
+        
     return render_template('Add/addCourse.html', form=form)
 
 

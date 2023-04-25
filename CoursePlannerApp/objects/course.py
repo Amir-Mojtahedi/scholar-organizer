@@ -24,13 +24,13 @@ class Course:
         self.description = description
         # if termId.isdigit(): 
         #     termId = int(termId) 
-        # if not isinstance(termId, int): #Term validation 
-        #     raise TypeError("Enter a valid/existing Term ID. Try again.")
+        if not isinstance(termId, int): #Term validation 
+            raise TypeError("Enter a valid/existing Term ID. Try again.")
         self.termId = termId
         # if domainId.isdigit(): 
         #     domainId = int(domainId) 
-        # if not isinstance(domainId, int): #Domain validation
-        #     raise TypeError("Enter a valid/existing Domain ID. Try again.")
+        if not isinstance(domainId, int): #Domain validation
+            raise TypeError("Enter a valid/existing Domain ID. Try again.")
         self.domainId = domainId
        
     def __repr__(self):

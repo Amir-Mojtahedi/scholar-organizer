@@ -7,5 +7,5 @@ bp = Blueprint('display', __name__, url_prefix='/display')
 #HOMEPAGE
 @bp.route("/")
 def display():
-    return render_template('display.html')
+    return redirect(url_for('courses.get_courses'))
 

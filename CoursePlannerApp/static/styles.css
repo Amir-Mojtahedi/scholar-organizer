@@ -38,7 +38,6 @@ ul {
 /*}*/
 section ul {
 	padding:0.5%;
-	width:50%;
 }
 a {
     color: #34495e;
@@ -98,7 +97,15 @@ a {
 
 /* Delete/Edit Btn */
 .icon{
-	display: inline-flex;
-	width: 15vh;
+	display: inline-block;
 	margin-left: 10px;
+}
+
+.icon img{
+	width: 3vh
+}
+
+
+.title{
+	display: inline;
 }

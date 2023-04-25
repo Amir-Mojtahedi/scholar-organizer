@@ -38,7 +38,7 @@
     <ul>
         {% for domain in domains %}
             <li>
-                <p>Name: {{domain.name | safe}}</p>
+                <p class="title">Name: {{domain.name | safe}}</p>
                 <div class='icon'>
                     <a class='edit' href="{{url_for('domains.update_domain', domain_id=domain.id)}}"><img src={{url_for('static', filename='media/edit.png')}}></a>
                     <a class='delete' href="{{url_for('domains.delete', domain_id=domain.id)}}"><img src={{url_for('static', filename='media/delete.png')}}></a> 
@@ -49,3 +49,5 @@
         {% endfor %}
     </ul>
 {% endblock%}
+
+ 
