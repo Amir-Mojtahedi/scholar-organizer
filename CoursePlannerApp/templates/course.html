@@ -3,8 +3,6 @@
     Competencies of {{course.name}}, {{course.id}}
 {% endblock %}
 {% block headerTitle %}
-    Competencies of {{course.name}}, {{course.id}}
-    <hr>
     <a href="{{ url_for('courses.list_competencies', course_id=course.id) }}">{{course.name | safe}}</a>
     <div class='icon'>  
         <a class='edit' href="{{url_for('courses.update_course', course_id=course.id)}}"><img src="{{url_for('static', filename='media/edit.png')}}""></a>
@@ -27,6 +25,8 @@
     {% endfor %}
     <p>Total hours: {{(course.lab_hours+course.theory_hours)*15}}</p>
     <p>Credits: {{(course.lab_hours+course.theory_hours+course.work_hours)/3}}</p>
+    <hr>
+    Competencies of {{course.name}}, {{course.id}}
     <hr>
 {% endblock %}
 {% block script %}
