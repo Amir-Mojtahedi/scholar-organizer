@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}
-    Competency List
+    Competencies of {{course.name}}, {{course.id}}
 {% endblock %}
 {% block headerTitle %}
+    Competencies of {{course.name}}, {{course.id}}
     <a href="{{ url_for('courses.list_competencies', course_id=course.id) }}">{{course.name | safe}}</a>
     <div class='icon'>  
         <a class='edit' href="{{url_for('courses.update_course', course_id=course.id)}}"><img src={{url_for('static', filename='media/edit.png')}}></a>
@@ -30,7 +31,6 @@
 {% block script %}
 {% endblock %}
 {% block sectionContent%}
-    <h1>Competencies of {{course.name}}, {{course.id}}</h1>
     <ul>
         {% for competency in competencies %}
             <li>

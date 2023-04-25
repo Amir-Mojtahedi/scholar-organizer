@@ -32,7 +32,7 @@ def list_elements(competency_id):
             flash('There is an issue with the Database')
         if not elements or len(elements) == 0:
             flash('There is no competency in the database')            
-    return render_template('elements.html', elements = elements,competency=competency)
+    return render_template('competency.html', elements = elements,competency=competency)
 
 #Add Competency
 @bp.route('/new/', methods=['GET', 'POST'])
