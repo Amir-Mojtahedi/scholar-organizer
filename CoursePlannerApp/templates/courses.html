@@ -1,21 +1,41 @@
 {% extends 'base.html' %}
-{% block title %}
-    Course List
-{% endblock %}
-{% block headerTitle %}
-    Course List
-{% endblock %}
-{% block script %}
 
+{% block title %}
+    Course Planner
 {% endblock %}
+
+{% block script %}
+    <script defer type="text/javascript" src="{{ url_for('static', filename='courses.js')}}"></script>
+{% endblock %}
+
+{% block headerTitle %}
+    Courses List
+{% endblock %}
+
 {% block sectionContent%}
-    <h1>Course:</h1>
-    <ul class="courseList">
-        {% for course in banner %}
-        <li class="courseItem"> 
-            <a href="{{ url_for('courses.list_competencies', course_id=course.id) }}"> {{course | safe}} </a>  
-        </li>
+    <ul>
+        {% for course in courses %}
+            <li>
+                <a href="{{ url_for('courses.list_competencies', course_id=course.id) }}">{{course.name | safe}}</a>
+                <p>{{course.description | safe}}</p>
+                {% if course.termId%2==0 %}
+                    <p>Session: Winter</p>
+                    {%else%}
+                        <p>Session: Fall</p>
+                {% endif %}
+                <p>Term: {{course.termId | safe}}</p>
+                <p>Class hours: {{course.theory_hours | safe}}</p>
+                <p>Lab hours: {{course.lab_hours | safe}}</p>
+                <p>Homework hours: {{course.work_hours | safe}}</p>
+                {% for domain in domains %}
+                    {% if domain.id==course.domainId %}
+                        <p>Domain: <a href="{{url_for('courses.get_specific_domain',domain_id=domain.id,course_id=course.id)}}">{{domain.name | safe}}</a></p>
+                    {% endif %}
+                {% endfor %}
+                <p>Total hours: {{(course.lab_hours+course.theory_hours)*15}}</p>
+                <p>Credits: {{(course.lab_hours+course.theory_hours+course.work_hours)/3}}</p>
+            </li>
+            <hr>
         {% endfor %}
     </ul>
-    <button type="button" id="addCourse" name="addCourse"> <a href={{url_for('courses.create_course')}}> Add </a> </button>
 {% endblock%}
