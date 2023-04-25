@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}
+    Element List
+{% endblock %}
+{% block headerTitle %}
+    {% if competency %}
+        <p>Code: {{competency.id | safe}}</p>
+        <a href="{{ url_for('competencies.list_elements', competency_id=competency.id) }}">{{competency.name | safe}}</a>
+        <div class='icon'>
+        <a class='edit' href="{{url_for('competencies.update_competency',  competency_id=competency.id)}}"><img class='icon' src="{{url_for('static', filename='media/edit.png')}}"></a>
+        <a class='delete' onclick="return confirm('Deleting this Competency will also delete his Elements. Continue?')" href="{{url_for('competencies.delete', competency_id=competency.id)}}"><img class='icon' src="{{url_for('static', filename='media/delete.png')}}"></a> 
+        </div>
+        <p>{{competency.achievement | safe}}</p>
+        <p>Type: {{competency.type | safe}}</p>
+        <hr>
+        </ul>
+    {% endif %}
+{% endblock %}
+{% block script %}
+{% endblock %}
+{% block sectionContent%}
+    <h1>
+        {% if competency%}
+            Elements of {{competency.name}}, {{competency.id}}
+            {% else %}
+                Elements List
+        {% endif %}
+    </h1>
+    <ol>
+        {% for element in elements %}
+            <li>
+                <p>Title: {{element.name | safe}}</p>
+                <div class='icon'>
+                    <a class='edit' href="{{url_for('elements.update_element',  element_id=element.id)}}"><img src="{{url_for('static', filename='media/edit.png')}}"></a>
+                    <a class='delete' href="{{url_for('elements.delete', element_id=element.id)}}"><img src="{{url_for('static', filename='media/delete.png')}}"></a> 
+                </div>
+                <p>ID: {{element.id | safe}}</p>
+                <p>Order: {{element.order | safe}}</p>
+                <p>{{element.criteria | safe}}</p>
+            </li>
+            <hr>
+        {% endfor %}
+    </ol>
+{% endblock%}

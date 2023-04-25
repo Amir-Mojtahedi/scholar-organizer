@@ -3,31 +3,7 @@
     Competency List
 {% endblock %}
 {% block headerTitle %}
-    {% if course %}
-        <a href="{{ url_for('courses.list_competencies', course_id=course.id) }}">{{course.name | safe}}</a>
-        <div class='icon'>  
-            <a class='edit' href="{{url_for('courses.update_course', course_id=course.id)}}"><img src={{url_for('static', filename='media/edit.png')}}></a>
-            <a class='delete' href="{{url_for('courses.delete', course_id=course.id)}}"><img src={{url_for('static', filename='media/delete.png')}}></a> 
-        </div>
-        <p>{{course.description | safe}}</p>
-        {% if course.termId%2==0 %}
-            <p>Session: Winter</p>
-            {%else%}
-                <p>Session: Fall</p>
-        {% endif %}
-        <p>Term: {{course.termId | safe}}</p>
-        <p>Class hours: {{course.theory_hours | safe}}</p>
-        <p>Lab hours: {{course.lab_hours | safe}}</p>
-        <p>Homework hours: {{course.work_hours | safe}}</p>
-        {% for domain in domains %}
-            {% if domain.id==course.domainId %}
-                <p>Domain: <a href="{{url_for('courses.get_specific_domain',domain_id=domain.id,course_id=course.id)}}">{{domain.name | safe}}</a></p>
-            {% endif %}
-        {% endfor %}
-        <p>Total hours: {{(course.lab_hours+course.theory_hours)*15}}</p>
-        <p>Credits: {{(course.lab_hours+course.theory_hours+course.work_hours)/3}}</p>
-        <hr>
-    {% endif %}
+    Competencies List
 {% endblock %}
 {% block script %}
 {% endblock %}
