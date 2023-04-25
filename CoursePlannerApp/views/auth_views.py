@@ -49,7 +49,7 @@ def signup():
                     # to successfuly retrieve the right image which in this case is the default one.
                     shutil.copy(default_avatar_path, avatar_path)
                 _hash = generate_password_hash(form.password.data)
-                user = User(form.email.data, form.name.data, _hash)
+                user = User(form.name.data, form.email.data, _hash)
                 dtb.add_user(user)
         else:
             flash("Form is not valid")

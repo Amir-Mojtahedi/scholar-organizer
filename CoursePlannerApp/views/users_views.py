@@ -35,7 +35,7 @@ def index():
         groups = []
 
     if level == 0 or level == 1:  # members and admin_user_gp can see members
-        group = [g for g in groups if g.id == 0]
+        group = [g for g in groups if g.id == 0][0]
         group.users = [u for u in users if u.group_id == 0]
         return render_template("users.html", manages=level == 1, groups=[group], users=users, form=form)
 
