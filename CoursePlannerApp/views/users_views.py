@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from werkzeug.local import LocalProxy
 
 from CoursePlannerApp.dbmanager import get_db
-from CoursePlannerApp.objects.user import UserForm
+from CoursePlannerApp.objects.user import User, UserForm
 
 bp = Blueprint("users", __name__, url_prefix="/users/")
 
@@ -57,23 +57,22 @@ def delete():
     manages = user.group_id == 1 or user.group_id == 2
 
     if not manages:
-        flash("You don't have permission to edit groups")
+        flash("You don't have permission to edit users")
         return redirect(url_for(".index"))
 
     if form.validate_on_submit():
-        group = Group(form.name.data, form.id.data)
+        user = User(id=form.id.data)
 
-        # try to delete group
+        # try to delete user
         try:
-            dtb.delete_group(group)
+            dtb.delete_user(user)
         except oracledb.Error:
-            flash("There was an error deleting the group from the database")
+            flash("There was an error deleting the user from the database")
             return redirect(url_for(".index"))
 
-        flash("Group deleted successfully")
+        flash("User deleted successfully")
         return redirect(url_for(".index"))
 
     else:
         flash("Invalid form data")
         return redirect(url_for(".index"))
-
