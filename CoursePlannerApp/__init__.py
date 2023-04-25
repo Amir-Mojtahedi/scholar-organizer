@@ -16,6 +16,7 @@ from CoursePlannerApp.views.term_views import bp as term_bp
 from CoursePlannerApp.views.groups_views import bp as groups_bp
 from CoursePlannerApp.views.users_views import bp as users_bp
 
+
 from .dbmanager import close_db, init_db_command, get_db
 
 
