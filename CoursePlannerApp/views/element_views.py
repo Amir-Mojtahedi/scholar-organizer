@@ -11,18 +11,6 @@ bp = Blueprint('elements', __name__, url_prefix='/elements')
 
 dtb = LocalProxy(get_db)
 
-#Get * Elements
-@bp.route("/", methods=['GET', 'POST'])
-def get_elements():
-    if request.method == 'GET':
-        try:
-            elements = dtb.get_elements() 
-        except Exception as e:
-            flash('There is an issue with the Database')
-        if not elements or len(elements) == 0:
-            flash('There are not any elements of competency in the database')            
-    return render_template('elements.html', elements = elements)
-
 #Add Element
 @bp.route('/new/', methods=['GET', 'POST'])
 @login_required

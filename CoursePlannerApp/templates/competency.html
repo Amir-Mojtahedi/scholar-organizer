@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+    Elements of {{competency.name}}
+{% endblock %}
+{% block headerTitle %}
+    <p>Code: {{competency.id | safe}}</p>
+    <a href="{{ url_for('competencies.list_elements', competency_id=competency.id) }}">{{competency.name | safe}}</a>
+    <p>{{competency.achievement | safe}}</p>
+    <p>Type: {{competency.type | safe}}</p>
+    <hr>
+    Elements of {{competency.name}}
+    <hr>
+{% endblock %}
+{% block script %}
+{% endblock %}
+{% block sectionContent%}
+    <ol>
+        {% for element in elements%}
+            {% if element.competencyId==competency.id%}
+                <li>
+                    <p>Title: {{element.name | safe}}</p>
+                    <p>{{element.criteria | safe}}</p>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+{% endblock%}

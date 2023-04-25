@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}
+    Competencies of {{course.name}}, {{course.id}}
+{% endblock %}
+{% block headerTitle %}
+    <a href="{{ url_for('courses.list_competencies', course_id=course.id) }}">{{course.name | safe}}</a>
+    <div class='icon'>  
+        <a class='edit' href="{{url_for('courses.update_course', course_id=course.id)}}"><img src="{{url_for('static', filename='media/edit.png')}}""></a>
+        <a class='delete' href="{{url_for('courses.delete', course_id=course.id)}}"><img src="{{url_for('static', filename='media/delete.png')}}""></a> 
+    </div>
+    <p>{{course.description | safe}}</p>
+    {% if course.termId%2==0 %}
+        <p>Session: Winter</p>
+        {%else%}
+            <p>Session: Fall</p>
+    {% endif %}
+    <p>Term: {{course.termId | safe}}</p>
+    <p>Class hours: {{course.theory_hours | safe}}</p>
+    <p>Lab hours: {{course.lab_hours | safe}}</p>
+    <p>Homework hours: {{course.work_hours | safe}}</p>
+    {% for domain in domains %}
+        {% if domain.id==course.domainId %}
+            <p>Domain: <a href="{{url_for('domains.get_specific_domain',domain_id=domain.id)}}">{{domain.name | safe}}</a></p>
+        {% endif %}
+    {% endfor %}
+    <p>Total hours: {{(course.lab_hours+course.theory_hours)*15}}</p>
+    <p>Credits: {{(course.lab_hours+course.theory_hours+course.work_hours)/3}}</p>
+    <hr>
+    Competencies of {{course.name}}, {{course.id}}
+    <hr>
+{% endblock %}
+{% block script %}
+{% endblock %}
+{% block sectionContent%}
+    <ul>
+        {% for competency in competencies %}
+            <li>
+                <p>Code: {{competency.id | safe}}</p>
+                <a href="{{ url_for('competencies.list_elements', competency_id=competency.id) }}">{{competency.name | safe}}</a>
+                <p>{{competency.achievement | safe}}</p>
+                <p>Type: {{competency.type | safe}}</p>
+            </li>
+            <li>
+                <ol>
+                    {% for element in elements_covered%}
+                        {% if element.competencyId==competency.id%}
+                            <li>
+                                <p>Title: {{element.name | safe}}</p>
+                                <p>{{element.criteria | safe}}</p>
+                            </li>
+                        {% endif %}
+                        
+                    {% endfor %}
+                </ol>
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+    <a href="{{url_for('add.add_course')}}"><button>Add a new competency for this course</button></a>
+{% endblock%}

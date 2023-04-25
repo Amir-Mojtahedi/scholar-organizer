@@ -19,7 +19,7 @@
             <tbody>
                 {% for user in users %}
                     <tr>
-                        <td>{% if user.group != None %} <kbd>{{ user.group.name }}</kbd>{% endif %} - {{ user.name }}</td>
+                        <td>{% if user.group_id != None %} <kbd>{{ user.group.name }}</kbd>{% endif %} - {{ user.name }}</td>
                         {% if manages %}
                             <td class="buttons">
                                 <button class="orange">Edit</button>
