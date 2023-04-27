@@ -18,7 +18,7 @@ def index():
 
     # get user
     user = current_user
-    manages = user.group_id == 1 or user.group_id == 2  # admin_user_gp or admin_gp (respectively)
+    manages = user.group_id == 2  # admin_user_gp or admin_gp (respectively)
 
     # get all groups
     try:
@@ -62,8 +62,7 @@ def edit():
     form = GroupForm()
 
     # get user
-    user = current_user
-    manages = user.group_id == 1 or user.group_id == 2  # admin_user_gp or admin_gp (respectively)
+    manages = current_user.group_id == 1 or current_user.group_id == 2  # admin_user_gp or admin_gp (respectively)
 
     if not manages:
         flash("You don't have permission to edit groups")
