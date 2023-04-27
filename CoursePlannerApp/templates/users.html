@@ -51,7 +51,7 @@
             {{ form.password.label }} {{ form.password() }}
             {{ form.avatar.label }} {{ form.avatar() }}
 
-            <!-- <details role="list">
+            <details role="list" hidden>
                 <summary aria-haspopup="listbox"></summary>
                 <ul role="listbox">
                   {% for group in groups %}
@@ -63,7 +63,7 @@
                     </li>
                   {% endfor %}
                 </ul>
-            </details> -->
+            </details>
 
             <input name="id" type="hidden" value=-1>
             <input name="group_id" type="hidden" value=-1>

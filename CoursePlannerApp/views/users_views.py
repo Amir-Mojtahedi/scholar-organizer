@@ -114,6 +114,37 @@ def add():
     return redirect(url_for(".index"))
 
 
+@bp.route("/edit/", methods=["POST"])
+@login_required
+def edit():
+    form = SignupForm()
+
+    if current_user.group_id == 0:
+        flash("You don't have permission to edit users")
+        return redirect(url_for(".index"))
+
+    if form.group_id.data in [1, 2] and current_user.group_id != 2:
+        flash("You don't have permission to edit users from this group")
+        return redirect(url_for(".index"))
+
+    if form.validate_on_submit():
+        # TODO: AVATAR
+        user = User(form.id.data, form.group_id.data, form.name.data, form.email.data, generate_password_hash(form.password.data))
+
+        # try to edit user
+        try:
+            dtb.update_user(user)
+        except oracledb.Error:
+            flash("There was an error editing the user in the database")
+            return redirect(url_for(".index"))
+
+        flash("User edited successfully")
+        return redirect(url_for(".index"))
+
+    flash("Invalid form data")
+    return redirect(url_for(".index"))
+
+
 @bp.route("/delete/", methods=["POST"])
 @login_required
 def delete():

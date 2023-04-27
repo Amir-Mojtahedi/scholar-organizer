@@ -14,6 +14,13 @@ document.querySelectorAll("button").forEach(button => button.addEventListener("c
     button.setAttribute("aria-busy", "true")
 }))
 
+document.querySelector("details").addEventListener("toggle", () => {
+    if (!form.querySelector("details").open) { //oh, the details just closed!
+        const selected = form.querySelector("details").querySelector("input:checked")
+        form.querySelector("summary").innerText = selected.parentElement.innerText
+    }
+})
+
 //close gently and prep for reopening
 const closeForm = () => {
     container.style.animation = "slideFadeOut 0.5s"
@@ -22,6 +29,9 @@ const closeForm = () => {
         container.style.display = "none"
         container.classList.remove("active")
         container.style.animation = "slideFadeIn 0.5s"
+
+        //hide group selection
+        form.querySelector("details").hidden = true
     }, 500)
 }
 
@@ -38,10 +48,15 @@ const openForm = (actionId, wrapper) => {
         submit.innerText = "Edit User"
         form.querySelector("summary").innerText = groupName
 
+        //show group selection
+        form.querySelector("details").hidden = false
+        // TODO: FIX THIS
+        form.querySelector("details").querySelector("input[value=" + groupId + "]").checked = true
+
         //manually changing form data for simplicity
         form.action = `/users/edit/`
         form.querySelector("input[name=id]").value = userId
-        form.querySelector("input[name=group_id]").value = groupId
+        form.querySelector("input[name=group_id]").value = form.querySelector("details").querySelector("input:checked").value
     }
 
     if (actionId === 2) { //delete

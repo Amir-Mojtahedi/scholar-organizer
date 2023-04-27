@@ -44,6 +44,7 @@ class SignupForm(FlaskForm):
     email = EmailField("Email", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     name = StringField("Name", validators=[DataRequired()])
+    id = IntegerField("id")
     group_id = IntegerField("group_id")
     avatar = FileField('Avatar')
 
