@@ -20,7 +20,7 @@
             <table>
                 <tbody>
                     {% for user in group.users %}
-                        <tr data-user-id="{{ user.id }}" data-user-name="{{ user.name }}" data-group-id="{{ user.group_id }}" data-group-name="{{ group.name }}">
+                        <tr data-user-id="{{ user.id }}" data-user-name="{{ user.name }}" data-user-email="{{ user.email }}" data-group-id="{{ user.group_id }}" data-group-name="{{ group.name }}">
                             <td>{{ user.name }}</td>
                             {% if manages %}
                                 <td class="buttons">

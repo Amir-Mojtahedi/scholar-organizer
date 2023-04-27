@@ -39,6 +39,7 @@ const closeForm = () => {
 const openForm = (actionId, wrapper) => {
     const userId = wrapper.getAttribute("data-user-id")
     const userName = wrapper.getAttribute("data-user-name")
+    const userEmail = wrapper.getAttribute("data-user-email")
     const groupId = wrapper.getAttribute("data-group-id")
     const groupName = wrapper.getAttribute("data-group-name")
 
@@ -54,6 +55,8 @@ const openForm = (actionId, wrapper) => {
 
         //manually changing form data for simplicity
         form.action = `/users/edit/`
+        form.querySelector("input[name=name]").value = userName
+        form.querySelector("input[name=email]").value = userEmail
         form.querySelector("input[name=id]").value = userId
         form.querySelector("input[name=group_id]").value = form.querySelector("details").querySelector("input:checked").value
     }
