@@ -16,26 +16,6 @@
             {% if manages %} <button class="add">Add User</button> {% endif %}
         </main>
 
-<<<<<<< HEAD
-    <div>
-        <table>
-            <tbody>
-                {% for user in users %}
-                    <tr>
-                        <td>{% if user.group_id != None %} <kbd>{{ user.group.name }}</kbd>{% endif %} - {{ user.name }}</td>
-                        {% if manages %}
-                            <td class="buttons">
-                                <button class="orange">Edit</button>
-                                <button class="red">Delete</button>
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% endblock%}
-=======
         <div>
             <table>
                 <tbody>
@@ -91,4 +71,3 @@
         </form>
     </main>
 {% endblock %}
->>>>>>> 345abb60b356de311db7dbe4d85c4dfe40b50a58
