@@ -18,6 +18,7 @@ document.querySelector("details").addEventListener("click", () => {
     if (form.querySelector("details").open) {
         const selected = form.querySelector("details").querySelector("input:checked")
         form.querySelector("summary").innerText = selected.parentElement.innerText
+        form.querySelector("input[name=group_id]").value = form.querySelector("details").querySelector("input:checked").value
     }
 })
 
@@ -65,7 +66,6 @@ const openForm = (actionId, wrapper) => {
         form.querySelector("input[name=name]").value = userName
         form.querySelector("input[name=email]").value = userEmail
         form.querySelector("input[name=id]").value = userId
-        form.querySelector("input[name=group_id]").value = form.querySelector("details").querySelector("input:checked").value
     }
 
     if (actionId === 2) { //delete

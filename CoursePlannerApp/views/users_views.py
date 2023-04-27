@@ -135,7 +135,7 @@ def edit():
             flash("Error: " + str(e))
             return render_template("signup.html", form=form)
 
-        if db_user:
+        if db_user and db_user.id != form.id.data:
             flash("User with this email already exists")
             return redirect(url_for(".index"))
         else:
@@ -170,6 +170,8 @@ def edit():
                 return redirect(url_for(".index"))
         else:
             password = generate_password_hash(form.password.data) 
+
+        current_app.logger.info("Group id: " + str(form.group_id.data))
 
         user = User(form.id.data, form.group_id.data, form.name.data, form.email.data, password)
 
