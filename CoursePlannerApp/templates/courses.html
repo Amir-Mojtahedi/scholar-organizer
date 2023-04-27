@@ -16,7 +16,11 @@
     <ul>
         {% for course in courses %}
             <li>
-                <a href="{{ url_for('courses.list_competencies', course_id=course.id) }}">{{course.name | safe}}</a>
+                <div class='icon'>
+                    <a href="{{ url_for('courses.list_competencies', course_id=course.id) }}">{{course.name | safe}}</a>  
+                    <a class='edit' href="{{url_for('courses.update_course', course_id=course.id)}}"><img src="{{url_for('static', filename='media/edit.png')}}"></a>
+                    <a class='delete' href="{{url_for('courses.delete', course_id=course.id)}}"><img src="{{url_for('static', filename='media/delete.png')}}"></a> 
+                </div>
                 <p>{{course.description | safe}}</p>
                 {% if course.termId%2==0 %}
                     <p>Session: Winter</p>

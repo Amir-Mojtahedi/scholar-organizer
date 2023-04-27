@@ -98,7 +98,36 @@ a {
 
 /* Delete/Edit Btn */
 .icon{
-	display: inline-flex;
-	width: 15vh;
-	margin-left: 10px;
+	display: flex;
+	align-items: center;
+	width:85%;
+}
+.icon .edit,.icon .delete{
+	width:6.7%;
+	margin-left: 2em;
+}
+
+.icon .edit img, .icon .delete img{
+	width:50%;
+}
+
+#course-header{
+	width:74%;
+}
+
+#course-header .title{
+	width:22%;
+}
+
+#course-header #course-title{
+	width:12%;
+}
+
+#course-header img{
+	width:74%;
+	width:30px;
+}
+
+#elements-competency{
+	width:40%;
 }
