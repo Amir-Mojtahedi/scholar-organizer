@@ -54,7 +54,8 @@ CREATE TABLE courseapp_users (
     group_id NUMBER REFERENCES courseapp_groups(id),
     name VARCHAR2(20) NOT NULL,
     email    VARCHAR2(50) NOT NULL,
-    password VARCHAR2(102) NOT NULL
+    password VARCHAR2(102) NOT NULL,
+    blocked NUMBER(1) DEFAULT 0 NOT NULL
 );
 
 --calling creation of sample data
