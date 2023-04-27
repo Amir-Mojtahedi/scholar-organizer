@@ -51,7 +51,12 @@ const openForm = (actionId, wrapper) => {
     const groupId = wrapper.getAttribute("data-group-id")
     const groupName = wrapper.getAttribute("data-group-name")
 
-    submit.innerHTML = "Add User to <mark>" + groupName + "</mark>"
+
+    if (actionId === 0) { //add
+        submit.innerHTML = "Add User to <mark>" + groupName + "</mark>"
+
+        form.querySelector("input[name=group_id]").value = groupId
+    }
 
     if (actionId === 1) { //edit
         submit.innerText = "Edit User"
