@@ -138,6 +138,81 @@ def delete():
         flash("User deleted successfully")
         return redirect(url_for(".index"))
 
-    else:
-        flash("Invalid form data")
+    flash("Invalid form data")
+    return redirect(url_for(".index"))
+
+
+@bp.route("/block/", methods=["POST"])
+@login_required
+def block():
+    form = UserForm()
+
+    if current_user.group_id == 0:
+        flash("You don't have permission to block users")
         return redirect(url_for(".index"))
+
+    if form.group_id.data in [1, 2] and current_user.group_id != 2:
+        flash("You don't have permission to block users from this group")
+        return redirect(url_for(".index"))
+
+    if form.validate_on_submit():
+        # try to get user
+        try:
+            user = dtb.get_user(form.id.data)
+        except oracledb.Error:
+            flash("There was an error retrieving the user from the database")
+            return redirect(url_for(".index"))
+
+        # block user
+        user.blocked = True
+
+        # try to update user
+        try:
+            dtb.update_user(user)
+        except oracledb.Error:
+            flash("There was an error updating the user in the database")
+            return redirect(url_for(".index"))
+
+        flash("User blocked successfully")
+        return redirect(url_for(".index"))
+
+    flash("Invalid form data")
+    return redirect(url_for(".index"))
+
+
+@bp.route("/unblock/", methods=["POST"])
+@login_required
+def unblock():
+    form = UserForm()
+
+    if current_user.group_id == 0:
+        flash("You don't have permission to unblock users")
+        return redirect(url_for(".index"))
+
+    if form.group_id.data in [1, 2] and current_user.group_id != 2:
+        flash("You don't have permission to unblock users from this group")
+        return redirect(url_for(".index"))
+
+    if form.validate_on_submit():
+        # try to get user
+        try:
+            user = dtb.get_user(form.id.data)
+        except oracledb.Error:
+            flash("There was an error retrieving the user from the database")
+            return redirect(url_for(".index"))
+
+        # unblock user
+        user.blocked = False
+
+        # try to update user
+        try:
+            dtb.update_user(user)
+        except oracledb.Error:
+            flash("There was an error updating the user in the database")
+            return redirect(url_for(".index"))
+
+        flash("User unblocked successfully")
+        return redirect(url_for(".index"))
+
+    flash("Invalid form data")
+    return redirect(url_for(".index"))

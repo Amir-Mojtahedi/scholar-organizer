@@ -465,12 +465,13 @@ class Database:
         if not isinstance(user, User):
             raise TypeError("You must provide a user object to this function.")
         with self.__get_cursor() as cursor:
-            cursor.execute('update courseapp_users set group_id=:group_id, email=:email, password=:password, name=:name where id=:id',
+            cursor.execute('update courseapp_users set group_id=:group_id, email=:email, password=:password, name=:name, blocked=:blocked where id=:id',
                            group_id = user.group_id,
                            email = user.email,
                            password = user.password,
                            name = user.name,
-                           id = user.id)
+                           id = user.id,
+                           blocked = 1 if user.blocked else 0)
 
     def delete_user(self, user):
         if not isinstance(user, User):
