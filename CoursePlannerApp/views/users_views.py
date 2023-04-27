@@ -1,7 +1,11 @@
+import os
+import shutil
+
 import oracledb
-from flask import Blueprint, redirect, render_template, flash, url_for
+from flask import Blueprint, redirect, render_template, flash, url_for, current_app
 from flask_login import login_required, current_user
 from werkzeug.local import LocalProxy
+from werkzeug.security import generate_password_hash
 
 from CoursePlannerApp.dbmanager import get_db
 from CoursePlannerApp.objects.user import SignupForm, User, UserForm
@@ -45,7 +49,7 @@ def index():
             group.users = [u for u in users if u.group_id == group.id]
 
         return render_template("users.html", manages=True, groups=groups, form=form)
-    
+
 
 @bp.route("/", methods=["POST"])
 @login_required
@@ -61,8 +65,50 @@ def add():
         if form.group_id.data in [1, 2] and current_user.group_id != 2:
             flash("You don't have permission to add users to this group")
             return redirect(url_for(".index"))
-        
-        user = User(name=form.name.data, avatar=form.avatar.data, email=form.email.data, password=form.password.data, group_id=form.group_id.data)
+
+        try:
+            db_user = dtb.get_user_by_email(form.email.data)
+        except oracledb.Error as e:
+            flash("Error: " + str(e))
+            return redirect(url_for(".index"))
+
+        # taken as is from auth_views.py
+        if db_user:
+            flash("User with this email already exists")
+            return redirect(url_for(".index"))
+        else:
+            file = form.avatar.data
+            if file:
+                avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], form.email.data)
+                avatar_path = os.path.join(avatar_dir, 'avatar.png')
+                if not os.path.exists(avatar_dir):
+                    os.makedirs(avatar_dir)
+                file.save(avatar_path)
+            else:
+                # If no file for the profile picture is provided by the user, the default path will
+                # be set to a profile icon which is saved in images directory(not the one in instance).
+                # os.getcwd() gets the current working directory which in our case is the root of the repository
+                default_avatar_path = os.path.join(os.getcwd(), 'CoursePlannerApp', 'images', 'avatar.png')
+                avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], form.email.data)
+                avatar_path = os.path.join(avatar_dir, 'avatar.png')
+                if not os.path.exists(avatar_dir):
+                    os.makedirs(avatar_dir)
+                # shutil.copy() is like save() but the big difference is that it does not need a file, however, it retrieves the file that the path is pointing to e.g. avatar.png.
+                # Using it, we retrieve the default profile picture and set it to avatar_path which will allow show_avatar()
+                # to successfuly retrieve the right image which in this case is the default one.
+                shutil.copy(default_avatar_path, avatar_path)
+            _hash = generate_password_hash(form.password.data)
+            user = User(None, form.group_id.data, form.name.data, form.email.data, _hash)
+
+            # try to add user
+            try:
+                dtb.add_user(user)
+            except oracledb.Error:
+                flash("There was an error adding the user to the database")
+                return redirect(url_for(".index"))
+
+            flash("User added successfully")
+            return redirect(url_for(".index"))
 
     flash("Invalid form data")
     return redirect(url_for(".index"))
@@ -73,20 +119,18 @@ def add():
 def delete():
     form = UserForm()
 
-    # get user
-    user = current_user
-    manages = user.group_id == 1 or user.group_id == 2
+    if current_user.group_id == 0:
+        flash("You don't have permission to delete users")
+        return redirect(url_for(".index"))
 
-    if not manages:
-        flash("You don't have permission to edit users")
+    if form.group_id.data in [1, 2] and current_user.group_id != 2:
+        flash("You don't have permission to delete users from this group")
         return redirect(url_for(".index"))
 
     if form.validate_on_submit():
-        user = User(id=form.id.data)
-
         # try to delete user
         try:
-            dtb.delete_user(user)
+            dtb.delete_user_by_id(form.id.data)
         except oracledb.Error:
             flash("There was an error deleting the user from the database")
             return redirect(url_for(".index"))
