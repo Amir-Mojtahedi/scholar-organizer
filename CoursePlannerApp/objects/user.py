@@ -37,7 +37,7 @@ class User(UserMixin):
 class UserForm(FlaskForm):
     id = IntegerField("id")
     group_id = IntegerField("group_id")
-    name = StringField("Name", validators=[DataRequired(), Length(1, 30)])
+    name = StringField("Name")
 
 
 class SignupForm(FlaskForm):    

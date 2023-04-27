@@ -70,10 +70,13 @@ def login():
                 return render_template("login.html", form=form)
 
             if user:
-                if check_password_hash(user.password, form.password.data):
-                    login_user(user, form.remember_me.data)
+                if user.blocked:
+                    flash("This user is blocked")
                 else:
-                    flash("Incorrect credentials")
+                    if check_password_hash(user.password, form.password.data):
+                        login_user(user, form.remember_me.data)
+                    else:
+                        flash("Incorrect credentials")
             else:
                 flash("No user exists with this email")
         else:

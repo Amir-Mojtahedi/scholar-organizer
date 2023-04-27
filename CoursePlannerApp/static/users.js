@@ -33,6 +33,13 @@ const closeForm = () => {
         //hide group selection
         form.querySelector("details").hidden = true
     }, 500)
+
+    //reset form data
+    form.action = `/users/add/`
+    form.querySelector("input[name=name]").value = ""
+    form.querySelector("input[name=email]").value = ""
+    form.querySelector("input[name=password]").value = ""
+    form.querySelector("input[name=avatar]").value = ""
 }
 
 //reuse this function for 3 different forms

@@ -32,11 +32,6 @@ def create_app(test_config=None):
     login_manager.login_view = "auth.login"
     login_manager.init_app(app)
 
-    @app.before_request
-    def check_blocked():
-        if current_user.is_authenticated and not current_user.is_active:
-            return "Your account has been blocked. Please contact an administrator for more information."
-
     @login_manager.user_loader
     def load_user(user_id):
         return get_db().get_user(int(user_id))

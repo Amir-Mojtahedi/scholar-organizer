@@ -448,10 +448,10 @@ class Database:
         if not isinstance(email, str):
             raise TypeError("Email must be a string")
         with self.__get_cursor() as cursor:
-            results = cursor.execute('select id, group_id, email, password, name from courseapp_users where email=:email', email=email)
+            results = cursor.execute('select id, group_id, email, password, name, blocked from courseapp_users where email=:email', email=email)
             for row in results:
                 user = User(id=row[0], group_id=row[1], email=row[2],
-                    password=row[3], name=row[4])
+                    password=row[3], name=row[4], blocked=row[5] == 1)
                 return user
         return None
 
