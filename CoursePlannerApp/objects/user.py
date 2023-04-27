@@ -48,6 +48,13 @@ class SignupForm(FlaskForm):
     group_id = IntegerField("group_id")
     avatar = FileField('Avatar')
 
+class EditForm(FlaskForm):
+    email = EmailField("Email", validators=[DataRequired()])
+    password = PasswordField("Password")
+    name = StringField("Name", validators=[DataRequired()])
+    id = IntegerField("id")
+    group_id = IntegerField("group_id")
+    avatar = FileField('Avatar')
 
 class LoginForm(FlaskForm):
     email = EmailField("email", validators=[DataRequired()])

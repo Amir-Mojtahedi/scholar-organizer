@@ -8,7 +8,7 @@ from werkzeug.local import LocalProxy
 from werkzeug.security import generate_password_hash
 
 from CoursePlannerApp.dbmanager import get_db
-from CoursePlannerApp.objects.user import SignupForm, User, UserForm
+from CoursePlannerApp.objects.user import EditForm, SignupForm, User, UserForm
 
 bp = Blueprint("users", __name__, url_prefix="/users/")
 
@@ -18,7 +18,7 @@ dtb = LocalProxy(get_db)
 @bp.route("/")
 @login_required
 def index():
-    form = SignupForm()
+    form = EditForm()
 
     # get user
     user = current_user
@@ -54,7 +54,7 @@ def index():
 @bp.route("/", methods=["POST"])
 @login_required
 def add():
-    form = SignupForm()
+    form = EditForm()
 
     # get authorization level
     if form.validate_on_submit():
@@ -117,7 +117,7 @@ def add():
 @bp.route("/edit/", methods=["POST"])
 @login_required
 def edit():
-    form = SignupForm()
+    form = EditForm()
 
     if current_user.group_id == 0:
         flash("You don't have permission to edit users")
@@ -129,7 +129,19 @@ def edit():
 
     if form.validate_on_submit():
         # TODO: AVATAR
-        user = User(form.id.data, form.group_id.data, form.name.data, form.email.data, generate_password_hash(form.password.data))
+
+        # if we keep password as is
+        if not form.password.data:
+            # get password from database
+            try:
+                password = dtb.get_user(form.id.data).password
+            except oracledb.Error:
+                flash("There was an error retrieving the user from the database")
+                return redirect(url_for(".index"))
+        else:
+            password = generate_password_hash(form.password.data) 
+
+        user = User(form.id.data, form.group_id.data, form.name.data, form.email.data, password)
 
         # try to edit user
         try:
