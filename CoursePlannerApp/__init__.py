@@ -1,8 +1,8 @@
 import secrets
 import os
 
-from flask import Flask, render_template, current_app
-from flask_login import LoginManager
+from flask import Flask, render_template, current_app, redirect, url_for, flash
+from flask_login import LoginManager, current_user
 
 from CoursePlannerApp.views.auth_views import bp as auth_bp
 from CoursePlannerApp.views.home_views import bp as home_bp

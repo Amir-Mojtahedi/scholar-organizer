@@ -10,10 +10,13 @@
 {% endblock %}
 
 {% block sectionContent%}
-    <main id="header" class="container-fluid">
-        <h1>{% if groups == [] %} Members {% else %} Users {% endif %}</h1>
-    </main>
+    {% for group in groups %}
+        <main id="header" class="container-fluid" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">
+            <h1>{{ group.name }}</h1>
+            {% if manages %} <button class="add">Add User</button> {% endif %}
+        </main>
 
+<<<<<<< HEAD
     <div>
         <table>
             <tbody>
@@ -32,3 +35,60 @@
         </table>
     </div>
 {% endblock%}
+=======
+        <div>
+            <table>
+                <tbody>
+                    {% for user in group.users %}
+                        <tr data-user-id="{{ user.id }}" data-user-name="{{ user.name }}" data-user-email="{{ user.email }}" data-group-id="{{ user.group_id }}" data-group-name="{{ group.name }}">
+                            <td>{{ user.name }}</td>
+                            {% if manages %}
+                                <td class="buttons">
+                                    {% if user.blocked %}
+                                        <button class="green unblock">Unblock</button>
+                                    {% else %}
+                                        <button class="red block">Block</button>
+                                    {% endif %}
+                                        <button class="orange edit">Edit</button>
+                                    <button class="red delete">Delete</button>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endfor %}
+
+    <!-- popup form -->
+    <main class="container-fluid overlay">
+        <button class="close red">🗙</button>
+        <form method="POST">
+            {{ form.csrf_token }} 
+            {{ form.hidden_tag() }} 
+            {{ form.email.label }} {{ form.email() }}
+            {{ form.name.label }} {{ form.name() }}
+            {{ form.password.label }} {{ form.password() }}
+            {{ form.avatar.label }} {{ form.avatar() }}
+
+            <details role="list" hidden>
+                <summary aria-haspopup="listbox"></summary>
+                <ul role="listbox">
+                  {% for group in groups %}
+                    <li>
+                      <label for="{{ group.name }}">
+                        <input type="radio" id="{{ group.name }}" name="_group" value="{{ group.id }}">
+                        {{ group.name }}
+                      </label>
+                    </li>
+                  {% endfor %}
+                </ul>
+            </details>
+
+            <input name="id" type="hidden" value=-1>
+            <input name="group_id" type="hidden" value=-1>
+            <button type="submit"></button>
+        </form>
+    </main>
+{% endblock %}
+>>>>>>> 345abb60b356de311db7dbe4d85c4dfe40b50a58

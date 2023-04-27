@@ -418,11 +418,11 @@ class Database:
 
     def get_users(self):
         with self.__get_cursor() as cursor:
-            results = cursor.execute('select id, group_id, email, password, name from courseapp_users')
+            results = cursor.execute('select id, group_id, email, password, name, blocked from courseapp_users')
             users = []
             for row in results:
                 user = User(id=row[0], group_id=row[1], email=row[2],
-                    password=row[3], name=row[4])
+                    password=row[3], name=row[4], blocked=row[5] == 1)
                 users.append(user)
             return users
 
@@ -430,19 +430,20 @@ class Database:
         if not isinstance(user, User):
             raise TypeError("You must provide a user object to this function.")
         with self.__get_cursor() as cursor:
-            cursor.execute('insert into courseapp_users (group_id, email, password, name) values (0, :email, :password, :name)',
+            cursor.execute('insert into courseapp_users (group_id, email, password, name) values (:group_id, :email, :password, :name)',
                            email = user.email,
                            password = user.password,
-                           name = user.name)
+                           name = user.name,
+                           group_id = user.group_id)
     
     def get_user(self, id):
         if not isinstance(id, int):
             raise TypeError("Id must be an integer")
         with self.__get_cursor() as cursor:
-            results = cursor.execute('select id, group_id, email, password, name from courseapp_users where id=:id', id=id)
+            results = cursor.execute('select id, group_id, email, password, name, blocked from courseapp_users where id=:id', id=id)
             for row in results:
                 user = User(id=row[0], group_id=row[1], email=row[2],
-                    password=row[3], name=row[4])
+                    password=row[3], name=row[4], blocked=row[5] == 1)
                 return user
         return None
 
@@ -450,23 +451,30 @@ class Database:
         if not isinstance(email, str):
             raise TypeError("Email must be a string")
         with self.__get_cursor() as cursor:
-            results = cursor.execute('select id, group_id, email, password, name from courseapp_users where email=:email', email=email)
+            results = cursor.execute('select id, group_id, email, password, name, blocked from courseapp_users where email=:email', email=email)
             for row in results:
                 user = User(id=row[0], group_id=row[1], email=row[2],
-                    password=row[3], name=row[4])
+                    password=row[3], name=row[4], blocked=row[5] == 1)
                 return user
         return None
+
+    def delete_user_by_id(self, id):
+        if not isinstance(id, int):
+            raise TypeError("Id must be an integer")
+        with self.__get_cursor() as cursor:
+            cursor.execute('delete from courseapp_users where id=:id', id=id)
     
     def update_user(self, user):
         if not isinstance(user, User):
             raise TypeError("You must provide a user object to this function.")
         with self.__get_cursor() as cursor:
-            cursor.execute('update courseapp_users set group_id=:group_id, email=:email, password=:password, name=:name where id=:id',
+            cursor.execute('update courseapp_users set group_id=:group_id, email=:email, password=:password, name=:name, blocked=:blocked where id=:id',
                            group_id = user.group_id,
                            email = user.email,
                            password = user.password,
                            name = user.name,
-                           id = user.id)
+                           id = user.id,
+                           blocked = 1 if user.blocked else 0)
 
     def delete_user(self, user):
         if not isinstance(user, User):
