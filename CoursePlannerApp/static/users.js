@@ -2,6 +2,11 @@ const container = document.querySelector(".container-fluid.overlay")
 const form = container.querySelector("form")
 const submit = form.querySelector("button[type=submit]")
 
+//add
+document.querySelectorAll("button.addgroup").forEach(button => button.addEventListener("click", () => {
+    openForm(0, null, null, button.getAttribute("data-group-id"), button.getAttribute("data-group-name"))
+}))
+
 //edit
 document.querySelectorAll(".buttons button.orange").forEach(button => button.addEventListener("click", () => {
     openForm(1, button.getAttribute("data-user-id"), button.getAttribute("data-user-name"), button.getAttribute("data-group-id"), button.getAttribute("data-group-name"))
@@ -25,6 +30,8 @@ container.querySelector("button.close").addEventListener("click", () => {
 
 //reuse this function for 3 different forms
 const openForm = (actionId, userId, userName, groupId, groupName) => {
+    submit.innerHTML = "Add User to <mark>" + groupName + "</mark>"
+
     if (actionId === 1) { //edit
         submit.innerText = "Edit User"
         form.querySelector("summary").innerText = groupName

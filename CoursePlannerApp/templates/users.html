@@ -13,6 +13,7 @@
     {% for group in groups %}
         <main id="header" class="container-fluid">
             <h1>{{ group.name }}</h1>
+            {% if manages %} <button class="addgroup" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Add User</button> {% endif %}
         </main>
 
         <div>
@@ -40,9 +41,12 @@
         <form method="POST">
             {{ form.csrf_token }} 
             {{ form.hidden_tag() }} 
+            {{ form.email.label }} {{ form.email() }}
             {{ form.name.label }} {{ form.name() }}
+            {{ form.password.label }} {{ form.password() }}
+            {{ form.avatar.label }} {{ form.avatar() }}
 
-            <details role="list">
+            <!-- <details role="list">
                 <summary aria-haspopup="listbox"></summary>
                 <ul role="listbox">
                   {% for group in groups %}
@@ -54,7 +58,7 @@
                     </li>
                   {% endfor %}
                 </ul>
-              </details>
+            </details> -->
 
             <input name="id" type="hidden" value=-1>
             <input name="group_id" type="hidden" value=-1>

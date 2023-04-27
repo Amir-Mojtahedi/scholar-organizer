@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from werkzeug.local import LocalProxy
 
 from CoursePlannerApp.dbmanager import get_db
-from CoursePlannerApp.objects.user import User, UserForm
+from CoursePlannerApp.objects.user import SignupForm, User, UserForm
 
 bp = Blueprint("users", __name__, url_prefix="/users/")
 
@@ -14,7 +14,7 @@ dtb = LocalProxy(get_db)
 @bp.route("/")
 @login_required
 def index():
-    form = UserForm()
+    form = SignupForm()
 
     # get user
     user = current_user
@@ -46,6 +46,27 @@ def index():
 
         return render_template("users.html", manages=True, groups=groups, form=form)
     
+
+@bp.route("/", methods=["POST"])
+@login_required
+def add():
+    form = SignupForm()
+
+    # get authorization level
+    if form.validate_on_submit():
+        if current_user.group_id == 0:
+            flash("You don't have permission to add users")
+            return redirect(url_for(".index"))
+
+        if form.group_id.data in [1, 2] and current_user.group_id != 2:
+            flash("You don't have permission to add users to this group")
+            return redirect(url_for(".index"))
+        
+        user = User(name=form.name.data, avatar=form.avatar.data, email=form.email.data, password=form.password.data, group_id=form.group_id.data)
+
+    flash("Invalid form data")
+    return redirect(url_for(".index"))
+
 
 @bp.route("/delete/", methods=["POST"])
 @login_required
