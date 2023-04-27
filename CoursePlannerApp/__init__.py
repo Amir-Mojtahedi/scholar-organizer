@@ -2,7 +2,7 @@ import secrets
 import os
 
 from flask import Flask, render_template, current_app
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 from CoursePlannerApp.views.auth_views import bp as auth_bp
 from CoursePlannerApp.views.home_views import bp as home_bp
@@ -31,6 +31,11 @@ def create_app(test_config=None):
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"
     login_manager.init_app(app)
+
+    @app.before_request
+    def check_blocked():
+        if current_user.is_authenticated and not current_user.is_active:
+            return "Your account has been blocked. Please contact an administrator for more information."
 
     @login_manager.user_loader
     def load_user(user_id):

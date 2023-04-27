@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired
 
 
 class User(UserMixin):
-    def __init__(self, id, group_id, name, email, password):
+    def __init__(self, id, group_id, name, email, password, blocked=False):
         if not isinstance(email, str):
             raise TypeError("E-mail must be a string")
         if not isinstance(password, str):
@@ -23,6 +23,11 @@ class User(UserMixin):
         self.name = name
         self.id = id
         self.group_id = group_id
+        self.blocked = blocked
+
+    @property
+    def is_active(self):
+        return not self.blocked
 
 
 class UserForm(FlaskForm):
@@ -43,6 +48,7 @@ class LoginForm(FlaskForm):
     email = EmailField("email", validators=[DataRequired()])
     password = PasswordField("password", validators=[DataRequired()])
     remember_me = BooleanField("remember me")
+
 
 class ChangePasswordForm(FlaskForm):
     old_password = PasswordField("Enter your old password: ", validators=[DataRequired()])

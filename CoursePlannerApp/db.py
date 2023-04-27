@@ -437,10 +437,10 @@ class Database:
         if not isinstance(id, int):
             raise TypeError("Id must be an integer")
         with self.__get_cursor() as cursor:
-            results = cursor.execute('select id, group_id, email, password, name from courseapp_users where id=:id', id=id)
+            results = cursor.execute('select id, group_id, email, password, name, blocked from courseapp_users where id=:id', id=id)
             for row in results:
                 user = User(id=row[0], group_id=row[1], email=row[2],
-                    password=row[3], name=row[4])
+                    password=row[3], name=row[4], blocked=row[5] == 1)
                 return user
         return None
 
@@ -454,6 +454,12 @@ class Database:
                     password=row[3], name=row[4])
                 return user
         return None
+
+    def delete_user_by_id(self, id):
+        if not isinstance(id, int):
+            raise TypeError("Id must be an integer")
+        with self.__get_cursor() as cursor:
+            cursor.execute('delete from courseapp_users where id=:id', id=id)
     
     def update_user(self, user):
         if not isinstance(user, User):
