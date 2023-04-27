@@ -20,7 +20,7 @@ def get_courses():
             flash('There is an issue with the Database')
         if not courses or len(courses) == 0:
             flash('There is no course in database')            
-        return render_template('home.html', courses = courses, domains=domains)
+        return render_template('courses.html', courses = courses, domains=domains)
     
 @bp.route("/<course_id>/", methods=['GET', 'POST'])
 def list_competencies(course_id):
@@ -34,19 +34,9 @@ def list_competencies(course_id):
             flash('There is an issue with the Database')
         if not competencies or len(competencies) == 0:
             flash('There is no competency in the database')            
-    return render_template('competencies.html', competencies = competencies, course = course, domains = domains, elements_covered = elements_covered)
+    return render_template('course.html', competencies = competencies, course = course, domains = domains, elements_covered = elements_covered)
 
-@bp.route("/<course_id>/<int:domain_id>/")
-def get_specific_domain(course_id,domain_id):
-    if request.method == 'GET':
-        try:
-            course = dtb.get_specific_course(course_id)
-            domain = dtb.get_specific_domain(domain_id) 
-        except Exception as e:
-            flash('There is an issue with the Database')
-        if not domain:
-            flash('There is no course in database')            
-        return render_template('domains.html',domains=domain,course=course)
+
 
 #Add course
 @bp.route('/new/', methods=['GET', 'POST'])

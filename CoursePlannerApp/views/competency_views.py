@@ -32,7 +32,7 @@ def list_elements(competency_id):
             flash('There is an issue with the Database')
         if not elements or len(elements) == 0:
             flash('There is no competency in the database')            
-    return render_template('elements.html', elements = elements,competency=competency)
+    return render_template('competency.html', elements = elements,competency=competency)
 
 #Add Competency
 @bp.route('/new/', methods=['GET', 'POST'])
@@ -90,10 +90,9 @@ def update_competency(competency_id):
 
     return render_template('Update/updateCompetency.html', form=form, competency=competency)
 #Delete
-@bp.route("/<int:competency_id>/delete/", methods=["GET"])
+@bp.route("/<competency_id>/delete/", methods=["GET"])
 @login_required
 def delete(competency_id):
-    
     try:
         competency = dtb.get_specific_competency(competency_id)        
     except Exception as e:
