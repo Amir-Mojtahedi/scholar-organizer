@@ -52,7 +52,7 @@ CREATE TABLE courseapp_groups (
 CREATE TABLE courseapp_users (
     id  NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     group_id NUMBER REFERENCES courseapp_groups(id),
-    name VARCHAR2(20) NOT NULL,
+    name VARCHAR2(30) NOT NULL,
     email    VARCHAR2(50) NOT NULL,
     password VARCHAR2(102) NOT NULL,
     blocked NUMBER(1) DEFAULT 0 NOT NULL

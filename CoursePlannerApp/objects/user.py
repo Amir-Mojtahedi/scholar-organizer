@@ -2,7 +2,7 @@ from flask_login import UserMixin
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import EmailField, PasswordField, StringField, BooleanField, IntegerField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
 
 
 class User(UserMixin):
@@ -37,27 +37,27 @@ class User(UserMixin):
 class UserForm(FlaskForm):
     id = IntegerField("id")
     group_id = IntegerField("group_id")
-    name = StringField("Name")
+    name = StringField("Name", validators=[DataRequired(), Length(1, 30)])
 
 
-class SignupForm(FlaskForm):
-    email = EmailField("Email", validators=[DataRequired()])
+class SignupForm(FlaskForm):    
+    email = EmailField("Email", validators=[DataRequired(), Length(1, 50)])
     password = PasswordField("Password", validators=[DataRequired()])
-    name = StringField("Name", validators=[DataRequired()])
+    name = StringField("Name", validators=[DataRequired(), Length(1, 30)])
     id = IntegerField("id")
     group_id = IntegerField("group_id")
     avatar = FileField('Avatar')
 
 class EditForm(FlaskForm):
-    email = EmailField("Email", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired(), Length(1, 50)])
     password = PasswordField("Password")
-    name = StringField("Name", validators=[DataRequired()])
+    name = StringField("Name", validators=[DataRequired(), Length(1, 30)])
     id = IntegerField("id")
     group_id = IntegerField("group_id")
     avatar = FileField('Avatar')
 
 class LoginForm(FlaskForm):
-    email = EmailField("email", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired(), Length(1, 50)])
     password = PasswordField("password", validators=[DataRequired()])
     remember_me = BooleanField("remember me")
 
