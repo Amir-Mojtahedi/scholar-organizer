@@ -14,8 +14,8 @@ document.querySelectorAll("button").forEach(button => button.addEventListener("c
     button.setAttribute("aria-busy", "true")
 }))
 
-document.querySelector("details").addEventListener("toggle", () => {
-    if (!form.querySelector("details").open) { //oh, the details just closed!
+document.querySelector("details").addEventListener("click", () => {
+    if (form.querySelector("details").open) {
         const selected = form.querySelector("details").querySelector("input:checked")
         form.querySelector("summary").innerText = selected.parentElement.innerText
     }
@@ -50,8 +50,7 @@ const openForm = (actionId, wrapper) => {
 
         //show group selection
         form.querySelector("details").hidden = false
-        // TODO: FIX THIS
-        form.querySelector("details").querySelector("input[value=" + groupId + "]").checked = true
+        form.querySelector("details").querySelector(`input[value="${groupId}"]`).checked = true
 
         //manually changing form data for simplicity
         form.action = `/users/edit/`
