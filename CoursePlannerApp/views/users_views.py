@@ -128,7 +128,15 @@ def edit():
         return redirect(url_for(".index"))
 
     if form.validate_on_submit():
-        # TODO: AVATAR
+        # avatar
+        try:
+            file = form.avatar.data
+            avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], form.email.data)
+            avatar_path = os.path.join(avatar_dir, 'avatar.png')
+            file.save(avatar_path)
+        except:
+            flash("There was an error saving the avatar")
+            return redirect(url_for(".index"))
 
         # if we keep password as is
         if not form.password.data:
