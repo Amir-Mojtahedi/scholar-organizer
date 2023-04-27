@@ -428,10 +428,11 @@ class Database:
         if not isinstance(user, User):
             raise TypeError("You must provide a user object to this function.")
         with self.__get_cursor() as cursor:
-            cursor.execute('insert into courseapp_users (group_id, email, password, name) values (0, :email, :password, :name)',
+            cursor.execute('insert into courseapp_users (group_id, email, password, name) values (:group_id, :email, :password, :name)',
                            email = user.email,
                            password = user.password,
-                           name = user.name)
+                           name = user.name,
+                           group_id = user.group_id)
     
     def get_user(self, id):
         if not isinstance(id, int):
