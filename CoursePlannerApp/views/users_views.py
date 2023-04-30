@@ -125,8 +125,14 @@ def edit():
             file = form.avatar.data
             if file:
                 avatar_path = os.path.join(current_app.config['IMAGE_PATH'], form.email.data, 'avatar.png')
-                os.remove(avatar_path)  # remove old avatar
-                file.save(avatar_path)  # save new avatar
+
+                # remove old avatar
+                if os.path.exists(avatar_path):
+                    os.remove(avatar_path)
+                else:  # save new avatar
+                    os.makedirs(os.path.join(current_app.config['IMAGE_PATH'], form.email.data))
+
+                file.save(avatar_path)
 
         # if we keep password as is
         if not form.password.data:
