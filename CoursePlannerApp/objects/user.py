@@ -58,8 +58,8 @@ class EditForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = EmailField("Email", validators=[DataRequired(), Length(1, 50)])
-    password = PasswordField("password", validators=[DataRequired()])
-    remember_me = BooleanField("remember me")
+    password = PasswordField("Password", validators=[DataRequired()])
+    remember_me = BooleanField("Remember Me")
 
 
 class ChangePasswordForm(FlaskForm):

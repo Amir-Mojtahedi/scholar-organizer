@@ -1,13 +1,12 @@
-{% extends 'base.html' %}
-{%block headerTitle%} Signup {% endblock %}
+{% extends "base.html" %}
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    {{ form.csrf_token }}
-    {{ form.email.label}} {{ form.email() }}
-    {{ form.password.label}} {{ form.password() }}
-    {{ form.name.label}} {{ form.name() }}
-    {{ form.avatar.label}} {{form.avatar() }}
-    <br>
-    <input type="submit" />
-</form>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        {{ form.email.label}} {{ form.email() }}
+        {{ form.password.label}} {{ form.password() }}
+        {{ form.name.label}} {{ form.name() }}
+        {{ form.avatar.label}} {{ form.avatar() }}
+        <br>
+        <button type="submit">Signup</button>
+    </form>
 {% endblock %}

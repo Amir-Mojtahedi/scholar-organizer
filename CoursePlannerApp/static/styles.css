@@ -40,6 +40,12 @@ nav {
     height: 125px;
 }
 
+span {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
 #header {
     display: flex;
     justify-content: space-between;
