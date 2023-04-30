@@ -11,18 +11,16 @@ from CoursePlannerApp.dbmanager import get_db
 from CoursePlannerApp.objects.user import EditForm, User, UserForm
 
 bp = Blueprint("users", __name__, url_prefix="/users/")
-
 dtb = LocalProxy(get_db)
 
 
-@bp.route("/")
+@bp.route("/", methods=["GET", "POST"])
 @login_required
 def index():
     form = EditForm()
 
-    # get user
-    user = current_user
-    level = user.group_id
+    # get authorization level
+    level = current_user.group_id
 
     # get all users
     try:
@@ -38,17 +36,17 @@ def index():
         flash("There was an error retrieving the groups from the database")
         groups = []
 
-    if level == 0 or level == 1:  # members and admin_user_gp can see members
-        group = [g for g in groups if g.id == 0][0]
-        group.users = [u for u in users if u.group_id == 0]
-        return render_template("users.html", manages=level == 1, groups=[group], users=users, form=form)
-
-    elif level == 2:  # admin_gp can see all users and groups
-        # insert users into each group
+    if level == 2:  # admin_gp can see all users and groups
         for group in groups:
-            group.users = [u for u in users if u.group_id == group.id]
+            group.users = [u for u in users if
+                           u.group_id == group.id]  # inserting users in group for nested loop usability
 
         return render_template("users.html", manages=True, groups=groups, form=form)
+    else:  # members, other groups and admin_user_gp can see members (only admin_user_gp can manage them)
+        group = [g for g in groups if g.id == 0][0]
+        group.users = [u for u in users if u.group_id == 0]  # inserting users in group for nested loop usability
+
+        return render_template("users.html", manages=level == 1, groups=[group], form=form)
 
 
 @bp.route("/", methods=["POST"])
@@ -56,20 +54,14 @@ def index():
 def add():
     form = EditForm()
 
-    # get authorization level
     if form.validate_on_submit():
-        if current_user.group_id == 0:
-            flash("You don't have permission to add users")
-            return redirect(url_for(".index"))
+        check_authorization(form.group_id.data)
 
-        if form.group_id.data in [1, 2] and current_user.group_id != 2:
-            flash("You don't have permission to add users to this group")
-            return redirect(url_for(".index"))
-
+        # get user by email
         try:
             db_user = dtb.get_user_by_email(form.email.data)
-        except oracledb.Error as e:
-            flash("Error: " + str(e))
+        except oracledb.Error:
+            flash("There was an error retrieving the user from the database")
             return redirect(url_for(".index"))
 
         # taken as is from auth_views.py
@@ -85,22 +77,19 @@ def add():
                     os.makedirs(avatar_dir)
                 file.save(avatar_path)
             else:
-                # If no file for the profile picture is provided by the user, the default path will
-                # be set to a profile icon which is saved in images directory(not the one in instance).
-                # os.getcwd() gets the current working directory which in our case is the root of the repository
                 default_avatar_path = os.path.join(os.getcwd(), 'CoursePlannerApp', 'images', 'avatar.png')
                 avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], form.email.data)
                 avatar_path = os.path.join(avatar_dir, 'avatar.png')
+
                 if not os.path.exists(avatar_dir):
                     os.makedirs(avatar_dir)
-                # shutil.copy() is like save() but the big difference is that it does not need a file, however, it retrieves the file that the path is pointing to e.g. avatar.png.
-                # Using it, we retrieve the default profile picture and set it to avatar_path which will allow show_avatar()
-                # to successfuly retrieve the right image which in this case is the default one.
+
                 shutil.copy(default_avatar_path, avatar_path)
+
             _hash = generate_password_hash(form.password.data)
             user = User(None, form.group_id.data, form.name.data, form.email.data, _hash)
 
-            # try to add user
+            # add user
             try:
                 dtb.add_user(user)
             except oracledb.Error:
@@ -119,19 +108,14 @@ def add():
 def edit():
     form = EditForm()
 
-    if current_user.group_id == 0:
-        flash("You don't have permission to edit users")
-        return redirect(url_for(".index"))
-
-    if form.group_id.data in [1, 2] and current_user.group_id != 2:
-        flash("You don't have permission to edit users from this group")
-        return redirect(url_for(".index"))
-
     if form.validate_on_submit():
+        check_authorization(form.group_id.data)
+
+        # get user by email
         try:
             db_user = dtb.get_user_by_email(form.email.data)
-        except oracledb.Error as e:
-            flash("Error: " + str(e))
+        except oracledb.Error:
+            flash("There was an error retrieving the user from the database")
             return render_template("signup.html", form=form)
 
         if db_user and db_user.id != form.id.data:
@@ -141,7 +125,6 @@ def edit():
             file = form.avatar.data
             if file:
                 avatar_path = os.path.join(current_app.config['IMAGE_PATH'], form.email.data, 'avatar.png')
-
                 os.remove(avatar_path)  # remove old avatar
                 file.save(avatar_path)  # save new avatar
 
@@ -156,11 +139,9 @@ def edit():
         else:
             password = generate_password_hash(form.password.data)
 
-        current_app.logger.info("Group id: " + str(form.group_id.data))
-
         user = User(form.id.data, form.group_id.data, form.name.data, form.email.data, password)
 
-        # try to edit user
+        # edit user
         try:
             dtb.update_user(user)
         except oracledb.Error:
@@ -179,16 +160,10 @@ def edit():
 def delete():
     form = UserForm()
 
-    if current_user.group_id == 0:
-        flash("You don't have permission to delete users")
-        return redirect(url_for(".index"))
-
-    if form.group_id.data in [1, 2] and current_user.group_id != 2:
-        flash("You don't have permission to delete users from this group")
-        return redirect(url_for(".index"))
-
     if form.validate_on_submit():
-        # try to delete user
+        check_authorization(form.group_id.data)
+
+        # delete user
         try:
             dtb.delete_user_by_id(form.id.data)
         except oracledb.Error:
@@ -207,16 +182,10 @@ def delete():
 def block():
     form = UserForm()
 
-    if current_user.group_id == 0:
-        flash("You don't have permission to block users")
-        return redirect(url_for(".index"))
-
-    if form.group_id.data in [1, 2] and current_user.group_id != 2:
-        flash("You don't have permission to block users from this group")
-        return redirect(url_for(".index"))
-
     if form.validate_on_submit():
-        # try to get user
+        check_authorization(form.group_id.data)
+
+        # get user
         try:
             user = dtb.get_user(form.id.data)
         except oracledb.Error:
@@ -226,7 +195,7 @@ def block():
         # block user
         user.blocked = True
 
-        # try to update user
+        # update user
         try:
             dtb.update_user(user)
         except oracledb.Error:
@@ -245,16 +214,10 @@ def block():
 def unblock():
     form = UserForm()
 
-    if current_user.group_id == 0:
-        flash("You don't have permission to unblock users")
-        return redirect(url_for(".index"))
-
-    if form.group_id.data in [1, 2] and current_user.group_id != 2:
-        flash("You don't have permission to unblock users from this group")
-        return redirect(url_for(".index"))
-
     if form.validate_on_submit():
-        # try to get user
+        check_authorization(form.group_id.data)
+
+        # get user
         try:
             user = dtb.get_user(form.id.data)
         except oracledb.Error:
@@ -264,7 +227,7 @@ def unblock():
         # unblock user
         user.blocked = False
 
-        # try to update user
+        # update user
         try:
             dtb.update_user(user)
         except oracledb.Error:
@@ -276,3 +239,16 @@ def unblock():
 
     flash("Invalid form data")
     return redirect(url_for(".index"))
+
+
+def check_authorization(group_id):
+    # get authorization level
+    level = current_user.group_id
+
+    if level == 0 or level > 2:  # members and other groups can't manage users
+        flash("You don't have permission to add users")
+        return redirect(url_for(".index"))
+
+    if level != 2 and group_id in [1, 2]:  # only admin_gp can manage admin_gp and admin_user_gp
+        flash("You don't have permission to add users to this group")
+        return redirect(url_for(".index"))
