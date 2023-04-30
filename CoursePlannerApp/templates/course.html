@@ -38,35 +38,35 @@
             <p>Credits: {{ ((course.lab_hours + course.theory_hours + course.work_hours) / 3) | round(2) }}</p>
         </div>
     </main>
-        {% for competency in competencies %}
-            <main style="padding-left: 1rem">
-                <div class="headings">
-                    <div class="title">
-                        <kbd>{{ competency.id }}</kbd>
-                        <a href="{{ url_for('competencies.list_elements', competency_id=competency.id) }}"><h2>{{ competency.name }}</h2></a>
-                        <a class="edit" href="{{ url_for('competencies.update_competency', competency_id=competency.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a class="delete" onclick="return confirm('Deleting this Competency will also delete his Elements. Continue?')" href="{{ url_for('competencies.delete', competency_id=competency.id) }}"><i class="fa-solid fa-trash"></i></a>
-                    </div>
-                    <p>{{ competency.achievement }}</p>
-                    <p>Type: {{ competency.type }}</p>
+    {% for competency in competencies %}
+        <main style="padding-left: 1rem">
+            <div class="headings">
+                <div class="title">
+                    <kbd>{{ competency.id }}</kbd>
+                    <a href="{{ url_for('competencies.list_elements', competency_id=competency.id) }}"><h2>{{ competency.name }}</h2></a>
+                    <a class="edit" href="{{ url_for('competencies.update_competency', competency_id=competency.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a class="delete" onclick="return confirm('Deleting this Competency will also delete his Elements. Continue?')" href="{{ url_for('competencies.delete', competency_id=competency.id) }}"><i class="fa-solid fa-trash"></i></a>
                 </div>
+                <p>{{ competency.achievement }}</p>
+                <p>Type: {{ competency.type }}</p>
+            </div>
 
-                {% for element in elements_covered %}
-                    {% if element.competencyId == competency.id %}
-                        <main style="padding-left: 1rem">
-                            <div class="headings">
-                                <div class="title">
-                                    <kbd>{{ competency.id }}_{{ element.id }}</kbd>
-                                    <h5>{{ element.name }}</h5>
-                                    <a class="edit" href="{{ url_for('elements.update_element', element_id=element.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
-                                    <a class="delete" href="{{ url_for('elements.delete', element_id=element.id) }}"><i class="fa-solid fa-trash"></i></a>
-                                </div>
-                                <p>{{ element.criteria }}</p>
+            {% for element in elements_covered %}
+                {% if element.competencyId == competency.id %}
+                    <main style="padding-left: 1rem">
+                        <div class="headings">
+                            <div class="title">
+                                <kbd>{{ competency.id }}_{{ element.id }}</kbd>
+                                <h5>{{ element.name }}</h5>
+                                <a class="edit" href="{{ url_for('elements.update_element', element_id=element.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a class="delete" href="{{ url_for('elements.delete', element_id=element.id) }}"><i class="fa-solid fa-trash"></i></a>
                             </div>
-                        </main>
-                    {% endif %}
-                {% endfor %}
-            </main>
-            <hr>
-        {% endfor %}
+                            <p>{{ element.criteria }}</p>
+                        </div>
+                    </main>
+                {% endif %}
+            {% endfor %}
+        </main>
+        <hr>
+    {% endfor %}
 {% endblock%}

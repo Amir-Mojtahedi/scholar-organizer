@@ -15,9 +15,13 @@
     <body>
         <nav>
             <ul>
-                <li><a id="title" href="{{ url_for('home.index') }}"><strong><i class="fa-solid fa-house"></i> Scholar Organizer</strong></a></li>
+                <li><a id="title" href="{{ url_for('home.index') }}"><span><i class="fa-solid fa-house"></i><strong>Scholar Organizer</strong></span></a></li>
             </ul>
             <ul>
+                <li><a href="{{ url_for('courses.get_courses') }}">Courses</a></li>
+                <li><a href="{{ url_for('competencies.get_competencies') }}">Competencies</a></li>
+                <li><a href="{{ url_for('domains.get_domains') }}">Domains</a></li>
+
                 {% if current_user.group_id == 2 %}
                     <li><a href="{{ url_for('groups.index') }}">Groups</a></li>
                 {% endif %}
