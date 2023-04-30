@@ -124,13 +124,3 @@ const openForm = (actionId, wrapper) => {
     container.style.display = "flex"
     container.classList.add("active")
 }
-
-document.addEventListener("submit", e => {
-    e.preventDefault()
-
-    //manually submit form
-    if (form.checkValidity()) {
-        form.submit()
-        submit.setAttribute("aria-busy", "true")
-    }
-})

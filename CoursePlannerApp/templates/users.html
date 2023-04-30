@@ -1,12 +1,10 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block title %}
     Organizer - User List
 {% endblock %}
 
 {% block head %}
     <script defer type="text/javascript" src="{{ url_for('static', filename='users.js')}}"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css')}}">
 {% endblock %}
 
 {% block content%}
