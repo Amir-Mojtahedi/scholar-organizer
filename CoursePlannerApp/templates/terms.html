@@ -1,25 +1,21 @@
-{% extends 'base.html' %}
-{% block title %}
-    Term List
-{% endblock %}
-{% block headerTitle %}
-    Term List
-{% endblock %}
+{% extends "base.html" %}
 {% block head %}
+    <title>Term List</title>
 {% endblock %}
-{% block content%}
-    <h1>Terms:</h1>
-    <ul class="termList">
-        {% for term in banner %}
-        <li class="termItem"> 
-            <a href={{url_for('terms.get_terms')}}> {{term | safe}} </a>   
-            <div class='icon'>
-                <a class='delete' href="{{url_for('terms.delete', term_id=term.id)}}"><img src={{url_for('static', filename='media/delete.png')}}></a>
-                <a class='edit' href="{{url_for('terms.update_term', term_id=term.id)}}"><img src={{url_for('static', filename='media/edit.png')}}></a>
+
+{% block content %}
+    <a href="{{ url_for('terms.create_term') }}"><button>Add Term</button></a>
+    <br>
+    {% for term in terms %}
+        <main>
+            <div class="headings">
+                <div class="title">
+                    <h2>{{ term.name }}</h2>
+                    <a class="edit" href="{{ url_for('terms.update_term', term_id=term.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a class="delete" href="{{ url_for('terms.delete', term_id=term.id) }}"><i class="fa-solid fa-trash"></i></a>
+                </div>
             </div>
-            <hr>
-        </li>
-        {% endfor %}
-    </ul>
-    <button type="button" id="addTerm" name="addTerm"> <a href={{url_for('terms.create_term')}}> Add </a> </button>
+        </main>
+        <hr>
+    {% endfor %}
 {% endblock%}
