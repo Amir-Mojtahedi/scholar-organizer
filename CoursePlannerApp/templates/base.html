@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"/>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"/>
         <script defer src="https://kit.fontawesome.com/411819bb51.js" crossorigin="anonymous"></script>
-        {% block script %} <!-- additional head urls --> {% endblock %}
+        {% block head %} <!-- additional head urls --> {% endblock %}
     </head>
 
     <body>
@@ -24,8 +24,8 @@
                 {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('users.index') }}">Users</a></li>
                     <li><a href="{{ url_for('add.index') }}">Add</a> </li>
-                    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                     <li><a href="{{ url_for('auth.change_avatar', email=current_user.email) }}"><img id="profile-picture" src="{{ url_for('auth.show_avatar', email=current_user.email) }}" alt="profile-picture"></a></li>
+                    <li><a href="{{ url_for('auth.logout') }}" class="outline" role="button">Logout</a></li>
                 {% endif %}
 
                 {% if not current_user.is_authenticated %}
