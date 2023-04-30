@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {%block headerTitle%} Login {% endblock %}
-{% block sectionContent %}
+{% block content %}
 <form method="post">
     {{ form.csrf_token }}
     {{ form.email.label}} {{ form.email() }}

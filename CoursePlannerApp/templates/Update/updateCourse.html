@@ -7,7 +7,7 @@
 {% block script %}
     <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
 {% endblock %}
-{% block sectionContent%}
+{% block content%}
     <h1>Course to Update:</h1>
     <form method="post">
         {{ form.csrf_token }}

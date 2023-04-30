@@ -1,44 +1,42 @@
-<!DOCTYPE>
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <title>{%block title%} {%endblock%}</title>
-        <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}"/>
-        {%block script%} {%endblock%}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Scholar Organizer</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"/>
+        <script defer src="https://kit.fontawesome.com/411819bb51.js" crossorigin="anonymous"></script>
+        {% block script %} <!-- additional head urls --> {% endblock %}
     </head>
+
     <body>
-        <header class="header">
-            <h1 class="logo"><a href="{{url_for('home.index')}}"><img id="site-logo" src="{{url_for('static', filename='media/logo.png')}}"></a></h1>
-            <ul class="main-nav">
-                <li> <a href="{{url_for('home.index')}}">Home</a> </li>
-                {% if not current_user.is_authenticated %}
-                    <li> <a href="{{url_for('auth.signup')}}">Sign Up</a> </li>
-                    <li> <a href="{{url_for('auth.login')}}">Login</a> </li>
-                {% endif %}
-
+        <nav>
+            <ul>
+                <li><a id="title" href="{{ url_for('home.index') }}"><strong><i class="fa-solid fa-house"></i> Scholar Organizer</strong></a></li>
+            </ul>
+            <ul>
                 {% if current_user.group_id == 2 %}
-                    <li><a href="{{url_for('groups.index')}}">Groups</a></li>
+                    <li><a href="{{ url_for('groups.index') }}">Groups</a></li>
                 {% endif %}
 
                 {% if current_user.is_authenticated %}
-                    <li><a href="{{url_for('users.index')}}">Users</a></li>
+                    <li><a href="{{ url_for('users.index') }}">Users</a></li>
+                    <li><a href="{{ url_for('add.index') }}">Add</a> </li>
+                    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                    <li><a href="{{ url_for('auth.change_avatar', email=current_user.email) }}"><img id="profile-picture" src="{{ url_for('auth.show_avatar', email=current_user.email) }}" alt="profile-picture"></a></li>
                 {% endif %}
-                {% if current_user.is_authenticated %}
-                    <li> <a href="{{url_for('add.index')}}">Add</a> </li>
-                    <li><a href="{{url_for('auth.logout')}}">Logout</a></li>
-                    <li><a href="{{url_for('auth.change_avatar',email=current_user.email)}}"><img id="profile-picture" src="{{url_for('auth.show_avatar',email=current_user.email)}}"/></a></li>
+
+                {% if not current_user.is_authenticated %}
+                    <li><a href="{{ url_for('auth.login') }}" role="button">Login</a></li>
+                    <li><a href="{{ url_for('auth.signup') }}" class="outline" role="button">Signup</a></li>
                 {% endif %}
             </ul>
-        </header>
-        <h1> {%block headerTitle%} {% endblock %} </h1>
-        <section>
-            {% block sectionContent %}
-            
-            {%endblock%}            
-        </section>
-        <section>
-            {% for message in  get_flashed_messages()  %}
-                <div class="flashMessages">{{message}}</div>
-            {% endfor %}            
-        </section>
+        </nav>
+
+        <main class="container-fluid">
+            {% block content %} <!-- content --> {% endblock %}
+        </main>
     </body>
 </html>

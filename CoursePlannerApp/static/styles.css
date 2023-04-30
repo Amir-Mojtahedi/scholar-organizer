@@ -1,133 +1,137 @@
 * {
-	box-sizing: border-box;
-}
-body {
-	font-family: 'Montserrat', sans-serif;
-	line-height: 1.6;
-	margin: 0;
-	min-height: 100vh;
-}
-img{
-    width: 50%;
+    animation: slideFadeIn 0.5s;
 }
 
-#site-logo{
-	width:100px;
+main.container-fluid {
+    padding: 1rem;
 }
 
-#profile-picture{
-	border-radius: 50%;
-	height:67px;
-	width:67px;
+button {
+    width: fit-content;
 }
 
-h1{
-	font-size: 13pt;
-}
-h1 a{
-    width: 15%;
-}
-ul {
-    width:100%;
+h1, button {
     margin: 0;
-    padding: 0;
-    list-style: none;
-}
-/*section{*/
-/*	display: flex;*/
-/*}*/
-section ul {
-	padding:0.5%;
-	width:50%;
-}
-a {
-    color: #34495e;
-	text-decoration: none;
 }
 
-.logo {
-	margin: 0;
-	width:50%;
-	font-size: 1.45em;
+form button {
+    width: 100%;
 }
 
-.header{
+table {
+    width: calc(100% - 2rem);
+    margin: auto;
+}
+
+td {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+ul[role=listbox] {
+    width: 100%;
+}
+
+#header {
     display: flex;
-    flex-direction: row;
-	justify-content: space-between;
-    padding-top: .5em;
-	padding-bottom: .5em;
-	border: 1px solid #a2a2a2;
-	background-color: #f4f4f4;
-    border-radius: 5px;
+    justify-content: space-between;
 }
-.main-nav{
+
+.close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 50px;
+    height: 50px;
     display: flex;
-	justify-content: space-between;
-	margin-top: 5px
-}
-.main-nav li{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-    flex: 1
+    justify-content: center;
+    align-items: center;
 }
 
-.logo a,
-.main-nav a {
-	padding: 10px 15px;
-	text-transform: uppercase;
-	text-align: center;
-	display: block;
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.5s;
 }
 
-.main-nav a {
-	color: #34495e;
-	font-size: 1em;
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
 }
 
-.main-nav a:hover {
-	color: #718daa;
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
 }
 
-#competencyList ul, #elementList ul, #courseList, #domainList ul{
-	width: auto;
-	margin: 0;
-	list-style-type: disc;
+.edit {
+    background-color: orange;
+    border-color: orange;
 }
 
-/* Delete/Edit Btn */
-.icon{
-	display: flex;
-	align-items: center;
-	width:85%;
-}
-.icon .edit,.icon .delete{
-	width:6.7%;
-	margin-left: 2em;
+.delete, .block, .close {
+    background-color: red;
+    border-color: red;
 }
 
-.icon .edit img, .icon .delete img{
-	width:50%;
+.outline {
+    background-color: white;
+    border-color: black;
+    color: red;
 }
 
-#course-header{
-	width:74%;
+.unblock {
+    background-color: lime;
+    border-color: lime;
 }
 
-#course-header .title{
-	width:22%;
+@keyframes slideFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-#course-header #course-title{
-	width:12%;
+@keyframes slideFadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10%);
+    }
 }
 
-#course-header img{
-	width:74%;
-	width:30px;
+#site-logo {
+    width: 100px;
 }
 
-#elements-competency{
-	width:40%;
+#profile-picture {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    border: 1px solid white;
+}
+
+nav {
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(10px);
 }
