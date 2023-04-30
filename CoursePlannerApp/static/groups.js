@@ -2,30 +2,41 @@ const container = document.querySelector(".container-fluid.overlay")
 const form = container.querySelector("form")
 const submit = form.querySelector("button[type=submit]")
 
-//edit
-document.querySelectorAll(".buttons button.orange").forEach(button => button.addEventListener("click", () => {
-    openForm(1, button.getAttribute("data-group-id"), button.getAttribute("data-group-name"))
-}))
+//button actions
+document.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
+    if (button.classList.contains("close")) return closeForm()
+    if (button.classList.contains("add")) return openForm(0, button) //pass in any element here... doesn't matter
+    if (button.classList.contains("edit")) return openForm(1, button.parentElement.parentElement)
 
-//delete is a bit special because it doesn't need a form
-document.querySelectorAll(".buttons button.red").forEach(button => button.addEventListener("click", () => {
+    if (button.classList.contains("delete")) openForm(2, button.parentElement.parentElement)
     button.setAttribute("aria-busy", "true")
-    openForm(2, button.getAttribute("data-group-id"), button.getAttribute("data-group-name"))
 }))
 
-//close form
-container.querySelector("button.close").addEventListener("click", () => {
+//close form gently and prep for reopening
+const closeForm = () => {
     container.style.animation = "slideFadeOut 0.5s"
+
     setTimeout(() => {
         container.style.display = "none"
         container.classList.remove("active")
         container.style.animation = "slideFadeIn 0.5s"
     }, 500)
-})
 
-//reuse this function for 3 different forms
-const openForm = (actionId, groupId, groupName) => {
-    submit.innerText = "Create Group"
+    //reset form data
+    form.querySelector("input[name=name]").value = ""
+}
+
+//configures the multipurpose form and opens it
+const openForm = (actionId, wrapper) => {
+    const groupId = wrapper.getAttribute("data-group-id")
+    const groupName = wrapper.getAttribute("data-group-name")
+
+    if (actionId === 0) { //add
+        submit.innerText = "Add Group"
+
+        //manually changing form data for simplicity
+        form.action = `/groups/`
+    }
 
     if (actionId === 1) { //edit
         submit.innerText = "Edit Group"

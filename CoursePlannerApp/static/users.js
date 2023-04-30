@@ -36,7 +36,6 @@ const closeForm = () => {
     }, 500)
 
     //reset form data
-    form.action = `/users/`
     form.querySelector("input[name=name]").value = ""
     form.querySelector("input[name=email]").value = ""
     form.querySelector("input[name=password]").value = ""
@@ -54,6 +53,8 @@ const openForm = (actionId, wrapper) => {
     if (actionId === 0) { //add
         submit.innerHTML = "Add User to <mark>" + groupName + "</mark>"
 
+        //manually changing form data for simplicity
+        form.action = `/users/`
         form.querySelector("input[name=group_id]").value = groupId
     }
 

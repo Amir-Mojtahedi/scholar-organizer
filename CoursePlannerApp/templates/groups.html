@@ -1,6 +1,8 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block title %}
-    Organizer - Group List {% endblock %}
+    Organizer - Group List
+{% endblock %}
+
 {% block script %}
     <script defer type="text/javascript" src="{{ url_for('static', filename='groups.js')}}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
@@ -8,39 +10,42 @@
 {% endblock %}
 
 {% block sectionContent%}
-<main id="header" class="container-fluid">
-    <h1>Groups</h1>
-    {% if manages %} <button onclick="openForm()">Create Group</button> {% endif %}
-</main>
+    <main id="header" class="container-fluid">
+        <h1>Groups</h1>
+        {% if manages %} <button class="add">Add Group</button> {% endif %}
+    </main>
 
-<div>
-    <table>
-        <tbody>
-            {% for group in groups %}
-            <tr>
-                <td>{{ group.name }}</td>
+    <div>
+        <table>
+            <tbody>
+                {% for group in groups %}
+                    <tr data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">
+                        <td>{{ group.name }}</td>
 
-                <td class="buttons">
-                    {% if manages and group.id not in [0, 1, 2] %}
-                        <button class="orange" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Edit</button>
-                        <button class="red" data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">Delete</button>
-                    {% else %}
-                        <button class="secondary" disabled>Edit</button>
-                        <button class="secondary" disabled>Delete</button>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+                        <td class="buttons">
+                            {% if group.id not in [0, 1, 2] %}
+                                <button class="edit">Edit</button>
+                                <button class="delete">Delete</button>
+                            {% else %}
+                                <button class="secondary" disabled>Edit</button>
+                                <button class="secondary" disabled>Delete</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-<main class="container-fluid overlay">
-    <button class="close red">🗙</button>
-    <form method="POST">
-        {{ form.csrf_token }} {{ form.hidden_tag() }} {{ form.name.label }} {{ form.name() }}
-        <input name="id" type="hidden" value=-1>
-        <button type="submit">Create Group</button>
-    </form>
-</main>
+    <!-- multipurpose popup form -->
+    <main class="container-fluid overlay">
+        <button class="close">🗙</button>
+        <form method="POST">
+            {{ form.csrf_token }}
+            {{ form.hidden_tag() }}
+            {{ form.name.label }} {{ form.name() }}
+            <input name="id" type="hidden" value=-1>
+            <button type="submit"></button>
+        </form>
+    </main>
 {% endblock%}
