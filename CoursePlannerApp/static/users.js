@@ -51,7 +51,6 @@ const openForm = (actionId, wrapper) => {
     const groupId = wrapper.getAttribute("data-group-id")
     const groupName = wrapper.getAttribute("data-group-name")
 
-
     if (actionId === 0) { //add
         submit.innerHTML = "Add User to <mark>" + groupName + "</mark>"
 
@@ -71,6 +70,7 @@ const openForm = (actionId, wrapper) => {
         form.querySelector("input[name=name]").value = userName
         form.querySelector("input[name=email]").value = userEmail
         form.querySelector("input[name=id]").value = userId
+        form.querySelector("input[name=group_id]").value = groupId
     }
 
     if (actionId === 2) { //delete
