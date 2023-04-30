@@ -14,6 +14,7 @@ document.querySelectorAll("button").forEach(button => button.addEventListener("c
     button.setAttribute("aria-busy", "true")
 }))
 
+//group selection (making a details element act like a select element)
 document.querySelector("details").addEventListener("click", () => {
     if (form.querySelector("details").open) {
         const selected = form.querySelector("details").querySelector("input:checked")
@@ -42,7 +43,7 @@ const closeForm = () => {
     form.querySelector("input[name=avatar]").value = ""
 }
 
-//reuse this function for 3 different forms
+//configures the multipurpose form and opens it
 const openForm = (actionId, wrapper) => {
     const userId = wrapper.getAttribute("data-user-id")
     const userName = wrapper.getAttribute("data-user-name")
@@ -51,10 +52,10 @@ const openForm = (actionId, wrapper) => {
     const groupName = wrapper.getAttribute("data-group-name")
 
     if (actionId === 0) { //add
-        submit.innerHTML = "Add User to <mark>" + groupName + "</mark>"
+        submit.innerHTML = `Add User to <mark>${groupName}</mark>`
 
         //manually changing form data for simplicity
-        form.action = `/users/`
+        form.action = "/users/"
         form.querySelector("input[name=group_id]").value = groupId
     }
 
@@ -67,7 +68,7 @@ const openForm = (actionId, wrapper) => {
         form.querySelector("details").querySelector(`input[value="${groupId}"]`).checked = true
 
         //manually changing form data for simplicity
-        form.action = `/users/edit/`
+        form.action = "/users/edit/"
         form.querySelector("input[name=name]").value = userName
         form.querySelector("input[name=email]").value = userEmail
         form.querySelector("input[name=id]").value = userId
@@ -76,7 +77,7 @@ const openForm = (actionId, wrapper) => {
 
     if (actionId === 2) { //delete
         //manually changing form data for simplicity
-        form.action = `/users/delete/`
+        form.action = "/users/delete/"
         form.querySelector("input[name=id]").value = userId
 
         //no need to actually show form, just submit
@@ -86,7 +87,7 @@ const openForm = (actionId, wrapper) => {
 
     if (actionId === 3) { //block
         //manually changing form data for simplicity
-        form.action = `/users/block/`
+        form.action = "/users/block/"
         form.querySelector("input[name=id]").value = userId
 
         //no need to actually show form, just submit
@@ -96,7 +97,7 @@ const openForm = (actionId, wrapper) => {
 
     if (actionId === 4) { //unblock
         //manually changing form data for simplicity
-        form.action = `/users/unblock/`
+        form.action = "/users/unblock/"
         form.querySelector("input[name=id]").value = userId
 
         //no need to actually show form, just submit

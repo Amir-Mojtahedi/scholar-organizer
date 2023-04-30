@@ -35,20 +35,20 @@ const openForm = (actionId, wrapper) => {
         submit.innerText = "Add Group"
 
         //manually changing form data for simplicity
-        form.action = `/groups/`
+        form.action = "/groups/"
     }
 
     if (actionId === 1) { //edit
         submit.innerText = "Edit Group"
 
         //manually changing form data for simplicity
-        form.action = `/groups/edit/`
+        form.action = "/groups/edit/"
         form.querySelector("input[name=id]").value = groupId
     }
 
     if (actionId === 2) { //delete
         //manually changing form data for simplicity
-        form.action = `/groups/delete/`
+        form.action = "/groups/delete/"
         form.querySelector("input[name=name]").value = groupName
         form.querySelector("input[name=id]").value = groupId
 
