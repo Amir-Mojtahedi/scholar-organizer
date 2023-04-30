@@ -45,6 +45,7 @@ const openForm = (actionId, wrapper) => {
 
         //manually changing form data for simplicity
         form.action = "/groups/edit/"
+        form.querySelector("input[name=name]").value = groupName
         form.querySelector("input[name=id]").value = groupId
     }
 
