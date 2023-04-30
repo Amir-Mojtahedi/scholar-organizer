@@ -8,7 +8,21 @@ document.querySelectorAll("button").forEach(button => button.addEventListener("c
     else if (button.classList.contains("add")) return openForm(0, button.parentElement)
     else if (button.classList.contains("edit")) return openForm(1, button.parentElement.parentElement)
 
-    else if (button.classList.contains("delete")) openForm(2, button.parentElement.parentElement)
+    else if (button.classList.contains("delete")) {
+        if (button.classList.contains("outline")) openForm(2, button.parentElement.parentElement)
+        else {
+            button.classList.add("outline")
+            button.innerText = "Confirm"
+
+            //change back after 3s
+            setTimeout(() => {
+                button.classList.remove("outline")
+                button.innerText = "Delete"
+            }, 3000)
+
+            return
+        }
+    }
     else if (button.classList.contains("block")) openForm(3, button.parentElement.parentElement)
     else if (button.classList.contains("unblock")) openForm(4, button.parentElement.parentElement)
     else return
@@ -113,8 +127,6 @@ const openForm = (actionId, wrapper) => {
 
 document.addEventListener("submit", e => {
     e.preventDefault()
-
-    console.log(form.checkValidity())
 
     //manually submit form
     if (form.checkValidity()) {

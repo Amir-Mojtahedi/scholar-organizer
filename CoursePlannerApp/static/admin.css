@@ -85,6 +85,12 @@ ul[role=listbox] {
     border-color: red;
 }
 
+.outline {
+    background-color: white;
+    border-color: black;
+    color: red;
+}
+
 .unblock {
     background-color: lime;
     border-color: lime;
