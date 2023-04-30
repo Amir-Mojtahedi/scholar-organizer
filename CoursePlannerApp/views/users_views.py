@@ -8,7 +8,7 @@ from werkzeug.local import LocalProxy
 from werkzeug.security import generate_password_hash
 
 from CoursePlannerApp.dbmanager import get_db
-from CoursePlannerApp.objects.user import EditForm, SignupForm, User, UserForm
+from CoursePlannerApp.objects.user import EditForm, User, UserForm
 
 bp = Blueprint("users", __name__, url_prefix="/users/")
 
@@ -128,7 +128,6 @@ def edit():
         return redirect(url_for(".index"))
 
     if form.validate_on_submit():
-        # taken as is from auth_views.py
         try:
             db_user = dtb.get_user_by_email(form.email.data)
         except oracledb.Error as e:
@@ -141,24 +140,10 @@ def edit():
         else:
             file = form.avatar.data
             if file:
-                avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], form.email.data)
-                avatar_path = os.path.join(avatar_dir, 'avatar.png')
-                if not os.path.exists(avatar_dir):
-                    os.makedirs(avatar_dir)
-                file.save(avatar_path)
-            else:
-                # If no file for the profile picture is provided by the user, the default path will
-                # be set to a profile icon which is saved in images directory(not the one in instance).
-                # os.getcwd() gets the current working directory which in our case is the root of the repository
-                default_avatar_path = os.path.join(os.getcwd(), 'CoursePlannerApp', 'images', 'avatar.png')
-                avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], form.email.data)
-                avatar_path = os.path.join(avatar_dir, 'avatar.png')
-                if not os.path.exists(avatar_dir):
-                    os.makedirs(avatar_dir)
-                # shutil.copy() is like save() but the big difference is that it does not need a file, however, it retrieves the file that the path is pointing to e.g. avatar.png.
-                # Using it, we retrieve the default profile picture and set it to avatar_path which will allow show_avatar()
-                # to successfuly retrieve the right image which in this case is the default one.
-                shutil.copy(default_avatar_path, avatar_path)
+                avatar_path = os.path.join(current_app.config['IMAGE_PATH'], form.email.data, 'avatar.png')
+
+                os.remove(avatar_path)  # remove old avatar
+                file.save(avatar_path)  # save new avatar
 
         # if we keep password as is
         if not form.password.data:
@@ -169,7 +154,7 @@ def edit():
                 flash("There was an error retrieving the user from the database")
                 return redirect(url_for(".index"))
         else:
-            password = generate_password_hash(form.password.data) 
+            password = generate_password_hash(form.password.data)
 
         current_app.logger.info("Group id: " + str(form.group_id.data))
 

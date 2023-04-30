@@ -43,7 +43,7 @@
     <!-- popup form -->
     <main class="container-fluid overlay">
         <button class="close red">🗙</button>
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             {{ form.csrf_token }} 
             {{ form.hidden_tag() }} 
             {{ form.email.label }} {{ form.email() }}
