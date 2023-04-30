@@ -36,7 +36,7 @@ const closeForm = () => {
     }, 500)
 
     //reset form data
-    form.action = `/users/add/`
+    form.action = `/users/`
     form.querySelector("input[name=name]").value = ""
     form.querySelector("input[name=email]").value = ""
     form.querySelector("input[name=password]").value = ""
