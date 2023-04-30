@@ -418,7 +418,7 @@ class Database:
 
     def get_users(self):
         with self.__get_cursor() as cursor:
-            results = cursor.execute('select id, group_id, email, password, name, blocked from courseapp_users')
+            results = cursor.execute('select id, group_id, email, password, name, blocked from courseapp_users order by id')
             users = []
             for row in results:
                 user = User(id=row[0], group_id=row[1], email=row[2],
@@ -484,7 +484,7 @@ class Database:
 
     def get_groups(self):
         with self.__get_cursor() as cursor:
-            results = cursor.execute('select id, name from courseapp_groups')
+            results = cursor.execute('select id, name from courseapp_groups order by id')
             groups = []
             for row in results:
                 groups.append(Group(id=row[0], name=row[1]))

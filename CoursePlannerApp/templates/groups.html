@@ -18,7 +18,7 @@
         <tbody>
             {% for group in groups %}
             <tr>
-                <td><a href="#" class="outline">{{ group.name }}</a></td>
+                <td>{{ group.name }}</td>
 
                 <td class="buttons">
                     {% if manages and group.id not in [0, 1, 2] %}
