@@ -14,7 +14,7 @@ bp = Blueprint("users", __name__, url_prefix="/users/")
 dtb = LocalProxy(get_db)
 
 
-@bp.route("/", methods=["GET", "POST"])
+@bp.route("/")
 @login_required
 def index():
     form = EditForm()
