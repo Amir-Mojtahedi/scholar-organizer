@@ -27,7 +27,7 @@ def index():
         groups = []
 
     if request.method == "GET":
-        return render_template("groups.html", groups=groups, form=form)
+        return render_template("groups.html", manages=current_user.group_id == 2, groups=groups, form=form)
 
     if request.method == "POST":
         if form.validate_on_submit():
