@@ -17,7 +17,7 @@ def index():
 
     if current_user.group_id != 2:
         flash("You don't have permission to manage groups")
-        return redirect(url_for(".index"))
+        return redirect(url_for("home.index"))
 
     # get all groups
     try:
