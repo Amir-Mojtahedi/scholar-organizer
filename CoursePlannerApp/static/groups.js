@@ -5,10 +5,12 @@ const submit = form.querySelector("button[type=submit]")
 //button actions
 document.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
     if (button.classList.contains("close")) return closeForm()
-    if (button.classList.contains("add")) return openForm(0, button) //pass in any element here... doesn't matter
-    if (button.classList.contains("edit")) return openForm(1, button.parentElement.parentElement)
+    else if (button.classList.contains("add")) return openForm(0, button) //pass in any element here... doesn't matter
+    else if (button.classList.contains("edit")) return openForm(1, button.parentElement.parentElement)
 
-    if (button.classList.contains("delete")) openForm(2, button.parentElement.parentElement)
+    else if (button.classList.contains("delete")) openForm(2, button.parentElement.parentElement)
+    else return
+
     button.setAttribute("aria-busy", "true")
 }))
 
@@ -61,6 +63,14 @@ const openForm = (actionId, wrapper) => {
     container.classList.add("active")
 }
 
-document.addEventListener("submit", () => {
-    submit.setAttribute("aria-busy", "true")
+document.addEventListener("submit", e => {
+    e.preventDefault()
+
+    console.log(form.checkValidity())
+
+    //manually submit form
+    if (form.checkValidity()) {
+        form.submit()
+        submit.setAttribute("aria-busy", "true")
+    }
 })
