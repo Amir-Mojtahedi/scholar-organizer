@@ -38,5 +38,11 @@
         <main class="container-fluid">
             {% block content %} <!-- content --> {% endblock %}
         </main>
+
+        <div class="flash-container">
+            {% for message in get_flashed_messages() %}
+                <div class="flash"><i class="fa-solid fa-circle-info"></i><b>{{ message }}</b></div>
+            {% endfor %}
+        </div>
     </body>
 </html>

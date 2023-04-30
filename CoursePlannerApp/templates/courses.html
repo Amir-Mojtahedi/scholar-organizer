@@ -35,8 +35,6 @@
                 <p>Total hours: {{ (course.lab_hours + course.theory_hours) * 15}}</p>
                 <p>Credits: {{ ((course.lab_hours + course.theory_hours + course.work_hours) / 3) | round(2) }}</p>
             </div>
-
-
         </main>
         <hr>
     {% endfor %}
