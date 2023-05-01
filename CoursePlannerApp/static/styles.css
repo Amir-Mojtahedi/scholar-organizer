@@ -6,6 +6,10 @@ main.container-fluid {
     padding: 1rem;
 }
 
+a button {
+    width: 100%;
+}
+
 button {
     width: fit-content;
 }
@@ -89,22 +93,22 @@ span {
     justify-content: flex-end;
 }
 
-.buttons.edit {
+.buttons .edit {
     background-color: orange;
     border-color: orange;
 }
 
-.buttons.delete, .buttons.block, .buttons.close {
+.buttons .delete, .buttons .block, .buttons .close {
     background-color: red;
     border-color: red;
 }
 
-.buttons.unblock {
+.buttons .unblock {
     background-color: lime;
     border-color: lime;
 }
 
-.outline {
+.buttons .outline {
     background-color: white;
     border-color: black;
     color: red;
@@ -161,7 +165,6 @@ span {
         opacity: 0;
     }
 }
-
 
 @keyframes slideFadeIn {
     from {
