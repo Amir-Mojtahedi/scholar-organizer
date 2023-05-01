@@ -71,7 +71,7 @@ def login():
 
             if user:
                 if user.blocked:
-                    flash("This user is blocked")
+                    return render_template("blocked.html")
                 else:
                     if check_password_hash(user.password, form.password.data):
                         login_user(user, form.remember_me.data)
