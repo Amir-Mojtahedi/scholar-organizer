@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block content%}
+    <a href="{{ url_for('add.add_course') }}"><button>Add Course</button></a>
+    <br>
     {% for course in courses %}
         <main>
             <div class="headings">
