@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-    Organizer - Users List
+    Organizer - User List
 {% endblock %}
 
 {% block script %}
@@ -25,12 +25,13 @@
                             {% if manages %}
                                 <td class="buttons">
                                     {% if user.blocked %}
-                                        <button class="green unblock">Unblock</button>
+                                        <button class="unblock">Unblock</button>
                                     {% else %}
-                                        <button class="red block">Block</button>
+                                        <button class="block">Block</button>
                                     {% endif %}
-                                        <button class="orange edit">Edit</button>
-                                    <button class="red delete">Delete</button>
+
+                                    <button class="edit">Edit</button>
+                                    <button class="delete">Delete</button>
                                 </td>
                             {% endif %}
                         </tr>
@@ -43,9 +44,9 @@
     <!-- popup form -->
     <main class="container-fluid overlay">
         <button class="close red">🗙</button>
-        <form method="POST">
-            {{ form.csrf_token }} 
-            {{ form.hidden_tag() }} 
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            {{ form.hidden_tag() }}
             {{ form.email.label }} {{ form.email() }}
             {{ form.name.label }} {{ form.name() }}
             {{ form.password.label }} {{ form.password() }}
@@ -55,12 +56,11 @@
                 <summary aria-haspopup="listbox"></summary>
                 <ul role="listbox">
                   {% for group in groups %}
-                    <li>
-                      <label for="{{ group.name }}">
-                        <input type="radio" id="{{ group.name }}" name="_group" value="{{ group.id }}">
-                        {{ group.name }}
-                      </label>
-                    </li>
+                      <li>
+                          <label for="{{ group.name }}">
+                              <input type="radio" id="{{ group.name }}" name="_group" value="{{ group.id }}"> {{ group.name }}
+                          </label>
+                      </li>
                   {% endfor %}
                 </ul>
             </details>

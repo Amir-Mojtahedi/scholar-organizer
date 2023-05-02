@@ -5,15 +5,32 @@ const submit = form.querySelector("button[type=submit]")
 //button actions
 document.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
     if (button.classList.contains("close")) return closeForm()
-    if (button.classList.contains("add")) return openForm(0, button.parentElement)
-    if (button.classList.contains("edit")) return openForm(1, button.parentElement.parentElement)
+    else if (button.classList.contains("add")) return openForm(0, button.parentElement)
+    else if (button.classList.contains("edit")) return openForm(1, button.parentElement.parentElement)
 
-    if (button.classList.contains("delete")) openForm(2, button.parentElement.parentElement)
-    if (button.classList.contains("block")) openForm(3, button.parentElement.parentElement)
-    if (button.classList.contains("unblock")) openForm(4, button.parentElement.parentElement)
+    else if (button.classList.contains("delete")) {
+        if (button.classList.contains("outline")) openForm(2, button.parentElement.parentElement)
+        else {
+            button.classList.add("outline")
+            button.innerText = "Confirm"
+
+            //change back after 3s
+            setTimeout(() => {
+                button.classList.remove("outline")
+                button.innerText = "Delete"
+            }, 3000)
+
+            return
+        }
+    }
+    else if (button.classList.contains("block")) openForm(3, button.parentElement.parentElement)
+    else if (button.classList.contains("unblock")) openForm(4, button.parentElement.parentElement)
+    else return
+
     button.setAttribute("aria-busy", "true")
 }))
 
+//group selection (making a details element act like a select element)
 document.querySelector("details").addEventListener("click", () => {
     if (form.querySelector("details").open) {
         const selected = form.querySelector("details").querySelector("input:checked")
@@ -36,14 +53,13 @@ const closeForm = () => {
     }, 500)
 
     //reset form data
-    form.action = `/users/add/`
     form.querySelector("input[name=name]").value = ""
     form.querySelector("input[name=email]").value = ""
     form.querySelector("input[name=password]").value = ""
     form.querySelector("input[name=avatar]").value = ""
 }
 
-//reuse this function for 3 different forms
+//configures the multipurpose form and opens it
 const openForm = (actionId, wrapper) => {
     const userId = wrapper.getAttribute("data-user-id")
     const userName = wrapper.getAttribute("data-user-name")
@@ -51,10 +67,11 @@ const openForm = (actionId, wrapper) => {
     const groupId = wrapper.getAttribute("data-group-id")
     const groupName = wrapper.getAttribute("data-group-name")
 
-
     if (actionId === 0) { //add
-        submit.innerHTML = "Add User to <mark>" + groupName + "</mark>"
+        submit.innerHTML = `Add User to <mark>${groupName}</mark>`
 
+        //manually changing form data for simplicity
+        form.action = "/users/"
         form.querySelector("input[name=group_id]").value = groupId
     }
 
@@ -67,15 +84,16 @@ const openForm = (actionId, wrapper) => {
         form.querySelector("details").querySelector(`input[value="${groupId}"]`).checked = true
 
         //manually changing form data for simplicity
-        form.action = `/users/edit/`
+        form.action = "/users/edit/"
         form.querySelector("input[name=name]").value = userName
         form.querySelector("input[name=email]").value = userEmail
         form.querySelector("input[name=id]").value = userId
+        form.querySelector("input[name=group_id]").value = groupId
     }
 
     if (actionId === 2) { //delete
         //manually changing form data for simplicity
-        form.action = `/users/delete/`
+        form.action = "/users/delete/"
         form.querySelector("input[name=id]").value = userId
 
         //no need to actually show form, just submit
@@ -85,7 +103,7 @@ const openForm = (actionId, wrapper) => {
 
     if (actionId === 3) { //block
         //manually changing form data for simplicity
-        form.action = `/users/block/`
+        form.action = "/users/block/"
         form.querySelector("input[name=id]").value = userId
 
         //no need to actually show form, just submit
@@ -95,7 +113,7 @@ const openForm = (actionId, wrapper) => {
 
     if (actionId === 4) { //unblock
         //manually changing form data for simplicity
-        form.action = `/users/unblock/`
+        form.action = "/users/unblock/"
         form.querySelector("input[name=id]").value = userId
 
         //no need to actually show form, just submit
@@ -107,6 +125,12 @@ const openForm = (actionId, wrapper) => {
     container.classList.add("active")
 }
 
-document.addEventListener("submit", () => {
-    submit.setAttribute("aria-busy", "true")
+document.addEventListener("submit", e => {
+    e.preventDefault()
+
+    //manually submit form
+    if (form.checkValidity()) {
+        form.submit()
+        submit.setAttribute("aria-busy", "true")
+    }
 })
