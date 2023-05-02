@@ -428,11 +428,10 @@ class Database:
                 for result in results:
                     if result:
                         raise ValueError("record already exists")
-                else:
-                    cursor.execute(
-                        "INSERT INTO COURSES_ELEMENTS (element_id, course_id,element_hours) VALUES(:elementId, :courseId,:elementHours)",elementId=elementId, courseId=courseId,elementHours=elementHours)
-                    if not cursor.rowcount:
-                        raise oracledb.Error
+                cursor.execute(
+                    "INSERT INTO COURSES_ELEMENTS (element_id, course_id,element_hours) VALUES(:elementId, :courseId,:elementHours)",elementId=elementId, courseId=courseId,elementHours=elementHours)
+                if not cursor.rowcount:
+                    raise oracledb.Error
                     
     def update_element(self, element):
         '''Update a element for the given Competency object'''
