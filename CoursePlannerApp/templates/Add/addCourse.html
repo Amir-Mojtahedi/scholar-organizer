@@ -4,10 +4,10 @@
 {% endblock %}
 {% block headerTitle %}
 {% endblock %}
-{% block script %}
+{% block head %}
     <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
 {% endblock %}
-{% block sectionContent%}
+{% block content%}
     <h1>New Course:</h1>
     <form method="post">
         {{ form.csrf_token }}

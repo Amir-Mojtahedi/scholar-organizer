@@ -1,12 +1,11 @@
-{% extends 'base.html' %}
-{%block headerTitle%} Login {% endblock %}
-{% block sectionContent %}
-<form method="post">
-    {{ form.csrf_token }}
-    {{ form.email.label}} {{ form.email() }}
-    {{ form.password.label}}{{ form.password() }}
-    {{ form.remember_me.label}}{{ form.remember_me() }}
-    <br>
-    <input type="submit" />
-</form>
+{% extends "base.html" %}
+{% block content %}
+    <form method="POST">
+        {{ form.csrf_token }}
+        {{ form.email.label }} {{ form.email() }}
+        {{ form.password.label }} {{ form.password() }}
+        <span>{{ form.remember_me.label }} {{ form.remember_me() }}</span>
+        <br>
+        <button type="submit">Login</button>
+    </form>
 {% endblock %}
