@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{{ url_for('add.add_course') }}"><button>Add Competency</button></a>
+    <a href="{{ url_for('competencies.create_competency') }}"><button>Add Competency</button></a>
     <br>
     {% for competency in competencies %}
         <main>

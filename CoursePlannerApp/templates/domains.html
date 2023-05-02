@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{{ url_for('add.add_course') }}"><button>Add Domain</button></a>
+    <a href="{{ url_for('domains.create_domain') }}"><button>Add Domain</button></a>
     <br>
     {% for domain in domains %}
         <main>

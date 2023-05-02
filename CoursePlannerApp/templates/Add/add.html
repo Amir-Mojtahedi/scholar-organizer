@@ -10,11 +10,11 @@
 {% endblock %}
 {% block content%}
     <div class="add-options">
-        <a href="{{url_for('add.add_course')}}"><button>Add a new course</button></a>
-        <a href="{{url_for('add.add_competency')}}"><button>Add a new competency</button></a>
-        <a href="{{url_for('add.add_domain')}}"><button>Add a new domain</button></a>
-        <a href="{{url_for('add.add_element_competency')}}"><button>Add a new element of competency</button></a>
-        <a href="{{url_for('add.add_term')}}"><button>Add a new term</button></a>
+        <a href="{{url_for('courses.create_course')}}"><button>Add a new course</button></a>
+        <a href="{{url_for('competencies.create_competency')}}"><button>Add a new competency</button></a>
+        <a href="{{url_for('doamins.create_domain')}}"><button>Add a new domain</button></a>
+        <a href="{{url_for('elements.create_element')}}"><button>Add a new element of competency</button></a>
+        <a href="{{url_for('terms.create_term')}}"><button>Add a new term</button></a>
     </div>
 {% endblock%}
 
