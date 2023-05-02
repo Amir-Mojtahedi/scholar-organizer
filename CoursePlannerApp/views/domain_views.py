@@ -60,7 +60,7 @@ def create_domain():
 
 #Update Domain
 @bp.route('/<domain_id>/update/', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def update_domain(domain_id):
     
     #Check if domain exist
