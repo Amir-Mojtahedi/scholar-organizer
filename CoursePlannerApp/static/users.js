@@ -1,6 +1,6 @@
 const container = document.querySelector(".container-fluid.overlay")
-const form = container.querySelector("form")
-const submit = form.querySelector("button[type=submit]")
+// const form = container.querySelector("form")
+// const submit = form.querySelector("button[type=submit]")
 
 //button actions
 document.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
