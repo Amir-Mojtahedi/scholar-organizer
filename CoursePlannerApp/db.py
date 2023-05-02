@@ -425,9 +425,9 @@ class Database:
                 results = cursor.execute(
                 "SELECT course_id, element_id FROM COURSES_ELEMENTS where element_id = :elementId and course_id = :courseId",
                 elementId=elementId, courseId=courseId)
-                nRecord = [result for result in results if (result[0] == elementId and result[1] == courseId)]
-                if not (nRecord == []):
-                    raise ValueError("record already exists")
+                for result in results:
+                    if result:
+                        raise ValueError("record already exists")
                 else:
                     cursor.execute(
                         "INSERT INTO COURSES_ELEMENTS (element_id, course_id,element_hours) VALUES(:elementId, :courseId,:elementHours)",elementId=elementId, courseId=courseId,elementHours=elementHours)
