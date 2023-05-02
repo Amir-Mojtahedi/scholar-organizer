@@ -17,12 +17,12 @@ def get_terms():
         terms = dtb.get_terms() 
     except Exception as e:
         flash("Error: " + str(e))
-        return render_template("terms.html", banner=[])
+        return render_template("terms.html", terms=[])
     
     if not terms or len(terms) == 0:
         flash('There is no term in database') 
         return render_template('display.html')
-    return render_template('terms.html', banner = dtb.get_terms())
+    return render_template('terms.html', terms = dtb.get_terms())
 
 #Add term
 @bp.route('/new/', methods=['GET', 'POST'])

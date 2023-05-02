@@ -5,6 +5,8 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="411819bb51" level="application" />
+    <orderEntry type="library" name="@picocss/pico" level="application" />
     <orderEntry type="library" name="@picocss/pico" level="application" />
   </component>
   <component name="TemplatesService">

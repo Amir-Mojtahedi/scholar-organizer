@@ -49,7 +49,7 @@ def signup():
                     # to successfuly retrieve the right image which in this case is the default one.
                     shutil.copy(default_avatar_path, avatar_path)
                 _hash = generate_password_hash(form.password.data)
-                user = User(None, form.group_id.data, form.name.data, form.email.data, _hash)
+                user = User(None, 0, form.name.data, form.email.data, _hash)
                 dtb.add_user(user)
         else:
             flash("Form is not valid")
@@ -71,7 +71,7 @@ def login():
 
             if user:
                 if user.blocked:
-                    flash("This user is blocked")
+                    return render_template("blocked.html")
                 else:
                     if check_password_hash(user.password, form.password.data):
                         login_user(user, form.remember_me.data)

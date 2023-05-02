@@ -31,7 +31,7 @@ def get_specific_domain(domain_id):
             flash('There is an issue with the Database')
         if not domain:
             flash('There is no course in database')            
-        return render_template('domain.html',domains=domain)
+        return render_template('domain.html', domain=domain)
 
 
 #Add Domain
