@@ -79,7 +79,7 @@ def update_competency(competency_id):
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            updatedCompetency = Competency(form.id.data, form.name.data, form.achievement.data, 
+            updatedCompetency = Competency(competency_id, form.name.data, form.achievement.data, 
                                        form.type.data)
             try:
                 dtb.update_competency(updatedCompetency)
