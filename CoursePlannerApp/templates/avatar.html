@@ -13,7 +13,7 @@
         {{ form.csrf_token }}
         {{ form.avatar.label}} {{form.avatar() }}
         <br>
-        <input type="submit" />
+        <button type="submit">Submit</button>
     </form>
     <a href="{{url_for('auth.change_password',email=current_user.email)}}"><button>Change your password</button></a> 
 {% endblock%}

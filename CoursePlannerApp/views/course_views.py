@@ -133,4 +133,4 @@ def delete(course_id):
         return redirect(url_for(".get_courses"))
 
     flash("Course deleted successfully")
-    return redirect(url_for('courses.list_competencies', 'course_id=course.id'))
+    return redirect(url_for('courses.get_courses'))
