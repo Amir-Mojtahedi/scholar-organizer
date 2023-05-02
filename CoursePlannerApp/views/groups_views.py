@@ -7,7 +7,6 @@ from CoursePlannerApp.dbmanager import get_db
 from CoursePlannerApp.objects.group import GroupForm, Group
 
 bp = Blueprint("groups", __name__, url_prefix="/groups/")
-
 dtb = LocalProxy(get_db)
 
 
@@ -16,9 +15,9 @@ dtb = LocalProxy(get_db)
 def index():
     form = GroupForm()
 
-    # get user
-    user = current_user
-    manages = user.group_id == 1 or user.group_id == 2  # admin_user_gp or admin_gp (respectively)
+    if current_user.group_id != 2:
+        flash("You don't have permission to manage groups")
+        return redirect(url_for("home.index"))
 
     # get all groups
     try:
@@ -28,32 +27,29 @@ def index():
         groups = []
 
     if request.method == "GET":
-        return render_template("groups.html", manages=manages, groups=groups, form=form)
+        return render_template("groups.html", manages=current_user.group_id == 2, groups=groups, form=form)
 
-    elif request.method == "POST" and form.validate_on_submit():
-        if not manages:
-            flash("You don't have permission to edit groups")
+    if request.method == "POST":
+        if form.validate_on_submit():
+            group = Group(form.name.data)
+
+            # check if it already exists, by name from groups
+            if group.name in [g.name for g in groups]:
+                flash("Group already exists")
+                return redirect(url_for(".index"))
+
+            # add group
+            try:
+                dtb.add_group(group)
+            except oracledb.Error:
+                flash("There was an error adding the group to the database")
+                return redirect(url_for(".index"))
+
+            flash("Group added successfully")
             return redirect(url_for(".index"))
-
-        group = Group(name=form.name.data)
-
-        # check if it already exists, by name from groups
-        if group.name in [g.name for g in groups]:
-            flash("Group already exists")
+        else:
+            flash("Invalid form data")
             return redirect(url_for(".index"))
-
-        # try to add group
-        try:
-            dtb.add_group(group)
-        except oracledb.Error:
-            flash("There was an error adding the group to the database")
-            return redirect(url_for(".index"))
-
-        flash("Group added successfully")
-        return redirect(url_for(".index"))
-    else:
-        flash("Invalid form data")
-        return redirect(url_for(".index"))
 
 
 @bp.route("/edit/", methods=["POST"])
@@ -61,12 +57,8 @@ def index():
 def edit():
     form = GroupForm()
 
-    # get user
-    user = current_user
-    manages = user.group_id == 1 or user.group_id == 2  # admin_user_gp or admin_gp (respectively)
-
-    if not manages:
-        flash("You don't have permission to edit groups")
+    if current_user.group_id != 2:
+        flash("You don't have permission to manage groups")
         return redirect(url_for(".index"))
 
     if form.validate_on_submit():
@@ -81,7 +73,7 @@ def edit():
             flash("Group not found")
             return redirect(url_for(".index"))
 
-        # try to update group
+        # update group
         try:
             dbgroup.name = form.name.data
             dtb.update_group(dbgroup)
@@ -91,7 +83,6 @@ def edit():
 
         flash("Group edited successfully")
         return redirect(url_for(".index"))
-
     else:
         flash("Invalid form data")
         return redirect(url_for(".index"))
@@ -102,18 +93,14 @@ def edit():
 def delete():
     form = GroupForm()
 
-    # get user
-    user = current_user
-    manages = user.group_id == 1 or user.group_id == 2
-
-    if not manages:
-        flash("You don't have permission to edit groups")
+    if current_user.group_id != 2:
+        flash("You don't have permission to manage groups")
         return redirect(url_for(".index"))
 
     if form.validate_on_submit():
         group = Group(form.name.data, form.id.data)
 
-        # try to delete group
+        # delete group
         try:
             dtb.delete_group(group)
         except oracledb.Error:
@@ -122,7 +109,6 @@ def delete():
 
         flash("Group deleted successfully")
         return redirect(url_for(".index"))
-
     else:
         flash("Invalid form data")
         return redirect(url_for(".index"))

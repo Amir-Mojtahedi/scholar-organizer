@@ -1,21 +1,45 @@
-{% extends 'base.html' %}
-{% block title %}
-    Course List
+{% extends "base.html" %}
+{% block head %}
+    <title>Course List</title>
+    <script defer type="text/javascript" src="{{ url_for('static', filename='courses.js')}}"></script>
 {% endblock %}
-{% block headerTitle %}
-    Course List
-{% endblock %}
-{% block script %}
 
-{% endblock %}
-{% block sectionContent%}
-    <h1>Course:</h1>
-    <ul class="courseList">
-        {% for course in banner %}
-        <li class="courseItem"> 
-            <a href="{{ url_for('courses.list_competencies', course_id=course.id) }}"> {{course | safe}} </a>  
-        </li>
-        {% endfor %}
-    </ul>
-    <button type="button" id="addCourse" name="addCourse"> <a href={{url_for('courses.create_course')}}> Add </a> </button>
+{% block content%}
+    <a href="{{ url_for('add.add_course') }}"><button>Add Course</button></a>
+    <br>
+    {% for course in courses %}
+        <main>
+            <div class="headings">
+                <div class="title">
+                    <kbd>{{ course.id }}</kbd>
+                    <a href="{{ url_for('courses.list_competencies', course_id=course.id) }}"><h1>{{ course.name }}</h1></a>
+                    <a class="edit" href="{{ url_for('courses.update_course', course_id=course.id )}}"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a class="delete" href="{{ url_for('courses.delete', course_id=course.id )}}"><i class="fa-solid fa-trash"></i></a>
+                </div>
+                <p>{{ course.description }}</p>
+            </div>
+
+            {% for domain in domains %}
+                {% if domain.id == course.domainId %}
+                    <p>Domain: <a href="{{ url_for('domains.get_specific_domain', domain_id=domain.id) }}">{{ domain.name }}</a></p>
+                {% endif %}
+            {% endfor %}
+
+            <div class="grid">
+                {% if course.termId % 2 == 0 %}
+                    <p>Session: Winter</p>
+                {% else %}
+                    <p>Session: Fall</p>
+                {% endif %}
+
+                <p>Term: {{ course.termId }}</p>
+                <p>Class hours: {{ course.theory_hours }}</p>
+                <p>Lab hours: {{ course.lab_hours }}</p>
+                <p>Homework hours: {{ course.work_hours }}</p>
+                <p>Total hours: {{ (course.lab_hours + course.theory_hours) * 15}}</p>
+                <p>Credits: {{ ((course.lab_hours + course.theory_hours + course.work_hours) / 3) | round(2) }}</p>
+            </div>
+        </main>
+        <hr>
+    {% endfor %}
 {% endblock%}

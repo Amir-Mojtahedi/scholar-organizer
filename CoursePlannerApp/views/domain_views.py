@@ -22,6 +22,16 @@ def get_domains():
             flash('There is no course in database')            
         return render_template('domains.html',domains=domains)
 
+@bp.route("/<int:domain_id>/")
+def get_specific_domain(domain_id):
+    if request.method == 'GET':
+        try:
+            domain = dtb.get_specific_domain(domain_id) 
+        except Exception as e:
+            flash('There is an issue with the Database')
+        if not domain:
+            flash('There is no course in database')            
+        return render_template('domain.html', domain=domain)
 
 
 #Add Domain

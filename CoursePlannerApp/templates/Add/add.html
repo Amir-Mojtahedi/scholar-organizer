@@ -5,10 +5,10 @@
 {% block headerTitle %}
     Use the buttons below to add something new to the database
 {% endblock %}
-{% block script %}
+{% block head %}
     <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
 {% endblock %}
-{% block sectionContent%}
+{% block content%}
     <div class="add-options">
         <a href="{{url_for('add.add_course')}}"><button>Add a new course</button></a>
         <a href="{{url_for('add.add_competency')}}"><button>Add a new competency</button></a>
