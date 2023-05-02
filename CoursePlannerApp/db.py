@@ -404,23 +404,12 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(element, Element)):
                 raise ValueError("Should be Element obj")
-
-            # Check if Element doesn't already exist
-            results = cursor.execute(
-                "SELECT * FROM ELEMENTS where element_id = :elementId or element = :elementName or element_order = :elementOrder",
-                elementId=element.id, elementName=element.name, elementOrder=element.order)
-            nElement = [result for result in results if
-                        (result[0] == element.id or result[1] == element.order or result[2] == element.name)]
-            if not (nElement == []):
-                raise ValueError("Element already exist")
-
             # Check if Competency exists
             results = cursor.execute("SELECT * FROM COMPETENCIES where competency_id = :competencyId",
                                      competencyId=element.competencyId)
             nCompetency = [result for result in results if result[0] == element.competencyId]
             if nCompetency is None:
                 raise ValueError("Competency doesn't exist. Create a competency first")
-
             # Insert Data
             cursor.execute(
                 "INSERT INTO ELEMENTS (element_id, element_order, element, element_criteria, competency_id) VALUES (:elementId, :elementOrder, :elementName, :elementCriteria, :competencyId)",
@@ -428,7 +417,23 @@ class Database:
                 elementCriteria=element.criteria, competencyId=element.competencyId)
             if not cursor.rowcount:
                 raise oracledb.Error
-
+            
+    def add_element_course_bridging(self,elementId,courseId,elementHours):
+            '''Add a record to the bridging table'''
+            with self.__get_cursor() as cursor:
+                # Check if the record doesn't already exist in the bridging table
+                results = cursor.execute(
+                "SELECT course_id, element_id FROM COURSES_ELEMENTS where element_id = :elementId and course_id = :courseId",
+                elementId=elementId, courseId=courseId)
+                nRecord = [result for result in results if (result[0] == elementId and result[1] == courseId)]
+                if not (nRecord == []):
+                    raise ValueError("record already exists")
+                else:
+                    cursor.execute(
+                        "INSERT INTO COURSES_ELEMENTS (element_id, course_id,element_hours) VALUES(:elementId, :courseId,:elementHours)",elementId=elementId, courseId=courseId,elementHours=elementHours)
+                    if not cursor.rowcount:
+                        raise oracledb.Error
+                    
     def update_element(self, element):
         '''Update a element for the given Competency object'''
         with self.__get_cursor() as cursor:

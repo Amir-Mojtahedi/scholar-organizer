@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}
+    Add an Element for thic course
+{% endblock %}
+{% block headerTitle %}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
+{% endblock %}
+{% block content%}
+    <h1>Choose your Element:</h1>
+    <form method="post">
+        {{ form.csrf_token }}
+        {{ form.id.label}}              {{ form.id() }}
+        {{ form.element_hours.label}}              {{ form.element_hours() }}
+        <button type="submit" id="addElement" name="addElement"> Submit </button>
+    </form>
+{% endblock%}
+

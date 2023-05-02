@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content%}
-    <a href="{{ url_for('competencies.create_competency') }}"><button>Add a new competency for this course</button></a>
+    <a href="{{ url_for('courses.add_element_for_course',course_id=course.id) }}"><button>Add a new element for this course</button></a>
     <br>
     <main>
         <div class="headings">

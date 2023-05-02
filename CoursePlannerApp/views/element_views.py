@@ -92,4 +92,4 @@ def delete(element_id):
     except Exception as e:
         flash("Error: " + str(e))
     
-    return redirect(url_for('elements.get_elements'))
+    return redirect(url_for('competencies.list_elements', competency_id=element.competencyId))

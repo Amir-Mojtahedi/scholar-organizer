@@ -4,6 +4,7 @@ from werkzeug.local import LocalProxy
 from CoursePlannerApp.dbmanager import get_db
 import oracledb
 from CoursePlannerApp.objects.course import CourseForm, Course
+from CoursePlannerApp.objects.element import Element, ElementFormBridge
 
 bp = Blueprint('courses', __name__, url_prefix='/courses')
 
@@ -36,7 +37,27 @@ def list_competencies(course_id):
             flash('There is no competency in the database')            
     return render_template('course.html', competencies = competencies, course = course, domains = domains, elements_covered = elements_covered)
 
-
+@bp.route('/<course_id>/new/', methods=['GET', 'POST'])
+@login_required
+def add_element_for_course(course_id):
+    form = ElementFormBridge()
+    #Fill element drop list
+    form.id.choices = sorted([(element.id, str(element.id)+" - "+element.name) for element in dtb.get_elements()]) #Getting data for Select field for competencyId  (Circular import error)
+    form.id.choices.insert(0, [0, "Choose an Element of Competency"])
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            try:
+                dtb.add_element_course_bridging(int(form.id.data),course_id,int(form.element_hours.data))
+                return redirect(url_for('courses.list_competencies',course_id=course_id))
+            except oracledb.IntegrityError as e:
+                error_obj, = e.args #To acces code error 
+                if error_obj.code == 1: # 1 is related to primary key issue (when the primary key already exist) 
+                    flash("Element already exist")
+            except Exception as e:
+                flash("Error: " + str(e))
+        else:
+            flash('Invalid input')
+    return render_template('Add/addCourseElementBridge.html', form=form)
 
 #Add course
 @bp.route('/new/', methods=['GET', 'POST'])
