@@ -124,7 +124,7 @@ def update_course(course_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             
-            updatedCourse = Course(form.id.data, form.name.data, form.description.data, 
+            updatedCourse = Course(course_id, form.name.data, form.description.data, 
                                form.termId.data, form.domainId.data, 
                                form.lab_hours.data, form.theory_hours.data, 
                                form.work_hours.data)

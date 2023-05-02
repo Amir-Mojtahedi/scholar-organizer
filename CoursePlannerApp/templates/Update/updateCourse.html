@@ -11,7 +11,7 @@
     <h1>Course to Update:</h1>
     <form method="post">
         {{ form.csrf_token }}
-        {{ form.id.label}}              {{ form.id() }}             <div class="error">{{ form.id.errors[0]}}</div>
+        {{ form.id.label}}              {{ form.id(readonly=True) }}             <div class="error">{{ form.id.errors[0]}}</div>
         {{ form.name.label}}            {{ form.name() }}           <div class="error">{{ form.id.errors[0]}}</div>
         {{ form.description.label}}     {{ form.description() }}
         {{ form.termId.label}}          {{ form.termId() | safe}}
