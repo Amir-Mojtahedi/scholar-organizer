@@ -230,6 +230,7 @@ class Database:
             for result in results:
                 newTerm = Term(id=result[0], name=result[1])
                 newListTerm.append(newTerm)
+                newListTerm.sort(key=lambda x: x.id)
             return newListTerm
 
     def get_specific_term(self, termId):

@@ -22,6 +22,7 @@ def get_terms():
     if not terms or len(terms) == 0:
         flash('There is no term in database') 
         return render_template('display.html')
+    terms
     return render_template('terms.html', terms = dtb.get_terms())
 
 #Add term
