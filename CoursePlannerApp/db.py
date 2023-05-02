@@ -432,6 +432,15 @@ class Database:
                     "INSERT INTO COURSES_ELEMENTS (element_id, course_id,element_hours) VALUES(:elementId, :courseId,:elementHours)",elementId=elementId, courseId=courseId,elementHours=elementHours)
                 if not cursor.rowcount:
                     raise oracledb.Error
+                
+    def delete_element_course_bridging(self,elementId,courseId):
+            '''Delete a record from the bridging table'''
+            with self.__get_cursor() as cursor:
+                cursor.execute(
+                "DELETE FROM COURSES_ELEMENTS WHERE element_id = :elementId and course_id = :courseId",
+                elementId=elementId, courseId=courseId)
+                if not cursor.rowcount:
+                    raise oracledb.Error
                     
     def update_element(self, element):
         '''Update a element for the given Competency object'''

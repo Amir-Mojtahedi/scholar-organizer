@@ -59,7 +59,7 @@ def create_domain():
     return render_template('Add/addDomain.html', form=form)
 
 #Update Domain
-@bp.route('/<domain_id>/update/', methods=['GET', 'POST'])
+@bp.route('/<int:domain_id>/update/', methods=['GET', 'POST'])
 @login_required
 def update_domain(domain_id):
     

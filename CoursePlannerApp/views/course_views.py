@@ -155,3 +155,15 @@ def delete(course_id):
 
     flash("Course deleted successfully")
     return redirect(url_for('courses.get_courses'))
+
+@bp.route('/<course_id>/<int:element_id>/delete/', methods=['GET'])
+@login_required
+def delete_element_for_course(course_id,element_id):
+    try:    
+        dtb.delete_element_course_bridging(element_id,course_id)
+        flash("Element deleted successfully") 
+    except Exception as e:
+        flash("Could not access the record")
+        flash("Error: " + str(e))
+        return redirect(url_for('courses.list_competencies',course_id=course_id))
+    return redirect(url_for('courses.list_competencies',course_id=course_id))
