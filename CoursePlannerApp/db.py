@@ -370,20 +370,8 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(competency, Competency)):
                 raise ValueError
-            cursor.execute(
-                "UPDATE COMPETENCIES SET competency = :competencyName, competency_achievement = :competencyAchievement, competency_type = :competencyType WHERE competency_id = :competencyId",
-                competencyId=competency.id, competencyName=competency.name,
-                competencyAchievement=competency.achievement, competencyType=competency.type)
             
             ##Create competency with the updated data            
-            # Check if competency doesn't already exist
-            results = cursor.execute(
-                "SELECT * FROM COMPETENCIES where competency_id = :competencyId or competency = :competencyName",
-                competencyId=competency.id, competencyName=competency.name)
-            nCompetency = [result for result in results if (result[0] == competency.id or result[1] == competency.name)]
-            if not (nCompetency == []):
-                raise ValueError("Competency already exist")
-
             # Insert data
             cursor.execute(
                 "INSERT INTO COMPETENCIES (competency_id, competency, competency_achievement, competency_type) VALUES(:competencyId, :competencyName, :competencyAchievement, :competencyType)",
@@ -394,7 +382,7 @@ class Database:
             
             ##Update bridgin tbl
             cursor.execute(
-                "UPDATE COMPETENCIES SET competency_id = :competencyId WHERE course_id = :OldCompetencyId", OldCompetencyId = oldCompetencyId,
+                "UPDATE ELEMENTS SET competency_id = :competencyId WHERE competency_id = :OldCompetencyId", OldCompetencyId = oldCompetencyId,
                 competencyId=competency.id)
             if not cursor.rowcount:
                 raise oracledb.Error

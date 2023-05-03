@@ -5,6 +5,27 @@
 {% endblock %}
 
 {% block content%}
+    <div id="searchDiv">
+        <section id='top-section'>
+            <!-- Creating the form and the fieldset-->
+            <form>
+                <fieldset>
+                    <legend>Search Type</legend>
+                    <select name="cars" id="cars">
+                        <option value="course">Courses</option>
+                        <option value="competency">Competencies</option>
+                        <option value="element">Elements</option>
+                        <option value="domain">Domains</option>
+                        <option value="term">Terms</option>
+                      </select>
+                </fieldset>
+                <fieldset>
+                    <legend>Search</legend>
+                        <input type="queryr" id="query" name="query">                            
+                </fieldset>
+            </form>
+        </section>
+    </div>
     <a href="{{ url_for('courses.create_course') }}"><button>Add Course</button></a>
     <br>
     {% for course in courses %}
