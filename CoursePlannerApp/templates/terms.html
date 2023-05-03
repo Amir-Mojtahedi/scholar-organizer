@@ -4,10 +4,11 @@
 {% endblock %}
 
 {% block content %}
+    <input type="text" name="filter" placeholder="Filter">
     <a href="{{ url_for('terms.create_term') }}"><button>Add Term</button></a>
     <br>
     {% for term in terms %}
-        <main>
+        <main class="searchable">
             <div class="headings">
                 <div class="title">
                     <h2>{{ term.name }}</h2>
