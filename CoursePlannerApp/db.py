@@ -216,6 +216,24 @@ class Database:
             next_page = page_num + 1
         return courses, prev_page, next_page, count
 
+    def get_competencies_api(self, page_num=1, page_size=50):
+        competencies = []
+        offset = (page_num-1)*page_size
+        prev_page = None
+        next_page = None
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select count(*) from competencies')
+            count = results.fetchone()[0]
+            #id, name, achievement, type
+            results = cursor.execute('select competency_id, COMPETENCY, COMPETENCY_ACHIEVEMENT, COMPETENCY_TYPE from competencies order by competency_id offset :offset rows fetch next :page_size rows only', offset=offset, page_size=page_size)
+            for row in results:
+                competency = Competency(id=row[0], name=row[1], achievement=row[2], type=row[3])
+                competencies.append(competency)
+        if page_num > 1:
+            prev_page = page_num - 1
+        if len(competencies) > 0 and (count/page_size) > page_num:
+            next_page = page_num + 1
+        return competencies, prev_page, next_page, count
 
     def get_specific_domain(self, domainId):
         '''Returns a specific domain'''
