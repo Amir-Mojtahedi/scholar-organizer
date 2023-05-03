@@ -2,11 +2,11 @@ from flask import Blueprint, jsonify, make_response, request, abort, flash, url_
 from CoursePlannerApp.dbmanager import get_db
 from CoursePlannerApp.objects.course import Course
 
-bp = Blueprint('course_api', __name__, url_prefix='/api/courses/')
+bp = Blueprint('courses_api', __name__, url_prefix='/api/courses/')
 
 #Course Page 
 @bp.route("/", methods=['GET', 'POST'])
-def course_api():
+def courses_api():
     #Get needed data
     try:
         courses = get_db().get_courses()
@@ -14,9 +14,9 @@ def course_api():
         abort(404)
     #Add course
     if request.method == 'POST':
-        course_json = request.json #In json format
-        if course_json:
-                course = Course.from_json(course_json) #Turning _json to "python format"
+        result = request.json #In json format
+        if result:
+                course = Course.from_json(result) #Turning _json to "python format"
                 try:
                     get_db().add_course(course) 
                     resp = make_response({}, 201)

@@ -33,12 +33,19 @@ class Database:
                         statement_parts = []
 
     # COURSE
-    def get_courses(self):
+    def get_courses(self, page_num=1, page_size=1000000):
         '''Returns all Courses objects in a list'''
         with self.__get_cursor() as cursor:
             newListCourse = []
+            offset = (page_num-1)*page_size
+            prev_page = None
+            next_page = None
+            results = cursor.execute('SELECT count(*) FROM courses')
+            count = results.fetchone()[0]
+            
+            
             results = cursor.execute(
-                "SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES")
+                "SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES order by id offset :offset rows fetch next :page_size rows only", offset=offset, page_size=page_size)
             for result in results:
                 newCourse = Course(id=result[0], name=result[1], theory_hours=result[2], lab_hours=result[3],
                                    work_hours=result[4], description=result[5], domainId=result[6], termId=result[7])

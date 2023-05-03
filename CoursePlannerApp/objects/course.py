@@ -3,7 +3,19 @@ from wtforms import StringField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Regexp, NumberRange
 
 class Course:
-    def __init__(self, id, name, description, termId, domainId, lab_hours, theory_hours, work_hours):
+    
+    def from_json(course_dict):
+        return Course(  course_dict['name'],
+                        course_dict['id'],
+                        course_dict['description'],
+                        course_dict['termId'],
+                        course_dict['domainId'],
+                        course_dict['lab_hours'],
+                        course_dict['theory_hours'],
+                        course_dict['work_hours'])
+
+    def __init__(self, id, name, description, termId, domainId, lab_hours, theory_hours, 
+                 work_hours):
         if not isinstance(id, str): #Id validation
             raise TypeError("Enter a valid Id. Try again.")
         self.id = id
@@ -35,7 +47,7 @@ class Course:
        
     def __repr__(self):
         return f'{self.name}: {self.id}, {self.description}, {self.termId}, {self.domainId}, {self.lab_hours}, {self.theory_hours}, {self.work_hours} '        
-     
+
     def __str__(self): 
         return f'<h3>{self.name}: </h3> \
                     <ul>    \
@@ -47,6 +59,8 @@ class Course:
                             <li> Theory Hours: {self.theory_hours}</li> \
                             <li> Work Hours: {self.work_hours} </li>    \
                     </ul>'
+
+
     
 class CourseForm(FlaskForm):
     
