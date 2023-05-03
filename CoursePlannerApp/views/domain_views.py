@@ -78,7 +78,7 @@ def update_domain(domain_id):
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            updatedDomain = Domain(domain_id, form.name.data, form.description.data)
+            updatedDomain = Domain(form.id.data, form.name.data, form.description.data)
             try:
                 dtb.update_domain(updatedDomain)
                 flash("Domain has been updated")    
