@@ -6,6 +6,7 @@ from flask_login import LoginManager
 
 from CoursePlannerApp.apis.domains_api import bp as domains_api
 from CoursePlannerApp.apis.terms_api import bp as terms_api
+from CoursePlannerApp.apis.courses_api import bp as courses_api
 from CoursePlannerApp.views.auth_views import bp as auth_bp
 from CoursePlannerApp.views.competency_views import bp as competency_bp
 from CoursePlannerApp.views.course_views import bp as course_bp
@@ -65,3 +66,4 @@ def init_app(app):
 
     app.register_blueprint(domains_api)
     app.register_blueprint(terms_api)
+    app.register_blueprint(courses_api)

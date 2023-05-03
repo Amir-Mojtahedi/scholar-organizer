@@ -195,6 +195,27 @@ class Database:
             next_page = page_num + 1
         return terms, prev_page, next_page, count
 
+    def get_courses_api(self, page_num=1, page_size=50):
+        courses = []
+        offset = (page_num-1)*page_size
+        prev_page = None
+        next_page = None
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select count(*) from courses')
+            count = results.fetchone()[0]
+            results = cursor.execute('select course_id, course_title, theory_hours, lab_hours, work_hours, '
+                                     'description, domain_id, term_id from courses order by course_id offset :offset '
+                                     'rows fetch next :page_size rows only', offset=offset, page_size=page_size)
+            for row in results:
+                course = Course(id=row[0], name=row[1], theory_hours=row[2], lab_hours=row[3], work_hours=row[4],
+                                description=row[5], domainId=row[6], termId=row[7])
+                courses.append(course)
+        if page_num > 1:
+            prev_page = page_num - 1
+        if len(courses) > 0 and (count/page_size) > page_num:
+            next_page = page_num + 1
+        return courses, prev_page, next_page, count
+
 
     def get_specific_domain(self, domainId):
         '''Returns a specific domain'''
