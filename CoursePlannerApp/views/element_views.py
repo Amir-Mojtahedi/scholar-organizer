@@ -68,7 +68,7 @@ def update_element(element_id):
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            updatedElement = Element(form.id.data, form.order.data, form.name.data, 
+            updatedElement = Element(element_id, form.order.data, form.name.data, 
                                     form.criteria.data, form.competencyId.data)
             try:
                 dtb.update_element(updatedElement)
@@ -92,4 +92,4 @@ def delete(element_id):
     except Exception as e:
         flash("Error: " + str(e))
     
-    return redirect(url_for('elements.get_elements'))
+    return redirect(url_for('competencies.list_elements', competency_id=element.competencyId))

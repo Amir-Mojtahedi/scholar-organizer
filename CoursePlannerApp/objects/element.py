@@ -44,3 +44,10 @@ class ElementForm(FlaskForm):
     name = StringField('Name',validators=[DataRequired()])
     criteria = StringField('Criteria',validators=[DataRequired()])
     competencyId = SelectField('Id of associated Competency',validators=[DataRequired()], choices=[])
+
+class ElementFormBridge(FlaskForm):
+    id = SelectField('Id of associated Element',validators=[DataRequired()], choices=[])
+    element_hours = IntegerField('How many hours does this element take',validators=
+                                [DataRequired(), 
+                                 NumberRange(min=1)
+                                 ])

@@ -63,7 +63,7 @@ def create_competency():
 @bp.route('/<competency_id>/update/', methods=['GET', 'POST'])
 @login_required
 def update_competency(competency_id):
-    
+    oldCompetencyId = competency_id
     #Check if competency exist
     try:
         competency = dtb.get_specific_competency(competency_id)
@@ -82,7 +82,7 @@ def update_competency(competency_id):
             updatedCompetency = Competency(form.id.data, form.name.data, form.achievement.data, 
                                        form.type.data)
             try:
-                dtb.update_competency(updatedCompetency)
+                dtb.update_competency(updatedCompetency, oldCompetencyId)
                 flash("Competency has been updated")    
                 return redirect(url_for('competencies.get_competencies'))
             except Exception as e:
@@ -97,7 +97,7 @@ def delete(competency_id):
         competency = dtb.get_specific_competency(competency_id)        
     except Exception as e:
         flash("Could not acces the competency")
-        return redirect(url_for('competency.list_elements', 'competency_id=competency.id'))
+        return redirect(url_for('competency.list_elements', competency_id=competency.id))
     
     # try to delete competency
     try:
