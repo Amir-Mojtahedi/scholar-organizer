@@ -156,6 +156,26 @@ class Database:
                 newDomain = Domain(id=result[0], name=result[1], description=result[2])
                 newListDomain.append(newDomain)
             return newListDomain
+        
+    def get_domains_api(self, page_num=1, page_size=50):
+        domains = []
+        offset = (page_num-1)*page_size
+        prev_page = None
+        next_page = None
+        with self.__conn.cursor() as cursor:
+            results = cursor.execute('select count(*) from domains')
+            count = results.fetchone()[0]
+            results = cursor.execute('select domain_id, domain, domain_description from domains order by domain_id offset :offset rows fetch next :page_size rows only', offset=offset, page_size=page_size)
+            for row in results:
+                domain = Domain(id=row[0], name=row[1],
+                    description=row[2])
+                domains.append(domain)
+        if page_num > 1:
+            prev_page = page_num - 1
+        if len(domains) > 0 and (count/page_size) > page_num:
+            next_page = page_num + 1
+        return domains, prev_page, next_page
+
 
     def get_specific_domain(self, domainId):
         '''Returns a specific domain'''
