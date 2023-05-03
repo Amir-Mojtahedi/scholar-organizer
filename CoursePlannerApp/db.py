@@ -175,6 +175,25 @@ class Database:
         if len(domains) > 0 and (count/page_size) > page_num:
             next_page = page_num + 1
         return domains, prev_page, next_page, count
+    
+    def get_terms_api(self, page_num=1, page_size=50):
+        terms = []
+        offset = (page_num-1)*page_size
+        prev_page = None
+        next_page = None
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select count(*) from terms')
+            count = results.fetchone()[0]
+            results = cursor.execute('select term_id, TERM_NAME from terms order by term_id offset :offset rows fetch '
+                                     'next :page_size rows only', offset=offset, page_size=page_size)
+            for row in results:
+                term = Term(id=row[0], name=row[1])
+                terms.append(term)
+        if page_num > 1:
+            prev_page = page_num - 1
+        if len(terms) > 0 and (count/page_size) > page_num:
+            next_page = page_num + 1
+        return terms, prev_page, next_page, count
 
 
     def get_specific_domain(self, domainId):
