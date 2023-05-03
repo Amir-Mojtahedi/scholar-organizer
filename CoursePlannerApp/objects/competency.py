@@ -27,7 +27,17 @@ class Competency:
                             <li> Achievement: {self.achievement}</li>   \
                             <li> Type: {self.type}</li> \
                     </ul>'
-
+    
+    def from_json(competency_dict):
+        if not isinstance(competency_dict,dict):
+            raise TypeError("Expected dict")
+        return Competency(competency_dict['id'],competency_dict['name'],competency_dict['achievement'],competency_dict['type'])
+    
+    def to_json(competency):
+        if not isinstance(competency,Competency):
+            raise TypeError("Expected Address")
+        return competency.__dict__
+    
 class CompetencyForm(FlaskForm):
     id = StringField('Id',validators=
                      [DataRequired(),

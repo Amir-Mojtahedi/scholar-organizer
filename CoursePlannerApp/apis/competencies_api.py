@@ -1,20 +1,20 @@
 from flask import Blueprint, abort, jsonify, request, url_for
 from CoursePlannerApp.dbmanager import get_db
-from CoursePlannerApp.objects.domain import Domain
+from CoursePlannerApp.objects.competency import Competency
 
-bp = Blueprint('domains_api', __name__, url_prefix='/api/v1/domains')
+bp = Blueprint('competencies_api', __name__, url_prefix='/api/v1/competencies')
 
 from werkzeug.local import LocalProxy
 
 dtb = LocalProxy(get_db)
 
 @bp.route('', methods=['GET', 'POST'])
-def domains_api():
+def competencies_api():
     if request.method == 'POST':
         result = request.json 
         if result:
-            domain = Domain.from_json(result)
-            dtb.add_domain(domain)
+            competency = Competency.from_json(result)
+            dtb.add_competency(competency)
         else:
             abort(400)
     else:
@@ -23,7 +23,7 @@ def domains_api():
             page = request.args.get('page')
             if page:
                 page_num = int(page)
-        domains, prev_page, next_page = dtb.get_domains_api(page_num=page_num, page_size=10)
+        domains, prev_page, next_page = dtb.get_domains(page_num=page_num, page_size=10)
     next_page_url = None
     prev_page_url = None
     if prev_page:
