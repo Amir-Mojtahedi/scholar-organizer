@@ -190,14 +190,12 @@ class Database:
     def get_specific_domain(self, domainId):
         '''Returns a specific domain'''
         with self.__get_cursor() as cursor:
-            domain = []
             results = cursor.execute(
                 "SELECT domain_id, domain, domain_description FROM DOMAINS WHERE domain_id = :domainId",
                 domainId=domainId)
             for result in results:
                 foundDomain = Domain(id=result[0], name=result[1], description=result[2])
-                domain.append(foundDomain)
-            return domain
+            return foundDomain
 
     def get_courses_in_domain(self, domainId):
         '''Returns a specific domain'''
