@@ -48,6 +48,15 @@ def add_element_for_course(course_id):
         if form.validate_on_submit():
             try:
                 dtb.add_element_course_bridging(int(form.id.data),course_id,int(form.element_hours.data))
+                course=dtb.get_specific_course(course_id)
+                total_hours=(course.lab_hours + course.theory_hours) * 15
+                current_hours=dtb.get_sum_hours(course_id)
+                diff=total_hours-current_hours
+                flash("Element was added successfully")
+                if(diff<0):
+                    flash(f'You must remove {diff*-1} to match {total_hours} of {course.name}')
+                elif(diff>0):
+                    flash(f'You must add {diff} hours to match {total_hours} hours of {course.id} {course.name}')
                 return redirect(url_for('courses.list_competencies',course_id=course_id))
             except oracledb.IntegrityError as e:
                 error_obj, = e.args #To acces code error 
@@ -159,9 +168,17 @@ def delete(course_id):
 @bp.route('/<course_id>/<int:element_id>/delete/', methods=['GET'])
 @login_required
 def delete_element_for_course(course_id,element_id):
-    try:    
+    try:
+        course=dtb.get_specific_course(course_id)
+        total_hours=(course.lab_hours + course.theory_hours) * 15    
         dtb.delete_element_course_bridging(element_id,course_id)
-        flash("Element deleted successfully") 
+        current_hours=dtb.get_sum_hours(course_id)
+        diff=total_hours-current_hours
+        flash("Element deleted successfully")
+        if(diff<0):
+            flash(f'You must remove {diff*-1} to match {total_hours} of {course.name}')
+        elif(diff>0):
+            flash(f'You must add {diff} hours to match {total_hours} hours of {course.id} {course.name}')
     except Exception as e:
         flash("Could not access the record")
         flash("Error: " + str(e))

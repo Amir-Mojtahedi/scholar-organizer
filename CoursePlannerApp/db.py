@@ -441,6 +441,22 @@ class Database:
                 elementId=elementId, courseId=courseId)
                 if not cursor.rowcount:
                     raise oracledb.Error
+                
+    def get_sum_hours(self,courseId):
+            '''Get records from the bridging table'''
+            with self.__get_cursor() as cursor:
+                hours=0
+                try:
+                    results = cursor.execute(
+                        "SELECT SUM(element_hours) FROM COURSES_ELEMENTS WHERE course_id=:courseId",
+                        courseId=courseId)
+                    for result in results:
+                        if(result[0] is None):
+                            return 0
+                        hours=result[0]
+                except TypeError:
+                    return 0
+                return hours
                     
     def update_element(self, element):
         '''Update a element for the given Competency object'''
