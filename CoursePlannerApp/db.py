@@ -174,19 +174,19 @@ class Database:
             prev_page = page_num - 1
         if len(domains) > 0 and (count/page_size) > page_num:
             next_page = page_num + 1
-        return domains, prev_page, next_page
+        return domains, prev_page, next_page, count
 
 
     def get_specific_domain(self, domainId):
         '''Returns a specific domain'''
         with self.__get_cursor() as cursor:
-            domain = []
+            domain = None
+
             results = cursor.execute(
                 "SELECT domain_id, domain, domain_description FROM DOMAINS WHERE domain_id = :domainId",
                 domainId=domainId)
             for result in results:
-                foundDomain = Domain(id=result[0], name=result[1], description=result[2])
-                domain.append(foundDomain)
+                domain = Domain(id=result[0], name=result[1], description=result[2])
             return domain
 
     def get_courses_in_domain(self, domainId):
