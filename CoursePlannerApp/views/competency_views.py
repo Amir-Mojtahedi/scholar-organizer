@@ -63,7 +63,7 @@ def create_competency():
 @bp.route('/<competency_id>/update/', methods=['GET', 'POST'])
 @login_required
 def update_competency(competency_id):
-    
+    oldCompetencyId = competency_id
     #Check if competency exist
     try:
         competency = dtb.get_specific_competency(competency_id)
@@ -79,10 +79,10 @@ def update_competency(competency_id):
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            updatedCompetency = Competency(competency_id, form.name.data, form.achievement.data, 
+            updatedCompetency = Competency(competency.id, form.name.data, form.achievement.data, 
                                        form.type.data)
             try:
-                dtb.update_competency(updatedCompetency)
+                dtb.update_competency(updatedCompetency, oldCompetencyId)
                 flash("Competency has been updated")    
                 return redirect(url_for('competencies.get_competencies'))
             except Exception as e:

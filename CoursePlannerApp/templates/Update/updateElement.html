@@ -11,7 +11,7 @@
     <h1>Element to Update:</h1>
     <form method="post">
         {{ form.csrf_token }}
-        {{ form.id.label}}              {{ form.id(readonly=True) }}
+        {{ form.id.label}}              {{ form.id() }}
         {{ form.order.label}}           {{ form.order() }}
         {{ form.name.label}}            {{ form.name() }}
         {{ form.criteria.label}}        {{ form.criteria() }}
