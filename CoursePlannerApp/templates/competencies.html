@@ -4,10 +4,11 @@
 {% endblock %}
 
 {% block content %}
+    <input type="text" name="filter" placeholder="Filter">
     <a href="{{ url_for('add.add_course') }}"><button>Add Competency</button></a>
     <br>
     {% for competency in competencies %}
-        <main>
+        <main class="searchable">
             <div class="headings">
                 <div class="title">
                     <kbd>{{ competency.id }}</kbd>
