@@ -12,7 +12,11 @@ dtb = LocalProxy(get_db)
 @bp.route("", methods=["GET"])
 def get_domains():
     page = int(request.args.get("page") or 1)
-    domains, prev_page, next_page, count = dtb.get_domains_api(page)
+
+    try:
+        domains, prev_page, next_page, count = dtb.get_domains_api(page)
+    except oracledb.Error as e:
+        return jsonify({"error": str(e)}), 500
 
     next = url_for("domains_api.get_domains", page=next_page) if next_page else None
     prev = url_for("domains_api.get_domains", page=prev_page) if prev_page else None
@@ -20,7 +24,7 @@ def get_domains():
     json = {"count": count, "next": next, "prev": prev,
             "results": [domain.__dict__ for domain in domains]}
 
-    return jsonify(json)
+    return jsonify(json), 200
 
 
 @bp.route("/<int:id>", methods=["GET"])
@@ -33,7 +37,7 @@ def get_domain(id):
     if not domain:
         return jsonify({"error": "Domain not found"}), 404
 
-    return jsonify(domain.__dict__)
+    return jsonify(domain.__dict__), 200
 
 
 @bp.route("", methods=["POST"])
@@ -77,7 +81,7 @@ def update_domain(id):
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
-    return jsonify({"success": "Domain updated"}), 200
+    return {}, 204
 
 
 @bp.route("/<int:id>", methods=["DELETE"])
@@ -87,4 +91,4 @@ def delete_domain(id):
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
-    return jsonify({"success": "Domain deleted"}), 200
+    return {}, 204
