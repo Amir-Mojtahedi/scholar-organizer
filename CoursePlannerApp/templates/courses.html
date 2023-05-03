@@ -1,35 +1,14 @@
 {% extends "base.html" %}
 {% block head %}
     <title>Course List</title>
-    <script defer type="text/javascript" src="{{ url_for('static', filename='courses.js')}}"></script>
 {% endblock %}
 
 {% block content%}
-    <div id="searchDiv">
-        <section id='top-section'>
-            <!-- Creating the form and the fieldset-->
-            <form>
-                <fieldset>
-                    <legend>Search Type</legend>
-                    <select name="cars" id="cars">
-                        <option value="course">Courses</option>
-                        <option value="competency">Competencies</option>
-                        <option value="element">Elements</option>
-                        <option value="domain">Domains</option>
-                        <option value="term">Terms</option>
-                      </select>
-                </fieldset>
-                <fieldset>
-                    <legend>Search</legend>
-                        <input type="queryr" id="query" name="query">                            
-                </fieldset>
-            </form>
-        </section>
-    </div>
-    <a href="{{ url_for('courses.create_course') }}"><button>Add Course</button></a>
+    <input type="text" name="filter" placeholder="Filter">
+    <a href="{{ url_for('add.add_course') }}"><button>Add Course</button></a>
     <br>
     {% for course in courses %}
-        <main>
+        <main class="searchable">
             <div class="headings">
                 <div class="title">
                     <kbd>{{ course.id }}</kbd>
