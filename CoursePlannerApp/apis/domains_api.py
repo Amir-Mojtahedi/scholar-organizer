@@ -73,11 +73,9 @@ def update_domain(id):
     if "name" not in request.json and "description" not in request.json:
         return jsonify({"error": "Missing data to update"}), 400
 
-    name = request.json.get("name")
-    description = request.json.get("description")
-
+    domain = Domain(request.json.get("id"),request.json.get("name"),request.json.get("description"))
     try:
-        dtb.update_domain(id, name, description)
+        dtb.update_domain(domain)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
