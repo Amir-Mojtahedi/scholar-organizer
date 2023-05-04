@@ -10,6 +10,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(resp.status_code, 200)
         json = resp.json
         self.assertIsNotNone(json)
+        self.assertIsNotNone(json['count'])
         self.assertIsNotNone(json['results'])
         self.assertIsNone(json['next'])
         self.assertIsNone(json['prev'])
@@ -96,6 +97,52 @@ class TestForAPI(flask_unittest.ClientTestCase):
     # --------------- END TERM CRUD TEST ---------------
 
     # --------------- START COMPETENCY CRUD TEST ---------------
+    def test_get_competencies(self, client):
+        resp = client.get('/api/v1/competencies')
+        self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        self.assertIsNotNone(json)
+        self.assertIsNotNone(json['count'])
+        self.assertIsNotNone(json['results'])
+        self.assertIsNone(json['next'])
+        self.assertIsNone(json['prev'])
+
+    def test_get_competency(self,client):
+        resp = client.get('/api/v1/competencies/00SR')
+        self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        self.assertIsNotNone(json)
+        self.assertIsNotNone(json["id"])
+        self.assertIsNotNone(json["name"])
+        self.assertIsNotNone(json["achievement"])
+        self.assertIsNotNone(json["type"])
+
+    def test_add_competency(self, client):
+        resp = client.get('/api/v1/competencies')
+        self.assertEqual(resp.status_code, 200)
+        competency = resp.json['results'][0]
+        competency['id'] = '00XX'
+        competency['name'] = 'Understanding te basics of serverside programming'
+        competency["achievement"] = '* Based on a problem * Using flask rules'
+        competency["type"] = 'Mandatory'
+        resp = client.post('/api/v1/competencies', json=competency)
+        self.assertEqual(resp.status_code, 201)
+
+    def test_update_competency(self, client):
+        resp = client.get('/api/v1/competencies/00XX')
+        self.assertEqual(resp.status_code, 200)
+        competency = resp.json
+        competency['name'] = 'Understanding te basics of flask'
+        competency["achievement"] = '* Based on a project * Using refactoring'
+        competency["type"] = 'Optional'
+        resp = client.patch('/api/v1/competencies/00XX', json=competency)
+        self.assertEqual(resp.status_code, 204)
+
+         resp = client.get('/api/v1/competencies/00XX')
+        self.assertEqual(resp.status_code, 200)
+        competency = resp.json
+        resp = client.delete('/api/v1/competencies/00XX', json=competency)
+        self.assertEqual(resp.status_code, 204)
     # --------------- END COMPETENCY CRUD TEST ---------------
 
     # --------------- START ELEMENT OF COMPETENCY CRUD TEST ---------------

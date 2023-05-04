@@ -453,8 +453,6 @@ class Database:
 
             # Delete associated elements
             cursor.execute("DELETE FROM elements WHERE competency_id = :competencyId", competencyId=competency.id)
-            if not cursor.rowcount:
-                raise oracledb.Error
 
             cursor.execute("DELETE FROM competencies WHERE competency_id = :competencyId", competencyId=competency.id)
             if not cursor.rowcount:
