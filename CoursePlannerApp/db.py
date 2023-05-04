@@ -447,6 +447,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(element, Element)):
                 raise ValueError("Should be Element obj")
+            
             # Check if Competency exists
             results = cursor.execute("SELECT * FROM COMPETENCIES where competency_id = :competencyId",
                                      competencyId=element.competencyId)

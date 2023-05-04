@@ -70,6 +70,7 @@ def create_course():
     form.termId.choices = sorted([(term.id, str(term.id)+" - "+term.name) for term in dtb.get_terms()]) #Getting data for Select field for termId  (Circular import error)
     form.termId.choices.insert(0, [0, "Choose a term"])
 
+    
     #Fill domain drop list
     form.domainId.choices = sorted([(domain.id, str(domain.id)+" - "+domain.name) for domain in dtb.get_domains()]) #Getting data for Select field for domainId  (Circular import error)
     form.domainId.choices.insert(0, [0, "Choose a domain"])
@@ -81,6 +82,12 @@ def create_course():
                                form.termId.data, form.domainId.data, 
                                form.lab_hours.data, form.theory_hours.data, 
                                form.work_hours.data)
+            
+            for course in dtb.get_courses():
+                if(newCourse.id == course.id or newCourse.name == course.name):
+                    flash("Course already exists!")
+                    return redirect(url_for('courses.get_courses'))
+            
             try:
                 dtb.add_course(newCourse)
                 flash("Course has been added")
@@ -113,6 +120,7 @@ def update_course(course_id):
         flash("Course not found")
         return redirect(url_for('courses.get_courses'))
     
+    
     form = CourseForm(obj=course) #Prefill the form
       
     #Creating a new one based on the updated form
@@ -131,6 +139,11 @@ def update_course(course_id):
                                form.termId.data, form.domainId.data, 
                                form.lab_hours.data, form.theory_hours.data, 
                                form.work_hours.data)
+            
+            for course in dtb.get_courses():
+                if(updatedCourse.id == course.id or updatedCourse.name == course.name):
+                    flash("Course already exists!")
+                
             try:
                 dtb.update_course(updatedCourse, oldCourseId)
                 flash("Course has been updated")    

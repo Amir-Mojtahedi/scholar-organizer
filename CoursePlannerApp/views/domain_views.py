@@ -43,6 +43,11 @@ def create_domain():
         if form.validate_on_submit():
             
             newDomain = Domain(form.id.data, form.name.data, form.description.data)
+            
+            for domain in dtb.get_domains():
+                if(newDomain.id == domain.id or newDomain.name == domain.name):
+                    flash("Domain already exists!")
+                
             try:
                 dtb.add_domain(newDomain)
                 return redirect(url_for('domains.get_domains'))
@@ -79,6 +84,11 @@ def update_domain(domain_id):
         if form.validate_on_submit():
 
             updatedDomain = Domain(form.id.data, form.name.data, form.description.data)
+
+            for domain in dtb.get_domains():
+                if(updatedDomain.id == domain.id or updatedDomain.name == domain.name):
+                    flash("Domain already exists!")
+
             try:
                 dtb.update_domain(updatedDomain)
                 flash("Domain has been updated")    
