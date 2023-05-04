@@ -5,18 +5,19 @@ class TestForAPI(flask_unittest.ClientTestCase):
     app = create_app()
 
     def test_get_domains(self, client):
-        resp = client.get('/api/posts')
+        resp = client.get('/api/v1/domains')
         self.assertEqual(resp.status_code, 200)
         json = resp.json
         self.assertIsNotNone(json)
         self.assertIsNotNone(json['results'])
-        self.assertIsNotNone(json['next_page'])
-        self.assertIsNone(json['prev_page'])
+        self.assertIsNone(json['next'])
+        self.assertIsNone(json['prev'])
 
-    def test_post_domain(self, client):
-        resp = client.get('/api/posts')
-        post = resp.json['results'][0]
+    def test_add_domain(self, client):
+        resp = client.get('/api/v1/domains')
+        domain = resp.json['results'][0]
 
-        post['title'] = 'TEST TITLE'
-        resp = client.post('/api/posts', json=post)
+        domain['id'] = 4
+        domain['name'] = 'TEST TITLE'
+        resp = client.post('/api/v1/domains', json=domain)
         self.assertEqual(resp.status_code, 201)
