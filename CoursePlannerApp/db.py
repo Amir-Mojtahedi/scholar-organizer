@@ -81,6 +81,7 @@ class Database:
                 elementsList.append(element)
             return elementsList
 
+
     def add_course(self, course):
         '''Add a course to the DB for the given Course object'''
         with self.__get_cursor() as cursor:
@@ -174,19 +175,96 @@ class Database:
             prev_page = page_num - 1
         if len(domains) > 0 and (count/page_size) > page_num:
             next_page = page_num + 1
-        return domains, prev_page, next_page
+        return domains, prev_page, next_page, count
+    
+    def get_terms_api(self, page_num=1, page_size=50):
+        terms = []
+        offset = (page_num-1)*page_size
+        prev_page = None
+        next_page = None
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select count(*) from terms')
+            count = results.fetchone()[0]
+            results = cursor.execute('select term_id, TERM_NAME from terms order by term_id offset :offset rows fetch '
+                                     'next :page_size rows only', offset=offset, page_size=page_size)
+            for row in results:
+                term = Term(id=row[0], name=row[1])
+                terms.append(term)
+        if page_num > 1:
+            prev_page = page_num - 1
+        if len(terms) > 0 and (count/page_size) > page_num:
+            next_page = page_num + 1
+        return terms, prev_page, next_page, count
 
+    def get_courses_api(self, page_num=1, page_size=50):
+        courses = []
+        offset = (page_num-1)*page_size
+        prev_page = None
+        next_page = None
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select count(*) from courses')
+            count = results.fetchone()[0]
+            results = cursor.execute('select course_id, course_title, theory_hours, lab_hours, work_hours, '
+                                     'description, domain_id, term_id from courses order by course_id offset :offset '
+                                     'rows fetch next :page_size rows only', offset=offset, page_size=page_size)
+            for row in results:
+                course = Course(id=row[0], name=row[1], theory_hours=row[2], lab_hours=row[3], work_hours=row[4],
+                                description=row[5], domainId=row[6], termId=row[7])
+                courses.append(course)
+        if page_num > 1:
+            prev_page = page_num - 1
+        if len(courses) > 0 and (count/page_size) > page_num:
+            next_page = page_num + 1
+        return courses, prev_page, next_page, count
+
+    def get_competencies_api(self, page_num=1, page_size=50):
+        competencies = []
+        offset = (page_num-1)*page_size
+        prev_page = None
+        next_page = None
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select count(*) from competencies')
+            count = results.fetchone()[0]
+            #id, name, achievement, type
+            results = cursor.execute('select competency_id, COMPETENCY, COMPETENCY_ACHIEVEMENT, COMPETENCY_TYPE from competencies order by competency_id offset :offset rows fetch next :page_size rows only', offset=offset, page_size=page_size)
+            for row in results:
+                competency = Competency(id=row[0], name=row[1], achievement=row[2], type=row[3])
+                competencies.append(competency)
+        if page_num > 1:
+            prev_page = page_num - 1
+        if len(competencies) > 0 and (count/page_size) > page_num:
+            next_page = page_num + 1
+        return competencies, prev_page, next_page, count
+
+    def get_elements_api(self, page_num=1, page_size=50):
+        elements = []
+        offset = (page_num-1)*page_size
+        prev_page = None
+        next_page = None
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select count(*) from elements')
+            count = results.fetchone()[0]
+            #id, order, name, criteria, competencyId
+            results = cursor.execute('select element_id, ELEMENT_ORDER, ELEMENT, ELEMENT_CRITERIA, COMPETENCY_ID from elements order by element_id offset :offset rows fetch next :page_size rows only', offset=offset, page_size=page_size)
+            for row in results:
+                element = Element(id=row[0], order=row[1], name=row[2], criteria=row[3], competencyId=row[4])
+                elements.append(element)
+        if page_num > 1:
+            prev_page = page_num - 1
+        if len(elements) > 0 and (count/page_size) > page_num:
+            next_page = page_num + 1
+        return elements, prev_page, next_page, count
 
     def get_specific_domain(self, domainId):
         '''Returns a specific domain'''
         with self.__get_cursor() as cursor:
-            domain = []
+            domain = None
+
             results = cursor.execute(
                 "SELECT domain_id, domain, domain_description FROM DOMAINS WHERE domain_id = :domainId",
                 domainId=domainId)
             for result in results:
-                foundDomain = Domain(id=result[0], name=result[1], description=result[2])
-                domain.append(foundDomain)
+                domain = Domain(id=result[0], name=result[1], description=result[2])
             return domain
 
     def get_courses_in_domain(self, domainId):
