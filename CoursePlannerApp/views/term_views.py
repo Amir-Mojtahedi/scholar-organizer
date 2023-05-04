@@ -19,10 +19,12 @@ def get_terms():
         flash("Error: " + str(e))
         return render_template("terms.html", terms=[])
     
+    terms.sort(key=lambda x: x.id)
+    
     if not terms or len(terms) == 0:
         flash('There is no term in database') 
         return render_template('display.html')
-    return render_template('terms.html', terms = dtb.get_terms())
+    return render_template('terms.html', terms = terms)
 
 #Add term
 @bp.route('/new/', methods=['GET', 'POST'])

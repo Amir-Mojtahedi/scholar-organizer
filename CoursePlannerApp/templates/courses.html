@@ -5,7 +5,7 @@
 
 {% block content%}
     <input type="text" name="filter" placeholder="Filter">
-    <a href="{{ url_for('add.add_course') }}"><button>Add Course</button></a>
+    <a href="{{ url_for('courses.create_course') }}"><button>Add Course</button></a>
     <br>
     {% for course in courses %}
         <main class="searchable">
@@ -26,12 +26,6 @@
             {% endfor %}
 
             <div class="grid">
-                {% if course.termId % 2 == 0 %}
-                    <p>Session: Winter</p>
-                {% else %}
-                    <p>Session: Fall</p>
-                {% endif %}
-
                 <p>Term: {{ course.termId }}</p>
                 <p>Class hours: {{ course.theory_hours }}</p>
                 <p>Lab hours: {{ course.lab_hours }}</p>

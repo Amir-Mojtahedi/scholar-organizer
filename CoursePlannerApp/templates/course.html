@@ -24,12 +24,6 @@
         {% endfor %}
 
         <div class="grid">
-            {% if course.termId % 2 == 0 %}
-                <p>Session: Winter</p>
-            {% else %}
-                <p>Session: Fall</p>
-            {% endif %}
-
             <p>Term: {{ course.termId }}</p>
             <p>Class hours: {{ course.theory_hours }}</p>
             <p>Lab hours: {{ course.lab_hours }}</p>

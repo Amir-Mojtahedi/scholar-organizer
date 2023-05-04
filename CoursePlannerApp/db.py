@@ -245,9 +245,22 @@ class Database:
         with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
                 raise ValueError
+            
+            courseToDelete = []
+            results = cursor.execute("SELECT course_id FROM Courses WHERE domain_id = :domainId", domainId = domain.id)
+            for result in results:
+                courseId = result[0]
+                courseToDelete.append(courseId)
+            
+            for courseId in courseToDelete:
+                cursor.execute("DELETE FROM courses_elements WHERE course_id = :courseId", courseId=courseId)
+            
+            cursor.execute("DELETE FROM courses WHERE domain_id = :domainId", domainId=domain.id)
+            
             cursor.execute("DELETE FROM domains WHERE domain_id = :domainId", domainId=domain.id)
-            if not cursor.rowcount:
-                raise oracledb.Error
+            
+            
+            
 
     # TERM
     def get_terms(self):
@@ -315,9 +328,18 @@ class Database:
             if (not isinstance(term, Term)):
                 raise ValueError
 
-            cursor.execute("DELETE FROM terms WHERE term_id = :termId", termId=term.id)
-            if not cursor.rowcount:
-                raise oracledb.Error
+            courseToDelete = []
+            results = cursor.execute("SELECT course_id FROM Courses WHERE term_id = :termId", termId = term.id)
+            for result in results:
+                courseId = result[0]
+                courseToDelete.append(courseId)
+            
+            for courseId in courseToDelete:
+                cursor.execute("DELETE FROM courses_elements WHERE course_id = :courseId", courseId=courseId)
+            
+            cursor.execute("DELETE FROM courses WHERE term_id = :termId", termId = term.id)
+            
+            cursor.execute("DELETE FROM terms WHERE term_id = :termId", termId = term.id)
 
     # COMPETENCY
     def get_competencies(self):
@@ -398,8 +420,7 @@ class Database:
 
             # Delete associated elements
             cursor.execute("DELETE FROM elements WHERE competency_id = :competencyId", competencyId=competency.id)
-            if not cursor.rowcount:
-                raise oracledb.Error
+            
 
             cursor.execute("DELETE FROM competencies WHERE competency_id = :competencyId", competencyId=competency.id)
             if not cursor.rowcount:
@@ -520,9 +541,10 @@ class Database:
             if not isinstance(element, Element):
                 raise ValueError("Should be an Element obj")
 
+            cursor.execute("DELETE FROM courses_elements WHERE element_id = :elementId", elementId=element.id)
+            
             cursor.execute("DELETE FROM elements WHERE element_id = :elementId", elementId=element.id)
-            if not cursor.rowcount:
-                raise oracledb.Error
+            
 
     def close(self):
         if self.__connection is not None:
