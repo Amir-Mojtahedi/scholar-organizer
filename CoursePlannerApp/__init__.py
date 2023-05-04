@@ -15,7 +15,7 @@ from CoursePlannerApp.views.term_views import bp as term_bp
 from CoursePlannerApp.views.groups_views import bp as groups_bp
 from CoursePlannerApp.views.users_views import bp as users_bp
 
-from CoursePlannerApp.apis.domains_api import bp as domainapi_bp
+from CoursePlannerApp.apis.domains_api import bp as domains_api
 
 from .dbmanager import close_db, init_db_command, get_db
 
@@ -67,4 +67,4 @@ def init_app(app):
 
     app.register_blueprint(users_bp)
 
-    app.register_blueprint(domainapi_bp)
+    app.register_blueprint(domains_api)

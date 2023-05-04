@@ -30,5 +30,5 @@ def domains_api():
         prev_page_url = url_for('domains_api.domains_api', page=prev_page)
     if next_page:
         next_page_url = url_for('domains_api.domains_api', page=next_page)
-    json_domains = {'next_page': next_page_url, 'prev_page': prev_page_url, 'results': [Domain.to_json(domains) for post in posts]}
+    json_domains = {'next_page': next_page_url, 'prev_page': prev_page_url, 'results': [Domain.to_json(domain) for domain in domains]}
     return jsonify(json_domains)

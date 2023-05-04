@@ -162,7 +162,7 @@ class Database:
         offset = (page_num-1)*page_size
         prev_page = None
         next_page = None
-        with self.__conn.cursor() as cursor:
+        with self.__get_cursor() as cursor:
             results = cursor.execute('select count(*) from domains')
             count = results.fetchone()[0]
             results = cursor.execute('select domain_id, domain, domain_description from domains order by domain_id offset :offset rows fetch next :page_size rows only', offset=offset, page_size=page_size)
