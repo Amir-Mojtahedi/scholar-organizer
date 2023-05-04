@@ -386,8 +386,6 @@ class Database:
                 raise ValueError
 
             cursor.execute("DELETE FROM terms WHERE term_id = :termId", termId=term.id)
-            if not cursor.rowcount:
-                raise oracledb.Error
 
     # COMPETENCY
     def get_competencies(self):
