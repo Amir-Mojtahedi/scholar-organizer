@@ -11,11 +11,11 @@
     <h1>Competency to Update:</h1>
     <form method="post">
         {{ form.csrf_token }}
-        {{ form.id.label}}              {{ form.id(readonly=True) }}
+        {{ form.id.label}}              {{ form.id() }}
         {{ form.name.label}}            {{ form.name() }}
         {{ form.achievement.label}}     {{ form.achievement() }}
         {{ form.type.label}}            {{ form.type() }}
-        <button type="submit" id="addCompetency" name="addCompetency"> Update </button>
+        <button type="submit" id="updateCompetency" name="updateCompetency"> Update </button>
     </form>
 {% endblock%}
 

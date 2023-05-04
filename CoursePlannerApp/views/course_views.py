@@ -102,7 +102,7 @@ def create_course():
 @bp.route('/<course_id>/update/', methods=['GET', 'POST'])
 @login_required
 def update_course(course_id):
-    
+    oldCourseId = course_id
     #Cheack if course exist
     try:
         course = dtb.get_specific_course(course_id)
@@ -127,12 +127,12 @@ def update_course(course_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             
-            updatedCourse = Course(course_id, form.name.data, form.description.data, 
+            updatedCourse = Course(form.id.data, form.name.data, form.description.data, 
                                form.termId.data, form.domainId.data, 
                                form.lab_hours.data, form.theory_hours.data, 
                                form.work_hours.data)
             try:
-                dtb.update_course(updatedCourse)
+                dtb.update_course(updatedCourse, oldCourseId)
                 flash("Course has been updated")    
                 return redirect(url_for('courses.get_courses'))      
             except Exception as e:
@@ -159,12 +159,13 @@ def delete(course_id):
     flash("Course deleted successfully")
     return redirect(url_for('courses.get_courses'))
 
+#Delete an element for specific course
 @bp.route('/<course_id>/<int:element_id>/delete/', methods=['GET'])
 @login_required
 def delete_element_for_course(course_id,element_id):
     try:
         dtb.delete_element_course_bridging(element_id,course_id)
-        flash("Element deleted successfully")
+        flash("Element deleted for this course successfully")
         hour_validator(course_id)
     except Exception as e:
         flash("Could not access the record")

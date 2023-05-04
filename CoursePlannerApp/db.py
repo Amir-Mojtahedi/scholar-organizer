@@ -119,17 +119,47 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
 
-    def update_course(self, course):
+    def update_course(self, course, oldCourseId):
         '''Update a coursefor the given Course object'''
         with self.__get_cursor() as cursor:
             if (not isinstance(course, Course)):
                 raise ValueError
+            
+            ##Create course with the updated data            
+            # Check if domain exists
+            results = cursor.execute(
+                "SELECT domain_id, domain, domain_description FROM DOMAINS where domain_id = :domainId",
+                domainId=course.domainId)
+            domain = [result for result in results if result[0] == course.domainId]
+            if domain is None:
+                raise ValueError("Domain doesn't exist. Create a domain first")
+
+            # Check if term exists
+            results = cursor.execute("SELECT term_id FROM TERMS where term_id = :termId", termId=course.termId)
+            term = [result for result in results if result[0] == course.termId]
+            if term is None:
+                raise ValueError("Term doesn't exist. Create a term first")
+
+            # Insert data
             cursor.execute(
-                "UPDATE COURSES SET course_title = :title, theory_hours = :theory, lab_hours = :lab, work_hours = :work, description = :description, domain_id = :domainId, term_id = :termId WHERE course_id = :courseId",
+                "INSERT INTO COURSES (course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id) VALUES (:courseId, :title, :theory, :lab, :work, :description, :domainId, :termId)",
                 courseId=course.id, title=course.name, theory=course.theory_hours, lab=course.lab_hours,
                 work=course.work_hours, description=course.description, domainId=course.domainId, termId=course.termId)
             if not cursor.rowcount:
                 raise oracledb.Error
+            
+            ##Update bridgin tbl
+            cursor.execute(
+                "UPDATE COURSES_ELEMENTS SET course_id = :courseId WHERE course_id = :OldCourseId", OldCourseId = oldCourseId,
+                courseId=course.id)
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
+            ##Delete old course
+            cursor.execute("DELETE FROM courses WHERE course_id = :courseId", courseId=oldCourseId)
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
 
     def delete_course(self, course):
         '''Delete a course in DB for the given Course object id'''
@@ -299,7 +329,7 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
 
-    def update_domain(self, domain):
+    def update_domain(self, domain, olddomainId):
         '''Update a domain for the given Domain object'''
         with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
@@ -431,15 +461,30 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
 
-    def update_competency(self, competency):
+    def update_competency(self, competency, oldCompetencyId):
         '''Update a competency for the given Competency object'''
         with self.__get_cursor() as cursor:
             if (not isinstance(competency, Competency)):
                 raise ValueError
+            
+            ##Create competency with the updated data            
+            # Insert data
             cursor.execute(
-                "UPDATE COMPETENCIES SET competency = :competencyName, competency_achievement = :competencyAchievement, competency_type = :competencyType WHERE competency_id = :competencyId",
+                "INSERT INTO COMPETENCIES (competency_id, competency, competency_achievement, competency_type) VALUES(:competencyId, :competencyName, :competencyAchievement, :competencyType)",
                 competencyId=competency.id, competencyName=competency.name,
                 competencyAchievement=competency.achievement, competencyType=competency.type)
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
+            ##Update bridgin tbl
+            cursor.execute(
+                "UPDATE ELEMENTS SET competency_id = :competencyId WHERE competency_id = :OldCompetencyId", OldCompetencyId = oldCompetencyId,
+                competencyId=competency.id)
+            if not cursor.rowcount:
+                raise oracledb.Error
+            
+            ##Delete old course
+            cursor.execute("DELETE FROM COMPETENCIES WHERE competency_id = :competencyId", competencyId=oldCompetencyId)
             if not cursor.rowcount:
                 raise oracledb.Error
 
