@@ -1,5 +1,6 @@
 import flask_unittest
 from CoursePlannerApp import create_app
+from CoursePlannerApp.objects.domain import Domain
 
 class TestForAPI(flask_unittest.ClientTestCase):
     app = create_app()
@@ -9,9 +10,14 @@ class TestForAPI(flask_unittest.ClientTestCase):
         resp = client.get('/api/v1/domains')
         self.assertEqual(resp.status_code, 200)
         json = resp.json
+        domain = Domain(1,"Programming, Data Structures, and Algorithms","The courses in the Programming, Data Structures and Algorithms domain teach the knowledge and skills required to design and program solutions to typical information technology problems. The students are taught object-oriented programming in the context of standalone, event-driven and web-based programs.")
+        json_domain = Domain(json['results'][0]['id'],json['results'][0]['name'],json['results'][0]['description'])
         self.assertIsNotNone(json)
         self.assertIsNotNone(json['count'])
         self.assertIsNotNone(json['results'])
+        self.assertEqual(json_domain.id,domain.id)
+        self.assertEqual(json_domain.name,domain.name)
+        self.assertEqual(json_domain.description,domain.description)
         self.assertIsNone(json['next'])
         self.assertIsNone(json['prev'])
 
@@ -19,10 +25,15 @@ class TestForAPI(flask_unittest.ClientTestCase):
         resp = client.get('/api/v1/domains/1')
         self.assertEqual(resp.status_code, 200)
         json = resp.json
+        domain = Domain(1,"Programming, Data Structures, and Algorithms","The courses in the Programming, Data Structures and Algorithms domain teach the knowledge and skills required to design and program solutions to typical information technology problems. The students are taught object-oriented programming in the context of standalone, event-driven and web-based programs.")
+        json_domain = Domain(json['id'],json['name'],json['description'])
         self.assertIsNotNone(json)
         self.assertIsNotNone(json["id"])
         self.assertIsNotNone(json["name"])
         self.assertIsNotNone(json["description"])
+        self.assertEqual(json_domain.id,domain.id)
+        self.assertEqual(json_domain.name,domain.name)
+        self.assertEqual(json_domain.description,domain.description)
 
     def test_add_domain(self, client):
         resp = client.get('/api/v1/domains')
@@ -32,6 +43,15 @@ class TestForAPI(flask_unittest.ClientTestCase):
         domain['name'] = 'TEST TITLE'
         resp = client.post('/api/v1/domains', json=domain)
         self.assertEqual(resp.status_code, 201)
+        resp = client.get('/api/v1/domains/4')
+        self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        domain = Domain(4,"TEST TITLE","The courses in the Programming, Data Structures and Algorithms domain teach the knowledge and skills required to design and program solutions to typical information technology problems. The students are taught object-oriented programming in the context of standalone, event-driven and web-based programs.")
+        json_domain = Domain(json['id'],json['name'],json['description'])
+        self.assertEqual(json_domain.id,domain.id)
+        self.assertEqual(json_domain.name,domain.name)
+        self.assertEqual(json_domain.description,domain.description)
+        
 
     def test_update_domain(self, client):
         resp = client.get('/api/v1/domains/3')
@@ -39,9 +59,17 @@ class TestForAPI(flask_unittest.ClientTestCase):
         domain = resp.json
         domain['id'] = 3
         domain['name'] = 'TEST UPDATE TITLE'
-        domain['description'] = 'TEST UPDATE DESCRIPTION'
+        domain['description'] = 'TEST UPDATE TITLE'
         resp = client.patch('/api/v1/domains/3', json=domain)
         self.assertEqual(resp.status_code, 204)
+        resp = client.get('/api/v1/domains/3')
+        self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        domain = Domain(3,"TEST UPDATE TITLE","TEST UPDATE TITLE")
+        json_domain = Domain(json['id'],json['name'],json['description'])
+        self.assertEqual(json_domain.id,domain.id)
+        self.assertEqual(json_domain.name,domain.name)
+        self.assertEqual(json_domain.description,domain.description)
 
     def test_delete_domain(self, client):
         resp = client.get('/api/v1/domains/3')
@@ -200,5 +228,64 @@ class TestForAPI(flask_unittest.ClientTestCase):
     # --------------- END ELEMENT OF COMPETENCY CRUD TEST ---------------
 
     # --------------- START COURSE CRUD TEST ---------------
+    def test_get_courses(self, client):
+        resp = client.get('/api/v1/courses')
+        self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        self.assertIsNotNone(json)
+        self.assertIsNotNone(json['count'])
+        self.assertIsNotNone(json['results'])
+        self.assertIsNone(json['next'])
+        self.assertIsNone(json['prev'])
+
+    def test_get_course(self,client):
+        resp = client.get('/api/v1/courses/420-110-DW')
+        self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        self.assertIsNotNone(json)
+        self.assertIsNotNone(json["id"])
+        self.assertIsNotNone(json["name"])
+        self.assertIsNotNone(json["description"])
+        self.assertIsNotNone(json["termId"])
+        self.assertIsNotNone(json["domainId"])
+        self.assertIsNotNone(json["lab_hours"])
+        self.assertIsNotNone(json["theory_hours"])
+        self.assertIsNotNone(json["work_hours"])
+        
+    def test_add_course(self, client):
+        resp = client.get('/api/v1/courses')
+        self.assertEqual(resp.status_code, 200)
+        course = resp.json['results'][0]
+        course['id'] = '420-620-DE'
+        course['name'] = 'Programing VI'
+        course["description"] = 'Introduction into advanced development'
+        course["term_id"] = '6'
+        course["domain_id"] = '2'
+        course["lab_hours"] = '3'
+        course["theory_hours"] = '4'
+        course["work_hours"] = '4'
+        resp = client.post('/api/v1/courses', json=course)
+        self.assertEqual(resp.status_code, 201)
+
+    def test_update_course(self, client):
+        resp = client.get('/api/v1/courses/420-110-DW')
+        self.assertEqual(resp.status_code, 200)
+        course = resp.json
+        course['name'] = 'Hacking I'
+        course["description"] = 'Introduction to hacking'
+        course["term_id"] = '1'
+        course["domain_id"] = '1'
+        course["lab_hours"] = '5'
+        course["theory_hours"] = '5'
+        course["work_hours"] = '5'
+        resp = client.patch('/api/v1/courses/420-110-DW', json=course)
+        self.assertEqual(resp.status_code, 204)
+
+    def test_delete_course(self, client):
+        resp = client.get('/api/v1/courses/420-551-D')
+        self.assertEqual(resp.status_code, 200)
+        course = resp.json
+        resp = client.delete('/api/v1/courses/420-551-D', json=course)
+        self.assertEqual(resp.status_code, 204)
     # --------------- END COURSE CRUD TEST ---------------
 

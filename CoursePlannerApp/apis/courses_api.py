@@ -73,8 +73,8 @@ def add_course():
     term_id = request.json["term_id"]
 
     try:
-        dtb.add_course(Course(id=id, name=name, theory_hours=theory_hours, lab_hours=lab_hours, work_hours=work_hours,
-                              description=description, domainId=domain_id, termId=term_id))
+        dtb.add_course(Course(id=id, name=name, theory_hours=int(theory_hours), lab_hours=int(lab_hours), work_hours=int(work_hours),
+                              description=description, domainId=int(domain_id), termId=int(term_id)))
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
     except ValueError as e:
@@ -104,8 +104,8 @@ def update_course(id):
     term_id = request.json["term_id"]
 
     try:
-        dtb.update_course(id, Course(name=name, theory_hours=theory_hours, lab_hours=lab_hours, work_hours=work_hours,
-                                     description=description, domainId=domain_id, termId=term_id))
+        dtb.update_course(Course(id=id, name=name, theory_hours=int(theory_hours), lab_hours=int(lab_hours), work_hours=int(work_hours),
+                              description=description, domainId=int(domain_id), termId=int(term_id)))
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
     except ValueError as e:
