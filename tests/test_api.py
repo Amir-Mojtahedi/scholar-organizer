@@ -138,7 +138,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         resp = client.patch('/api/v1/competencies/00XX', json=competency)
         self.assertEqual(resp.status_code, 204)
 
-         resp = client.get('/api/v1/competencies/00XX')
+        resp = client.get('/api/v1/competencies/00XX')
         self.assertEqual(resp.status_code, 200)
         competency = resp.json
         resp = client.delete('/api/v1/competencies/00XX', json=competency)
