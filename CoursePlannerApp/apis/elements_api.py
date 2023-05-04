@@ -48,7 +48,7 @@ def add_element():
     if not all(key in request.json for key in ["id", "order", "name", "criteria", "competency_id"]):
         return jsonify({"error": "Missing fields"}), 400
 
-    element = Element(request.json["id"], request.json["order"], request.json["name"], request.json["criteria"],
+    element = Element(int(request.json["id"]), int(request.json["order"]), request.json["name"], request.json["criteria"],
                       request.json["competency_id"])
 
     try:
@@ -72,7 +72,7 @@ def update_element(id):
     if not all(key in request.json for key in ["order", "name", "criteria", "competency_id"]):
         return jsonify({"error": "Missing fields"}), 400
 
-    element = Element(id, request.json["order"], request.json["name"], request.json["criteria"],
+    element = Element(int(id), int(request.json["order"]), request.json["name"], request.json["criteria"],
                       request.json["competency_id"])
 
     try:
@@ -88,7 +88,8 @@ def update_element(id):
 @bp.route("/<string:id>", methods=["DELETE"])
 def delete_element(id):
     try:
-        dtb.delete_element(Element(id, "", "", "", ""))
+        # Just take the id
+        dtb.delete_element(Element(int(id), 0, "", "", ""))
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 

@@ -236,7 +236,7 @@ class Database:
             next_page = page_num + 1
         return competencies, prev_page, next_page, count
 
-    def get_elements_api(self, page_num=1, page_size=50):
+    def get_elements_api(self, page_num=1, page_size=10):
         elements = []
         offset = (page_num-1)*page_size
         prev_page = None
@@ -508,8 +508,8 @@ class Database:
                 raise ValueError("Competency doesn't exist. Create a competency first")
             # Insert Data
             cursor.execute(
-                "INSERT INTO ELEMENTS (element_id, element_order, element, element_criteria, competency_id) VALUES (:elementId, :elementOrder, :elementName, :elementCriteria, :competencyId)",
-                elementId=element.id, elementOrder=element.order, elementName=element.name,
+                "INSERT INTO ELEMENTS (element_order, element, element_criteria, competency_id) VALUES (:elementOrder, :elementName, :elementCriteria, :competencyId)",
+                elementOrder=element.order, elementName=element.name,
                 elementCriteria=element.criteria, competencyId=element.competencyId)
             if not cursor.rowcount:
                 raise oracledb.Error
