@@ -4,6 +4,7 @@ from werkzeug.local import LocalProxy
 from CoursePlannerApp.dbmanager import get_db
 import oracledb
 from CoursePlannerApp.objects.course import CourseForm, Course
+from CoursePlannerApp.objects.element import Element, ElementFormBridge
 
 bp = Blueprint('courses', __name__, url_prefix='/courses')
 
@@ -36,7 +37,29 @@ def list_competencies(course_id):
             flash('There is no competency in the database')            
     return render_template('course.html', competencies = competencies, course = course, domains = domains, elements_covered = elements_covered)
 
-
+@bp.route('/<course_id>/new/', methods=['GET', 'POST'])
+@login_required
+def add_element_for_course(course_id):
+    form = ElementFormBridge()
+    #Fill element drop list
+    form.id.choices = sorted([(element.id, str(element.id)+" - "+element.name) for element in dtb.get_elements()]) #Getting data for Select field for competencyId  (Circular import error)
+    form.id.choices.insert(0, [0, "Choose an Element of Competency"])
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            try:
+                dtb.add_element_course_bridging(int(form.id.data),course_id,int(form.element_hours.data))
+                flash("Element was created successfully.")
+                hour_validator(course_id)
+                return redirect(url_for('courses.list_competencies',course_id=course_id))
+            except oracledb.IntegrityError as e:
+                error_obj, = e.args #To acces code error 
+                if error_obj.code == 1: # 1 is related to primary key issue (when the primary key already exist) 
+                    flash("Element already exist")
+            except Exception as e:
+                flash("Error: " + str(e))
+        else:
+            flash('Invalid input')
+    return render_template('Add/addCourseElementBridge.html', form=form)
 
 #Add course
 @bp.route('/new/', methods=['GET', 'POST'])
@@ -60,8 +83,9 @@ def create_course():
                                form.work_hours.data)
             try:
                 dtb.add_course(newCourse)
-                flash("Course has been added")    
-                return redirect(url_for('courses.get_courses'))
+                flash("Course has been added")
+                hour_validator(form.id.data)    
+                return redirect(url_for('courses.list_competencies',course_id=form.id.data))
             
             except oracledb.IntegrityError as e:
                 error_obj, = e.args #To acces code error 
@@ -78,7 +102,7 @@ def create_course():
 @bp.route('/<course_id>/update/', methods=['GET', 'POST'])
 @login_required
 def update_course(course_id):
-    
+    oldCourseId = course_id
     #Cheack if course exist
     try:
         course = dtb.get_specific_course(course_id)
@@ -108,7 +132,7 @@ def update_course(course_id):
                                form.lab_hours.data, form.theory_hours.data, 
                                form.work_hours.data)
             try:
-                dtb.update_course(updatedCourse)
+                dtb.update_course(updatedCourse, oldCourseId)
                 flash("Course has been updated")    
                 return redirect(url_for('courses.get_courses'))      
             except Exception as e:
@@ -133,4 +157,28 @@ def delete(course_id):
         return redirect(url_for(".get_courses"))
 
     flash("Course deleted successfully")
-    return redirect(url_for('courses.list_competencies', course_id=course.id))
+    return redirect(url_for('courses.get_courses'))
+
+#Delete an element for specific course
+@bp.route('/<course_id>/<int:element_id>/delete/', methods=['GET'])
+@login_required
+def delete_element_for_course(course_id,element_id):
+    try:
+        dtb.delete_element_course_bridging(element_id,course_id)
+        flash("Element deleted for this course successfully")
+        hour_validator(course_id)
+    except Exception as e:
+        flash("Could not access the record")
+        flash("Error: " + str(e))
+        return redirect(url_for('courses.list_competencies',course_id=course_id))
+    return redirect(url_for('courses.list_competencies',course_id=course_id))
+
+def hour_validator(course_id):
+    course=dtb.get_specific_course(course_id)
+    total_hours=(course.lab_hours + course.theory_hours) * 15
+    current_hours=dtb.get_sum_hours(course_id)
+    diff=total_hours-current_hours
+    if(diff<0):
+        flash(f'You must remove {diff*-1} to match {total_hours} of {course.name}')
+    elif(diff>0):
+        flash(f'You must add {diff} hours to match {total_hours} hours of {course.id} {course.name}')

@@ -68,7 +68,7 @@ def update_term(term_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             
-            updatedTerm = Term(form.id.data, form.name.data)
+            updatedTerm = Term(term_id, form.name.data)
             try:
                 dtb.update_term(updatedTerm)
                 flash("Term has been updated")    
