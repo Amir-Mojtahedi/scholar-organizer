@@ -82,7 +82,7 @@ def update_term(id):
     if "name" not in request.json:
         return jsonify({"error": "Missing data to update"}), 400
 
-    name = request.json["name"]
+    term = 
 
     try:
         dtb.update_term(Term(id, name))
@@ -95,7 +95,7 @@ def update_term(id):
 @bp.route("/<int:id>", methods=["DELETE"])
 def delete_term(id):
     try:
-        dtb.delete_term(Term(id, ""))
+        dtb.delete_term(id)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
