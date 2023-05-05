@@ -314,7 +314,19 @@ class Database:
     def delete_domain(self, domain_id):
         '''Delete a domain in DB for the given Domain object id'''
         with self.__get_cursor() as cursor:
+            courseToDelete = []
+            results = cursor.execute("SELECT course_id FROM Courses WHERE domain_id = :domain_id", domain_id=domain_id)
+            for result in results:
+                courseId = result[0]
+                courseToDelete.append(courseId)
+
+            for courseId in courseToDelete:
+                cursor.execute("DELETE FROM courses_elements WHERE course_id = :courseId", courseId=courseId)
+
+            cursor.execute("DELETE FROM courses WHERE domain_id = :domain_id", domain_id=domain_id)
+
             cursor.execute("DELETE FROM domains WHERE domain_id = :domain_id", domain_id=domain_id)
+
 
     # TERM
     def get_terms(self):
