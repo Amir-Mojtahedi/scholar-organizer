@@ -65,6 +65,8 @@ def add_domain():
         dtb.add_domain(domain)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 409
 
     res = make_response({}, 201)
     res.headers['Location'] = url_for(".get_domain", id=domain.id)
@@ -91,6 +93,8 @@ def update_domain(id):
             dtb.add_domain(domain)
         except oracledb.Error as e:
             return jsonify({"error": str(e)}), 500
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 409
 
         res = make_response({}, 201)
         res.headers['Location'] = url_for(".get_domain", id=id)

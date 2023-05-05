@@ -66,6 +66,8 @@ def add_element():
         dtb.add_element(element)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 409
 
     resp = make_response({}, 201)
     resp.headers["Location"] = url_for(".get_element", id=element.id)
@@ -93,6 +95,8 @@ def update_element(id):
             dtb.add_element(element)
         except oracledb.Error as e:
             return jsonify({"error": str(e)}), 500
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 409
 
         res = make_response({}, 201)
         res.headers["Location"] = url_for(".get_element", id=element.id)
