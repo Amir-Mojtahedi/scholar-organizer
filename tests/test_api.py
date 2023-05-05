@@ -1,6 +1,7 @@
 import flask_unittest
 from CoursePlannerApp import create_app
 from CoursePlannerApp.objects.competency import Competency
+from CoursePlannerApp.objects.course import Course
 from CoursePlannerApp.objects.domain import Domain
 from CoursePlannerApp.objects.element import Element
 from CoursePlannerApp.objects.term import Term
@@ -311,16 +312,28 @@ class TestForAPI(flask_unittest.ClientTestCase):
         resp = client.get('/api/v1/courses')
         self.assertEqual(resp.status_code, 200)
         json = resp.json
+        course = Course("420-110-DW","Programming I","The course will introduce the student to the basic building blocks (sequential, selection and repetitive control structures) and modules (methods and classes) used to write a program. The student will use the Java programming language to implement the algorithms studied. The array data structure is introduced, and student will learn how to program with objects.",1,1,3,3,3)
+        json_course = Course(json['results'][0]['id'],json['results'][0]['name'],json['results'][0]['description'],json['results'][0]['termId'],json['results'][0]['domainId'],json['results'][0]['lab_hours'],json['results'][0]['theory_hours'],json['results'][0]['work_hours'])
         self.assertIsNotNone(json)
         self.assertIsNotNone(json['count'])
         self.assertIsNotNone(json['results'])
         self.assertIsNone(json['next'])
         self.assertIsNone(json['prev'])
+        self.assertEqual(json_course.id,course.id)
+        self.assertEqual(json_course.name,course.name)
+        self.assertEqual(json_course.description,course.description)
+        self.assertEqual(json_course.termId,course.termId)
+        self.assertEqual(json_course.domainId,course.domainId)
+        self.assertEqual(json_course.lab_hours,course.lab_hours)
+        self.assertEqual(json_course.theory_hours,course.theory_hours)
+        self.assertEqual(json_course.work_hours,course.work_hours)
 
     def test_get_course(self,client):
         resp = client.get('/api/v1/courses/420-110-DW')
         self.assertEqual(resp.status_code, 200)
         json = resp.json
+        course = Course("420-110-DW","Programming I","The course will introduce the student to the basic building blocks (sequential, selection and repetitive control structures) and modules (methods and classes) used to write a program. The student will use the Java programming language to implement the algorithms studied. The array data structure is introduced, and student will learn how to program with objects.",1,1,3,3,3)
+        json_course = Course(json['id'],json['name'],json['description'],json['termId'],json['domainId'],json['lab_hours'],json['theory_hours'],json['work_hours'])
         self.assertIsNotNone(json)
         self.assertIsNotNone(json["id"])
         self.assertIsNotNone(json["name"])
@@ -330,6 +343,13 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertIsNotNone(json["lab_hours"])
         self.assertIsNotNone(json["theory_hours"])
         self.assertIsNotNone(json["work_hours"])
+        self.assertEqual(json_course.name,course.name)
+        self.assertEqual(json_course.description,course.description)
+        self.assertEqual(json_course.termId,course.termId)
+        self.assertEqual(json_course.domainId,course.domainId)
+        self.assertEqual(json_course.lab_hours,course.lab_hours)
+        self.assertEqual(json_course.theory_hours,course.theory_hours)
+        self.assertEqual(json_course.work_hours,course.work_hours)
         
     def test_add_course(self, client):
         resp = client.get('/api/v1/courses')
@@ -337,7 +357,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         course = resp.json['results'][0]
         course['id'] = '420-620-DE'
         course['name'] = 'Programing VI'
-        course["description"] = 'Introduction into advanced development'
+        course["description"] = 'Introduction to advanced development'
         course["term_id"] = '6'
         course["domain_id"] = '2'
         course["lab_hours"] = '3'
@@ -345,6 +365,18 @@ class TestForAPI(flask_unittest.ClientTestCase):
         course["work_hours"] = '4'
         resp = client.post('/api/v1/courses', json=course)
         self.assertEqual(resp.status_code, 201)
+        resp = client.get('/api/v1/courses/420-620-DE')
+        self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        course = Course("420-620-DE","Programing VI","Introduction to advanced development",6,2,3,4,4)
+        json_course = Course(json['id'],json['name'],json['description'],json['termId'],json['domainId'],json['lab_hours'],json['theory_hours'],json['work_hours'])
+        self.assertEqual(json_course.name,course.name)
+        self.assertEqual(json_course.description,course.description)
+        self.assertEqual(json_course.termId,course.termId)
+        self.assertEqual(json_course.domainId,course.domainId)
+        self.assertEqual(json_course.lab_hours,course.lab_hours)
+        self.assertEqual(json_course.theory_hours,course.theory_hours)
+        self.assertEqual(json_course.work_hours,course.work_hours)
 
     def test_update_course(self, client):
         resp = client.get('/api/v1/courses/420-110-DW')
@@ -359,6 +391,18 @@ class TestForAPI(flask_unittest.ClientTestCase):
         course["work_hours"] = '5'
         resp = client.patch('/api/v1/courses/420-110-DW', json=course)
         self.assertEqual(resp.status_code, 204)
+        resp = client.get('/api/v1/courses/420-110-DW')
+        self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        course = Course("420-110-DW","Hacking I","Introduction to hacking",1,1,5,5,5)
+        json_course = Course(json['id'],json['name'],json['description'],json['termId'],json['domainId'],json['lab_hours'],json['theory_hours'],json['work_hours'])
+        self.assertEqual(json_course.name,course.name)
+        self.assertEqual(json_course.description,course.description)
+        self.assertEqual(json_course.termId,course.termId)
+        self.assertEqual(json_course.domainId,course.domainId)
+        self.assertEqual(json_course.lab_hours,course.lab_hours)
+        self.assertEqual(json_course.theory_hours,course.theory_hours)
+        self.assertEqual(json_course.work_hours,course.work_hours)
 
     def test_delete_course(self, client):
         resp = client.get('/api/v1/courses/420-551-D')
