@@ -419,7 +419,7 @@ class Database:
                 competency_id=competency.id, competencyName=competency.name)
             nCompetency = [result for result in results if (result[0] == competency.id or result[1] == competency.name)]
             if not (nCompetency == []):
-                raise ValueError("Competency already exist")
+                raise ValueError("Competency already exist. Code or Name already used")
 
             # Insert data
             cursor.execute(
@@ -434,6 +434,16 @@ class Database:
         with self.__get_cursor() as cursor:
             if not isinstance(competency, Competency):
                 raise ValueError
+
+            results = cursor.execute(
+                "SELECT * FROM COMPETENCIES where competency_id = :competency_id or competency = :competencyName",
+                competency_id=competency.id, competencyName=competency.name)
+            for result in results:
+                if result[1] == competency.name:
+                    if result[0] != competency.id:
+                        raise ValueError("Name already used")    
+
+            
             cursor.execute(
                 "UPDATE COMPETENCIES SET competency = :competencyName, competency_achievement = :competencyAchievement, competency_type = :competencyType WHERE competency_id = :competency_id",
                 competency_id=competency.id, competencyName=competency.name,

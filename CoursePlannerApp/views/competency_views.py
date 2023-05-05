@@ -55,11 +55,6 @@ def create_competency():
                 flash("Competency was added!")
                 return redirect(url_for('competencies.get_competencies'))
 
-            except oracledb.IntegrityError as e:
-                error_obj, = e.args  # To acces code error
-                if error_obj.code == 1:  # 1 is related to primary key issue (when the primary key already exist)
-                    flash("Competency already exist")
-
             except Exception as e:
                 flash("Error: " + str(e))
                 
@@ -89,7 +84,7 @@ def update_competency(competency_id):
                                            form.type.data)
 
             try:
-                dtb.update_competency(updatedCompetency, competency_id)
+                dtb.update_competency(updatedCompetency)
                 flash("Competency has been updated")
                 return redirect(url_for('competencies.get_competencies'))
             except Exception as e:

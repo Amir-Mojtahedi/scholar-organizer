@@ -31,7 +31,7 @@ class Competency:
 
 class CompetencyForm(FlaskForm):
     '''Fomr for Competency object'''
-    id = StringField('Id',validators=
+    id = StringField('Code',validators=
                      [DataRequired(),
                       Regexp('^[0-9A-Z]{4}$', 
                             message="Wrong Id format: #### (# => Letter or Digit)")
