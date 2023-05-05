@@ -9,7 +9,7 @@ bp = Blueprint("terms_api", __name__, url_prefix="/api/v1/terms")
 dtb = LocalProxy(get_db)
 
 
-@bp.route("", methods=["GET"])
+@bp.route("")
 def get_terms():
     # pagination
     page = int(request.args.get("page") or 1)
@@ -36,10 +36,10 @@ def get_terms():
     return jsonify(json), 200
 
 
-@bp.route("/<int:id>", methods=["GET"])
+@bp.route("/<int:id>")
 def get_term(id):
     try:
-        term = dtb.get_specific_term(id)
+        term = dtb.get_term(id)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
@@ -74,7 +74,7 @@ def add_term():
     return res
 
 
-@bp.route("/<int:id>", methods=["PATCH"])
+@bp.route("/<int:id>", methods=["PUT"])
 def update_term(id):
     if not request.json:
         return jsonify({"error": "Not a JSON"}), 400
@@ -82,12 +82,22 @@ def update_term(id):
     if "name" not in request.json:
         return jsonify({"error": "Missing data to update"}), 400
 
-    term = 
+    term = Term(id, request.json["name"])
 
     try:
-        dtb.update_term(Term(id, name))
+        dtb.update_term(term)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
+    except KeyError:  # raised manually when term not found
+        try:  # try to add term
+            dtb.add_term(term)
+        except oracledb.Error as e:
+            return jsonify({"error": str(e)}), 500
+
+        res = make_response({}, 201)
+        res.headers['Location'] = url_for(".get_term", id=term.id)
+
+        return res
 
     return {}, 204
 
