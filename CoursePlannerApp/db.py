@@ -277,7 +277,7 @@ class Database:
 
             # Check if domain doesn't already exist
             results = cursor.execute("SELECT domain FROM DOMAINS where domain_id = :domainId", domainId=domain.id)
-            nDomain = [result for result in results if result[0] == domain.name]
+            nDomain = [result for result in results if result[0] == domain.id]
             if not (nDomain == []):
                 raise ValueError("Domain already exist")
 
