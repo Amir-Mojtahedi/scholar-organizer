@@ -190,14 +190,12 @@ class Database:
     def get_specific_domain(self, domainId):
         '''Returns a specific domain'''
         with self.__get_cursor() as cursor:
-            domain = []
             results = cursor.execute(
                 "SELECT domain_id, domain, domain_description FROM DOMAINS WHERE domain_id = :domainId",
                 domainId=domainId)
             for result in results:
                 foundDomain = Domain(id=result[0], name=result[1], description=result[2])
-                domain.append(foundDomain)
-            return domain
+            return foundDomain
 
     def get_courses_in_domain(self, domainId):
         '''Returns a specific domain'''
@@ -220,7 +218,7 @@ class Database:
 
             # Check if domain doesn't already exist
             results = cursor.execute("SELECT domain FROM DOMAINS where domain_id = :domainId", domainId=domain.id)
-            nDomain = [result for result in results if result[0] == domain.name]
+            nDomain = [result for result in results if result[0] == domain.id]
             if not (nDomain == []):
                 raise ValueError("Domain already exist")
 
@@ -231,7 +229,7 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
 
-    def update_domain(self, domain, olddomainId):
+    def update_domain(self, domain):
         '''Update a domain for the given Domain object'''
         with self.__get_cursor() as cursor:
             if (not isinstance(domain, Domain)):
