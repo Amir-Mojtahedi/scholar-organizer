@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, NumberRange
 
+
 class Domain:
     def __init__(self, id, name, description):
         if not isinstance(id, int):  # Id validation
@@ -29,4 +30,3 @@ class DomainForm(FlaskForm):
                                         NumberRange(min=1)])
     name = StringField('Name',validators=[DataRequired()])
     description = StringField('Domain Description',validators=[DataRequired()])
-    

@@ -23,10 +23,10 @@ def get_domains():
         return render_template('domains.html',domains=domains)
 
 @bp.route("/<int:domain_id>/")
-def get_specific_domain(domain_id):
+def get_domain(domain_id):
     if request.method == 'GET':
         try:
-            domain = dtb.get_specific_domain(domain_id) 
+            domain = dtb.get_domain(domain_id) 
         except Exception as e:
             flash('There is an issue with the Database')
         if not domain:
@@ -43,6 +43,11 @@ def create_domain():
         if form.validate_on_submit():
             
             newDomain = Domain(form.id.data, form.name.data, form.description.data)
+            
+            for domain in dtb.get_domains():
+                if(newDomain.id == domain.id or newDomain.name == domain.name):
+                    flash("Domain already exists!")
+                
             try:
                 dtb.add_domain(newDomain)
                 return redirect(url_for('domains.get_domains'))
@@ -59,13 +64,13 @@ def create_domain():
     return render_template('Add/addDomain.html', form=form)
 
 #Update Domain
-@bp.route('/<domain_id>/update/', methods=['GET', 'POST'])
-#@login_required
+@bp.route('/<int:domain_id>/update/', methods=['GET', 'POST'])
+@login_required
 def update_domain(domain_id):
     
     #Check if domain exist
     try:
-        domain = dtb.get_specific_domain(domain_id)
+        domain = dtb.get_domain(domain_id)
     except Exception as e:
         flash("Error: "+ str(e))
     
@@ -79,6 +84,11 @@ def update_domain(domain_id):
         if form.validate_on_submit():
 
             updatedDomain = Domain(form.id.data, form.name.data, form.description.data)
+
+            for domain in dtb.get_domains():
+                if(updatedDomain.id == domain.id or updatedDomain.name == domain.name):
+                    flash("Domain already exists!")
+
             try:
                 dtb.update_domain(updatedDomain)
                 flash("Domain has been updated")    
@@ -93,8 +103,7 @@ def update_domain(domain_id):
 @login_required
 def delete(domain_id):
 
-    try:    
-        domain = dtb.get_specific_domain(domain_id)
+    try:
         courseImpacted = dtb.get_courses_in_domain(domain_id) 
     except Exception as e:
         flash("Could not acces the domain")
@@ -103,7 +112,7 @@ def delete(domain_id):
 
     # try to delete domain
     try:
-        dtb.delete_domain(domain) 
+        dtb.delete_domain(domain_id)
         flash("Domain deleted successfully")
     except oracledb.Error as e:
         flash("You can't delete this domain until you delete the following courses or change their domains")

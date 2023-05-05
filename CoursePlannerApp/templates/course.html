@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content%}
-    <a href="{{ url_for('add.add_course') }}"><button>Add a new competency for this course</button></a>
+    <a href="{{ url_for('courses.add_element_for_course',course_id=course.id) }}"><button>Add a new element for this course</button></a>
     <br>
     <main>
         <div class="headings">
@@ -19,17 +19,11 @@
 
         {% for domain in domains %}
             {% if domain.id == course.domainId %}
-                <p>Domain: <a href="{{ url_for('domains.get_specific_domain', domain_id=domain.id) }}">{{ domain.name }}</a></p>
+                <p>Domain: <a href="{{ url_for('domains.get_domain', domain_id=domain.id) }}">{{ domain.name }}</a></p>
             {% endif %}
         {% endfor %}
 
         <div class="grid">
-            {% if course.termId % 2 == 0 %}
-                <p>Session: Winter</p>
-            {% else %}
-                <p>Session: Fall</p>
-            {% endif %}
-
             <p>Term: {{ course.termId }}</p>
             <p>Class hours: {{ course.theory_hours }}</p>
             <p>Lab hours: {{ course.lab_hours }}</p>
@@ -60,7 +54,7 @@
                                 <kbd>{{ competency.id }}_{{ element.order }}</kbd>
                                 <h5>{{ element.name }}</h5>
                                 <a class="edit" href="{{ url_for('elements.update_element', element_id=element.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <a class="delete" href="{{ url_for('elements.delete', element_id=element.id) }}"><i class="fa-solid fa-trash"></i></a>
+                                <a class="delete" href="{{ url_for('courses.delete_element_for_course', element_id=element.id, course_id=course.id) }}"><i class="fa-solid fa-trash"></i></a>
                             </div>
                             <p>{{ element.criteria }}</p>
                         </div>

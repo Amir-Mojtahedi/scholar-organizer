@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block head %}
     <title>Course List</title>
-    <script defer type="text/javascript" src="{{ url_for('static', filename='courses.js')}}"></script>
 {% endblock %}
 
 {% block content%}
-    <a href="{{ url_for('add.add_course') }}"><button>Add Course</button></a>
+    <input type="text" name="filter" placeholder="Filter">
+    <a href="{{ url_for('courses.create_course') }}"><button>Add Course</button></a>
     <br>
     {% for course in courses %}
-        <main>
+        <main class="searchable">
             <div class="headings">
                 <div class="title">
                     <kbd>{{ course.id }}</kbd>
@@ -21,17 +21,11 @@
 
             {% for domain in domains %}
                 {% if domain.id == course.domainId %}
-                    <p>Domain: <a href="{{ url_for('domains.get_specific_domain', domain_id=domain.id) }}">{{ domain.name }}</a></p>
+                    <p>Domain: <a href="{{ url_for('domains.get_domain', domain_id=domain.id) }}">{{ domain.name }}</a></p>
                 {% endif %}
             {% endfor %}
 
             <div class="grid">
-                {% if course.termId % 2 == 0 %}
-                    <p>Session: Winter</p>
-                {% else %}
-                    <p>Session: Fall</p>
-                {% endif %}
-
                 <p>Term: {{ course.termId }}</p>
                 <p>Class hours: {{ course.theory_hours }}</p>
                 <p>Lab hours: {{ course.lab_hours }}</p>

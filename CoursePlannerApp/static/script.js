@@ -11,3 +11,20 @@ document.addEventListener("submit", e => {
         form.submit()
     }
 })
+
+const searchables = document.querySelectorAll(".searchable")
+const filter = document.querySelector("input[name=filter]")
+
+filter.addEventListener("input", () => {
+    searchables.forEach(searchable => {
+        if (searchable.innerHTML.toLowerCase().includes(filter.value.toLowerCase())) searchable.style.display = "block"
+        else {
+            searchable.style.animation = "slideFadeOut 0.5s"
+
+            setTimeout(() => {
+                searchable.style.display = "none"
+                searchable.style.animation = "slideFadeIn 0.5s"
+            }, 500)
+        }
+    })
+})

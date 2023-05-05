@@ -11,7 +11,7 @@
     <h1>Term to Update:</h1>
     <form method="post">
         {{ form.csrf_token }}
-        {{ form.id.label}}              {{ form.id() }}
+        {{ form.id.label}}              {{ form.id(readonly=True) }}
         {{ form.name.label}}            {{ form.name() }}
         <button type="submit" id="updateTerm" name="updateTerm"> Update </button>
     </form>
