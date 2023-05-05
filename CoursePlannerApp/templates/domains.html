@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>Domain List</title>
+{% endblock %}
+
+{% block content %}
+    <input type="text" name="filter" placeholder="Filter">
+    <a href="{{ url_for('domains.create_domain') }}"><button>Add Domain</button></a>
+    <br>
+    {% for domain in domains %}
+        <main class="searchable">
+            <div class="headings">
+                <div class="title">
+                    <h2>{{ domain.name }}</h2>
+                    <a class="edit" href="{{ url_for('domains.update_domain', domain_id=domain.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a class="delete" href="{{ url_for('domains.delete', domain_id=domain.id) }}"><i class="fa-solid fa-trash"></i></a>
+                </div>
+                <p>{{ domain.description }}</p>
+            </div>
+        </main>
+        <hr>
+    {% endfor %}
+{% endblock%}

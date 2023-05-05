@@ -1,0 +1,200 @@
+* {
+    animation: slideFadeIn 0.5s;
+}
+
+main.container-fluid {
+    padding: 1rem;
+}
+
+a button {
+    width: 100%;
+}
+
+button {
+    width: fit-content;
+}
+
+h1, h2, h3, h4, h5, h6, button {
+    margin: 0 !important;
+}
+
+form button {
+    width: 100%;
+}
+
+table {
+    width: calc(100% - 2rem);
+    margin: auto;
+}
+
+td {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+ul[role=listbox] {
+    width: 100%;
+}
+
+nav {
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(10px);
+    height: 125px;
+}
+
+span {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.buttons .edit {
+    background-color: orange;
+    border-color: orange;
+}
+
+.buttons .delete, .buttons .block, .buttons .close {
+    background-color: red;
+    border-color: red;
+}
+
+.buttons .unblock {
+    background-color: lime;
+    border-color: lime;
+}
+
+.buttons .outline {
+    background-color: white;
+    border-color: black;
+    color: red;
+}
+
+.title {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.flash-container {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.flash {
+    width: fit-content;
+    height: 50px;
+    animation-name: slide-in-out;
+    animation-duration: 6s;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+    background-color: #2196F3;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+@keyframes slide-in-out {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    50% {
+        transform: translateX(0%);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes slideFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideFadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10%);
+    }
+}
+
+#site-logo {
+    width: 100px;
+}
+
+#profile-picture {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    border: 1px solid white;
+}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}
+    Add Term
+{% endblock %}
+{% block headerTitle %}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
+{% endblock %}
+{% block content%}
+    <h1>New Term:</h1>
+    <form method="post">
+        {{ form.csrf_token }}
+        {{ form.id.label }}              {{ form.id() }}
+        {{ form.name.label }}            {{ form.name() }}
+        <button type="submit" id="addTerm" name="addTerm"> Submit </button>
+    </form>
+{% endblock%}
+

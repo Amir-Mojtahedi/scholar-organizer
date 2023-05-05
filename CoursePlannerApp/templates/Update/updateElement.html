@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}
+    Update Element
+{% endblock %}
+{% block headerTitle %}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
+{% endblock %}
+{% block content%}
+    <h1>Element to Update:</h1>
+    <form method="post">
+        {{ form.csrf_token }}
+        {{ form.id.label}}              {{ form.id() }}
+        {{ form.order.label}}           {{ form.order() }}
+        {{ form.name.label}}            {{ form.name() }}
+        {{ form.criteria.label}}        {{ form.criteria() }}
+        {{ form.competencyId.label}}    {{ form.competencyId() }}
+        <button type="submit" id="updateElement" name="updateElement"> Update </button>
+    </form>
+{% endblock%}
+

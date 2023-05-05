@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}
+    Add Competency
+{% endblock %}
+{% block headerTitle %}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{{url_for('static', filename='add.css')}}"/>
+{% endblock %}
+{% block content%}
+    <h1>New Competency:</h1>
+    <form method="post">
+        {{ form.csrf_token }}
+        {{ form.id.label }}              {{ form.id() }}
+        {{ form.name.label }}            {{ form.name() }}
+        {{ form.achievement.label }}     {{ form.achievement() }}
+        {{ form.type.label }}            {{ form.type() }}
+        <button type="submit" id="addCompetency" name="addCompetency"> Submit </button>
+    </form>
+{% endblock%}
+

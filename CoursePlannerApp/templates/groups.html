@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}
+    Organizer - Group List
+{% endblock %}
+
+{% block head %}
+    <script defer type="text/javascript" src="{{ url_for('static', filename='groups.js')}}"></script>
+{% endblock %}
+
+{% block content%}
+    <main id="header" class="container-fluid">
+        <h1>Groups</h1>
+        {% if manages %} <button class="add">Add Group</button> {% endif %}
+    </main>
+
+    <div>
+        <table>
+            <tbody>
+                {% for group in groups %}
+                    <tr data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">
+                        <td>{{ group.name }}</td>
+
+                        <td class="buttons">
+                            {% if group.id not in [0, 1, 2] %}
+                                <button class="edit">Edit</button>
+                                <button class="delete">Delete</button>
+                            {% else %}
+                                <button class="secondary" disabled>Edit</button>
+                                <button class="secondary" disabled>Delete</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- multipurpose popup form -->
+    <main class="container-fluid overlay">
+        <button class="close">🗙</button>
+        <form method="POST">
+            {{ form.csrf_token }}
+            {{ form.hidden_tag() }}
+            {{ form.name.label }} {{ form.name() }}
+            <input name="id" type="hidden" value=-1>
+            <button type="submit"></button>
+        </form>
+    </main>
+{% endblock%}
