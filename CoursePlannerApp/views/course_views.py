@@ -117,11 +117,9 @@ def create_course():
                                form.work_hours.data)
 
             try:
-                dtb.add_course(new_course)
-                flash("Course has been added")
-                hour_validator(form.id.data)
-                return redirect(url_for('courses.list_competencies', course_id=form.id.data))
-            
+                dtb.update_course(updatedCourse)
+                flash("Course has been updated")    
+                return redirect(url_for('courses.get_courses'))      
             except Exception as e:
                 flash("Error: " + str(e))
 

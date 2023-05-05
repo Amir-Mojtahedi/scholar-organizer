@@ -86,7 +86,7 @@ def update_competency(id):
     if not request.json:
         return jsonify({"error": "Not a JSON"}), 400
 
-    if not any(key in request.json for key in ["name", "achievement", "type"]):
+    if not all(key in request.json for key in ["name", "achievement", "type"]):
         return jsonify({"error": "Missing fields"}), 400
 
     competency = Competency(id, request.json["name"], request.json["achievement"], request.json["type"])

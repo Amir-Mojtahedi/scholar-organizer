@@ -28,7 +28,7 @@ class Competency:
                             <li> Achievement: {self.achievement}</li>   \
                             <li> Type: {self.type}</li> \
                     </ul>'
-
+    
 class CompetencyForm(FlaskForm):
     '''Fomr for Competency object'''
     id = StringField('Code',validators=

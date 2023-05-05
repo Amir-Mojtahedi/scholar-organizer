@@ -225,7 +225,7 @@ class Database:
             next_page = page_num + 1
         return competencies, prev_page, next_page, count
 
-    def get_elements_api(self, page_num=1, page_size=50):
+    def get_elements_api(self, page_num=1, page_size=10):
         elements = []
         offset = (page_num - 1) * page_size
         prev_page = None
@@ -311,7 +311,7 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
 
-    def delete_domain(self, domain_id):
+    def delete_domain(self, domainId):
         '''Delete a domain in DB for the given Domain object id'''
         with self.__get_cursor() as cursor:
             cursor.execute("DELETE FROM domains WHERE domain_id = :domain_id", domain_id=domain_id)
@@ -334,7 +334,8 @@ class Database:
             results = cursor.execute("SELECT term_id, term_name FROM TERMS WHERE term_id=:term_id", term_id=term_id)
             for result in results:
                 foundTerm = Term(id=result[0], name=result[1])
-            return foundTerm
+                return foundTerm
+            return None
 
     def get_courses_in_term(self, term_id):
         '''Returns a specific domain'''
@@ -402,7 +403,8 @@ class Database:
                 competency_id=competency_id)
             for result in results:
                 competency = Competency(id=result[0], name=result[1], achievement=result[2], type=result[3])
-            return competency
+                return competency
+            return None
 
     def add_competency(self, competency):
         '''Add a competency to the DB for the given Competency object'''
