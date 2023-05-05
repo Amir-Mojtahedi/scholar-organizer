@@ -123,7 +123,7 @@ def update_term(id):
 @bp.route("/<int:id>", methods=["DELETE"])
 def delete_term(id):
     try:
-        dtb.delete_term(id)
+        dtb.delete_term_api(id)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 

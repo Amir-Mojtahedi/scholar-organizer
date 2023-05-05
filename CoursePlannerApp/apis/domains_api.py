@@ -123,7 +123,7 @@ def update_domain(id):
 @bp.route("/<int:id>", methods=["DELETE"])
 def delete_domain(id):
     try:
-        dtb.delete_domain(id)
+        dtb.delete_domain_api(id)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 

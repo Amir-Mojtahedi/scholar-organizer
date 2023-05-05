@@ -283,8 +283,8 @@ class Database:
 
             # Insert data
             cursor.execute(
-                "INSERT INTO DOMAINS (domain, domain_description) VALUES(:domainName, :domainDescription)",
-                domainName=domain.name, domainDescription=domain.description)
+                "INSERT INTO DOMAINS (domain_id, domain, domain_description) VALUES(:domain_id, :domainName, :domainDescription)",
+                domain_id=domain.id, domainName=domain.name, domainDescription=domain.description)
             if not cursor.rowcount:
                 raise oracledb.Error
 
@@ -360,7 +360,7 @@ class Database:
                 raise ValueError("This term id, already exist!")
 
                 # Insert data
-            cursor.execute("INSERT INTO TERMS (term_name) VALUES( :termName)", termName=term.name)
+            cursor.execute("INSERT INTO TERMS (term_id, term_name) VALUES(:term_id, :termName)", term_id=term.id, termName=term.name)
             if not cursor.rowcount:
                 raise oracledb.Error
 
