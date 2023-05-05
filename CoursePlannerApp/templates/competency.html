@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content%}
-    <a href="{{ url_for('elements.create_element') }}"><button>Add an Element to this Competency</button></a>
+    <a href="{{ url_for('elements.create_element', competency_id=competency.id) }}"><button>Add an Element to this Competency</button></a>
     <br>
     <main>
         <div class="headings">
@@ -20,14 +20,14 @@
         <p>Type: {{ competency.type }}</p>
 
         {% for element in elements %}
-            {% if element.competencyId == competency.id %}
+            {% if element.competency_id == competency.id %}
                 <main style="padding-left: 1rem">
                     <div class="headings">
                         <div class="title">
                             <kbd>{{ competency.id }}_{{ element.order }}</kbd>
                             <h5>{{ element.name }}</h5>
-                            <a class="edit" href="{{ url_for('elements.update_element', element_id=element.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <a class="delete" href="{{ url_for('elements.delete', element_id=element.id) }}"><i class="fa-solid fa-trash"></i></a>
+                            <a class="edit" href="{{ url_for('elements.update_element', element_id=element.id, competency_id=competency.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a class="delete" href="{{ url_for('elements.delete_element', element_id=element.id, competency_id=competency.id) }}"><i class="fa-solid fa-trash"></i></a>
                         </div>
                         <p>{{ element.criteria }}</p>
                     </div>
