@@ -91,6 +91,39 @@ def add_course():
     return res
 
 
+@bp.route("/<string:id>/elements", methods=["POST"])
+def add_element_to_course(id):
+    if not request.json:
+        return jsonify({"error": "Not a JSON"}), 400
+
+    if not all(key in request.json for key in ["element_id"]):
+        return jsonify({"error": "Missing data to add"}), 400
+
+    try:
+        dtb.add_element_course_bridging(id, request.json["element_id"])
+    except oracledb.Error as e:
+        return jsonify({"error": str(e)}), 500
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 409
+
+    res = make_response({}, 201)
+    res.headers["Location"] = url_for(".get_course", id=id)
+
+    return res
+
+
+@bp.route("/<string:id>/elements/<string:element_id>", methods=["DELETE"])
+def delete_element_from_course(id, element_id):
+    try:
+        dtb.delete_element_course_bridging(id, element_id)
+    except oracledb.Error as e:
+        return jsonify({"error": str(e)}), 500
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 404
+
+    return jsonify({}), 204
+
+
 @bp.route("/<string:id>", methods=["PUT"])
 def update_course(id):
     if not request.json:

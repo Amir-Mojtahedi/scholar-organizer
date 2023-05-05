@@ -51,6 +51,22 @@ def get_term(id):
     return jsonify(term.__dict__), 200
 
 
+@bp.route("/<int:id>/courses")
+def get_term_courses(id):
+    try:
+        courses = dtb.get_courses_in_term(id)
+    except oracledb.Error as e:
+        return jsonify({"error": str(e)}), 500
+
+    if not courses:
+        return jsonify({"error": "Term not found"}), 404
+
+    for course in courses:
+        course.url = url_for("courses_api.get_course", id=course.id)
+
+    return jsonify([course.__dict__ for course in courses]), 200
+
+
 @bp.route("", methods=["POST"])
 def add_term():
     if not request.json:
