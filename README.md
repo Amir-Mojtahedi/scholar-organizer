@@ -20,5 +20,4 @@
 4. Set DBUSER and set DBPWD environment variables for the PDBORA19C database
 5. Setup the database by running the `setup.sql` script.
 6. Allow the port desired through your firewall.
-Create a config.py with the SECRET_KEY setting
-7. Run the command gunicorn -w 2 -b 0.0.0.0:8000 'CoursePlannerApp:create_app()'
+7. Run the command `gunicorn -w 2 -b 0.0.0.0:8000 'CoursePlannerApp:create_app()'`
