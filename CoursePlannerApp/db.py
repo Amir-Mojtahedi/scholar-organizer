@@ -358,7 +358,7 @@ class Database:
             results = cursor.execute("SELECT * FROM TERMS where term_id = :termId", termId=term.id)
             nTerm = [result for result in results if (result[0] == term.id)]
             if not (nTerm == []):
-                raise ValueError("Term already exist")
+                raise ValueError("This term id, already exist!")
 
                 # Insert data
             cursor.execute("INSERT INTO TERMS (term_id, term_name) VALUES(:termId, :termName)", termId=term.id,
@@ -371,6 +371,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if not isinstance(term, Term):
                 raise ValueError
+            
             cursor.execute("UPDATE terms SET term_name = :termName WHERE term_id = :termId", termId=term.id,
                            termName=term.name)
             if not cursor.rowcount:
