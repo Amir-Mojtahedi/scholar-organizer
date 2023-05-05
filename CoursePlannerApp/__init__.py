@@ -14,7 +14,7 @@ from CoursePlannerApp.views.competency_views import bp as competency_bp
 from CoursePlannerApp.views.course_views import bp as course_bp
 from CoursePlannerApp.views.display_views import bp as display_bp
 from CoursePlannerApp.views.domain_views import bp as domain_bp
-from CoursePlannerApp.views.element_views import bp as element_bp
+# from CoursePlannerApp.views.element_views import bp as element_bp
 from CoursePlannerApp.views.groups_views import bp as groups_bp
 from CoursePlannerApp.views.home_views import bp as home_bp
 from CoursePlannerApp.views.term_views import bp as term_bp
@@ -60,7 +60,7 @@ def init_app(app):
     app.register_blueprint(competency_bp)
     app.register_blueprint(course_bp)
     app.register_blueprint(domain_bp)
-    app.register_blueprint(element_bp)
+    # app.register_blueprint(element_bp)
     app.register_blueprint(term_bp)
 
     app.register_blueprint(groups_bp)
