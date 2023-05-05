@@ -151,7 +151,8 @@ def update_course(course_id):
         terms = dtb.get_terms()
         domains = dtb.get_domains()
     except Exception:
-        flash("")
+        flash("Error: "+ str(e))
+        
     form.term_id.choices = sorted([(term.id, str(term.id) + " - " + term.name) for term in terms])
     form.term_id.choices.insert(0, [0, "Choose a term"])
     form.term_id.choices.append(['newTerm', "Create new term"])

@@ -7,7 +7,7 @@ from wtforms.validators import DataRequired, NumberRange
 class Element:
     '''Class representing Element object'''
 
-    def __init__(self, id, order, name, criteria, competency_id):
+    def __init__(self, order, name, criteria, competency_id, id=0):
         if not isinstance(id, int):  # Id validation
             raise TypeError("Enter a valid number. Try again.")
         self.id = id
@@ -41,9 +41,6 @@ class Element:
 
 class ElementForm(FlaskForm):
     '''Form for Element object'''
-    id = IntegerField('Id', validators=[DataRequired(),
-                                        NumberRange(min=1)
-                                        ])
     order = IntegerField('Order', validators=[DataRequired(),
                                               NumberRange(min=1)
                                               ])
