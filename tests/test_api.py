@@ -441,7 +441,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(resp.status_code, 200)
         element = resp.json
         element['name'] = 'FAILURE'
-        resp = client.put('/api/v1/courses/420-110-DW', json=element)
+        resp = client.put('/api/v1/elements/7', json=element)
         self.assertEqual(resp.status_code, 400)
     # --------------- END ELEMENT OF COMPETENCY EXCEPTION TEST ---------------
 
@@ -465,7 +465,52 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(resp.status_code, 200)
         competency = resp.json
         competency['name'] = 'FAILURE'
-        resp = client.put('/api/v1/courses/420-110-DW', json=competency)
+        del competency['type']
+        resp = client.put('/api/v1/competencies/00SH', json=competency)
         self.assertEqual(resp.status_code, 400)
     # --------------- END COMPETENCY EXCEPTION TEST ---------------
+
+    # --------------- START TERM EXCEPTION TEST ---------------
+    def test_get_term_404(self,client):
+        resp = client.get('/api/v1/terms/10')
+        self.assertEqual(resp.status_code, 404)
+        
+    def test_add_term_400(self, client):
+        resp = client.get('/api/v1/terms')
+        self.assertEqual(resp.status_code, 200)
+        term = resp.json['results'][0]
+        del term['name']
+        resp = client.post('/api/v1/terms', json=term)
+        self.assertEqual(resp.status_code, 400)
+
+    def test_update_term_400(self, client):
+        resp = client.get('/api/v1/terms/5')
+        self.assertEqual(resp.status_code, 200)
+        term = resp.json
+        del term['name'] 
+        resp = client.put('/api/v1/terms/3', json=term)
+        self.assertEqual(resp.status_code, 400)
+    # --------------- END TERM EXCEPTION TEST ---------------
+
+    # --------------- START DOMAIN EXCEPTION TEST ---------------
+    def test_get_domain_404(self,client):
+        resp = client.get('/api/v1/domains/10')
+        self.assertEqual(resp.status_code, 404)
+        
+    def test_add_domain_400(self, client):
+        resp = client.get('/api/v1/domains')
+        self.assertEqual(resp.status_code, 200)
+        term = resp.json['results'][0]
+        del term['name']
+        resp = client.post('/api/v1/domains', json=term)
+        self.assertEqual(resp.status_code, 400)
+
+    def test_update_domain_400(self, client):
+        resp = client.get('/api/v1/domains/1')
+        self.assertEqual(resp.status_code, 200)
+        term = resp.json
+        del term['name'] 
+        resp = client.put('/api/v1/terms/3', json=term)
+        self.assertEqual(resp.status_code, 400)
+    # --------------- END DOMAIN EXCEPTION TEST ---------------
 

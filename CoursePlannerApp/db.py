@@ -333,7 +333,8 @@ class Database:
             results = cursor.execute("SELECT term_id, term_name FROM TERMS WHERE term_id=:termId", termId=termId)
             for result in results:
                 foundTerm = Term(id=result[0], name=result[1])
-            return foundTerm
+                return foundTerm
+            return None
 
     def get_courses_in_term(self, termId):
         '''Returns a specific domain'''
