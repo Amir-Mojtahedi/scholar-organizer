@@ -11,19 +11,10 @@
     <h1>New Element:</h1>
     <form method="post">
         {{ form.csrf_token }}
-<<<<<<< HEAD
-        <!-- {{ form.id.label}}              {{ form.id() }} -->
+        {{ form.competencyId.label}}    {{ form.competencyId(readonly=true) }}
         {{ form.order.label}}           {{ form.order() }}
         {{ form.name.label}}            {{ form.name() }}
         {{ form.criteria.label}}        {{ form.criteria() }}
-        {{ form.competencyId.label}}    {{ form.competencyId() }}
-=======
-        {{ form.id.label }}              {{ form.id() }}
-        {{ form.order.label }}           {{ form.order() }}
-        {{ form.name.label }}            {{ form.name() }}
-        {{ form.criteria.label }}        {{ form.criteria() }}
-        {{ form.competencyId.label }}    {{ form.competencyId() }}
->>>>>>> 6b32f2125aa5cb02ba2f632f082e824f119bbbbb
         <button type="submit" id="addElement" name="addElement"> Submit </button>
     </form>
 {% endblock%}

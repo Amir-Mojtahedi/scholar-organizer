@@ -33,17 +33,14 @@ class Element:
                     </ul>'
 
 class ElementForm(FlaskForm):
-    id = IntegerField('Id',validators=
-                                [DataRequired(), 
-                                 NumberRange(min=1)
-                                 ])
+    competencyId = SelectField('Id of associated Competency',validators=[DataRequired()], choices=[])
     order = IntegerField('Order',validators=
                                 [DataRequired(), 
                                  NumberRange(min=1)
                                  ])
     name = StringField('Name',validators=[DataRequired()])
     criteria = StringField('Criteria',validators=[DataRequired()])
-    competencyId = SelectField('Id of associated Competency',validators=[DataRequired()], choices=[])
+    
 
 class ElementFormBridge(FlaskForm):
     id = SelectField('Id of associated Element',validators=[DataRequired()], choices=[])

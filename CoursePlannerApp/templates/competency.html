@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content%}
-    <a href="{{ url_for('elements.create_element') }}"><button>Add an Element to this Competency</button></a>
+    <a href="{{ url_for('competencies.create_element',competency_id=competency.id) }}"><button>Add an Element to this Competency</button></a>
     <br>
     <main>
         <div class="headings">
@@ -26,7 +26,7 @@
                         <div class="title">
                             <kbd>{{ competency.id }}_{{ element.order }}</kbd>
                             <h5>{{ element.name }}</h5>
-                            <a class="edit" href="{{ url_for('elements.update_element', element_id=element.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a class="edit" href="{{ url_for('competencies.update_element', competency_id=competency.id , element_id=element.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
                             <a class="delete" href="{{ url_for('elements.delete', element_id=element.id) }}"><i class="fa-solid fa-trash"></i></a>
                         </div>
                         <p>{{ element.criteria }}</p>
