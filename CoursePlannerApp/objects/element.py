@@ -7,7 +7,7 @@ from wtforms.validators import DataRequired, NumberRange
 class Element:
     '''Class representing Element object'''
 
-    def __init__(self, order, name, criteria, competency_id, id=0):
+    def __init__(self, id, order, name, criteria, competency_id):
         if not isinstance(id, int):  # Id validation
             raise TypeError("Enter a valid number. Try again.")
         self.id = id

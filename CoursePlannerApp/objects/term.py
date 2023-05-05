@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired
 
 class Term:
     '''Class for term object'''
-    def __init__(self, name, id=0):
+    def __init__(self, id, name):
         if not isinstance(id, int):  # Id validation
             raise TypeError("Enter a valid id. Try again.")
         self.id = id

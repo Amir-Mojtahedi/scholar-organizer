@@ -354,7 +354,7 @@ class Database:
                 raise ValueError("Should be a Term obj")
 
             # Check if term doesn't already exist
-            results = cursor.execute("SELECT * FROM TERMS where term_id = :termId", termId=term.id)
+            results = cursor.execute("SELECT * FROM TERMS where term_id = :term_id", term_id=term.id)
             nTerm = [result for result in results if (result[0] == term.id)]
             if not (nTerm == []):
                 raise ValueError("This term id, already exist!")
@@ -370,7 +370,7 @@ class Database:
             if not isinstance(term, Term):
                 raise ValueError
             
-            cursor.execute("UPDATE terms SET term_name = :termName WHERE term_id = :termId", termId=term.id,
+            cursor.execute("UPDATE terms SET term_name = :termName WHERE term_id = :term_id", term_id=term.id,
                            termName=term.name)
             if not cursor.rowcount:
                 raise oracledb.Error
@@ -378,7 +378,7 @@ class Database:
     def delete_term(self, term_id):
         '''Delete a term in DB for the given Term object id'''
         with self.__get_cursor() as cursor:
-            cursor.execute("DELETE FROM terms WHERE term_id = :termId", termId=term_id)
+            cursor.execute("DELETE FROM terms WHERE term_id = :term_id", term_id=term_id)
 
     # COMPETENCY
     def get_competencies(self):

@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired
 
 class Domain:
     '''Class representing Domain object'''
-    def __init__(self, name, description, id = 0):
+    def __init__(self, id, name, description):
         if not isinstance(id, int):  # Name validation
             raise TypeError("Enter a valid name. Try again.")
         self.id = id

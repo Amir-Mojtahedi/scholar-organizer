@@ -37,11 +37,11 @@ CREATE OR REPLACE PACKAGE courses_package AS
         i_lab NUMBER,
         i_work NUMBER,
         i_description VARCHAR2,
-        i_domainid VARCHAR2,
-        i_termid NUMBER
+        i_domain_id VARCHAR2,
+        i_term_id NUMBER
         );
     PROCEDURE update_competency(
-        i_competencyid CHAR,
+        i_competency_id CHAR,
         i_competency VARCHAR2,
         i_competency_achievement VARCHAR2,
         i_competency_type VARCHAR2
@@ -221,7 +221,7 @@ WHERE
         the record with the matching competency id. 
     */
     PROCEDURE update_competency(
-        i_competencyid CHAR,
+        i_competency_id CHAR,
         i_competency VARCHAR2,
         i_competency_achievement VARCHAR2,
         i_competency_type VARCHAR2
@@ -231,7 +231,7 @@ WHERE
      UPDATE competencies SET competency = i_competency, 
                             competency_achievement = i_competency_achievement,
                             competency_type = i_competency_type
-                            WHERE competency_id = i_competencyid;
+                            WHERE competency_id = i_competency_id;
     END;
     
     /**
@@ -318,8 +318,8 @@ WHERE
         i_lab NUMBER,
         i_work NUMBER,
         i_description VARCHAR2,
-        i_domainid VARCHAR2,
-        i_termid NUMBER
+        i_domain_id VARCHAR2,
+        i_term_id NUMBER
         )
     IS
     BEGIN
@@ -328,8 +328,8 @@ WHERE
                            lab_hours = i_lab,
                            work_hours = i_work,
                            description = i_description,
-                           domain_id = i_domainid,
-                           term_id = i_termid
+                           domain_id = i_domain_id,
+                           term_id = i_term_id
                     WHERE course_id = i_courseid;
     END;
     

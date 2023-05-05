@@ -72,10 +72,10 @@ def add_term():
     if not request.json:
         return jsonify({"error": "Not a JSON"}), 400
 
-    if "name" not in request.json:
+    if "id" not in request.json or "name" not in request.json:
         return jsonify({"error": "Missing data to add"}), 400
 
-    term = Term(0, request.json["name"])
+    term = Term(request.json["id"], request.json["name"])
 
     try:
         dtb.add_term(term)

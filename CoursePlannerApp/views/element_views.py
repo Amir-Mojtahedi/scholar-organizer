@@ -17,17 +17,17 @@ dtb = LocalProxy(get_db)
 def create_element():
     form = ElementForm()
     #Fill competency drop list
-    form.competencyId.choices = sorted([(competency.id, str(competency.id)+" - "+competency.name) for competency in dtb.get_competencies()]) #Getting data for Select field for competencyId  (Circular import error)
-    form.competencyId.choices.append(['newCompetency', 'Create new competency'])
-    form.competencyId.choices.insert(0, [0, "Choose Competency"])
+    form.competency_id.choices = sorted([(competency.id, str(competency.id)+" - "+competency.name) for competency in dtb.get_competencies()]) #Getting data for Select field for competency_id  (Circular import error)
+    form.competency_id.choices.append(['newCompetency', 'Create new competency'])
+    form.competency_id.choices.insert(0, [0, "Choose Competency"])
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            if form.competencyId.data == 'newCompetency':
+            if form.competency_id.data == 'newCompetency':
                 return redirect(url_for('competencies.create_competency')) #If user want new competency
             
             newElement = Element(form.id.data, form.order.data, form.name.data, 
-                                    form.criteria.data, form.competencyId.data)
+                                    form.criteria.data, form.competency_id.data)
             try:
                 dtb.add_element(newElement)
                 return redirect(url_for('elements.get_elements'))
@@ -60,16 +60,16 @@ def update_element(element_id):
     
     form = ElementForm(obj=element) #Prefill the form
     #Fill competency drop list
-    form.competencyId.choices = sorted([(competency.id, str(competency.id)+" - "+competency.name) for competency in dtb.get_competencies()]) #Getting data for Select field for competencyId  (Circular import error)
-    form.competencyId.choices.append(['newCompetency', 'Create new competency'])
-    form.competencyId.choices.insert(0, [0, "Choose Competency"])
+    form.competency_id.choices = sorted([(competency.id, str(competency.id)+" - "+competency.name) for competency in dtb.get_competencies()]) #Getting data for Select field for competency_id  (Circular import error)
+    form.competency_id.choices.append(['newCompetency', 'Create new competency'])
+    form.competency_id.choices.insert(0, [0, "Choose Competency"])
     
     
     if request.method == 'POST':
         if form.validate_on_submit():
 
             updatedElement = Element(element_id, form.order.data, form.name.data, 
-                                    form.criteria.data, form.competencyId.data)
+                                    form.criteria.data, form.competency_id.data)
             try:
                 dtb.update_element(updatedElement)
                 flash("Element has been updated")    
@@ -92,4 +92,4 @@ def delete(element_id):
     except Exception as e:
         flash("Error: " + str(e))
     
-    return redirect(url_for('competencies.list_elements', competency_id=element.competencyId))
+    return redirect(url_for('competencies.list_elements', competency_id=element.competency_id))
