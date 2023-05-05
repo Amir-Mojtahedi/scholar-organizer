@@ -21,7 +21,7 @@
 
             {% for domain in domains %}
                 {% if domain.id == course.domainId %}
-                    <p>Domain: <a href="{{ url_for('domains.get_specific_domain', domain_id=domain.id) }}">{{ domain.name }}</a></p>
+                    <p>Domain: <a href="{{ url_for('domains.get_domain', domain_id=domain.id) }}">{{ domain.name }}</a></p>
                 {% endif %}
             {% endfor %}
 
