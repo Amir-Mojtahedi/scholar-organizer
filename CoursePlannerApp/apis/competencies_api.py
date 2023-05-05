@@ -75,10 +75,10 @@ def add_competency():
     except ValueError as e:
         return jsonify({"error": str(e)}), 409
 
-    resp = make_response({}, 201)
-    resp.headers["Location"] = url_for(".get_competency", id=competency.id)
+    res = make_response({}, 201)
+    res.headers["Location"] = url_for(".get_competency", id=competency.id)
 
-    return resp
+    return res
 
 
 @bp.route("/<string:id>", methods=["PUT"])
@@ -95,8 +95,18 @@ def update_competency(id):
         dtb.update_competency(competency)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 409
+    except KeyError:
+        try:
+            dtb.add_competency(competency)
+        except oracledb.Error as e:
+            return jsonify({"error": str(e)}), 500
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 409
+
+        res = make_response({}, 201)
+        res.headers["Location"] = url_for(".get_competency", id=competency.id)
+
+        return res
 
     return {}, 204
 

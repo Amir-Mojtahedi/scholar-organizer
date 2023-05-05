@@ -9,28 +9,37 @@ bp = Blueprint("courses_api", __name__, url_prefix="/api/v1/courses")
 dtb = LocalProxy(get_db)
 
 
-@bp.route("", methods=["GET"])
+@bp.route("")
 def get_courses():
+    # pagination
     page = int(request.args.get("page") or 1)
 
+    # get courses
     try:
         courses, prev_page, next_page, count = dtb.get_courses_api(page)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
-    next = url_for("courses_api.get_courses", page=next_page) if next_page else None
-    prev = url_for("courses_api.get_courses", page=prev_page) if prev_page else None
+    # pagination urls
+    next = url_for(".get_courses", page=next_page) if next_page else None
+    prev = url_for(".get_courses", page=prev_page) if prev_page else None
 
+    # add self url to courses
+    for course in courses:
+        course.url = url_for(".get_course", id=course.id)
+
+    # structure json
     json = {"count": count, "next": next, "prev": prev,
             "results": [course.__dict__ for course in courses]}
 
+    # return json
     return jsonify(json), 200
 
 
-@bp.route("/<string:id>", methods=["GET"])
+@bp.route("/<string:id>")
 def get_course(id):
     try:
-        course = dtb.get_specific_course(id)
+        course = dtb.get_course(id)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
@@ -50,6 +59,7 @@ def get_course(id):
 
     course.competencies = [url_for("competencies_api.get_competency", id=competency.id) for competency in competencies]
     course.elements_covered = [url_for("elements_api.get_element", id=element.id) for element in elements]
+    course.url = url_for(".get_course", id=course.id)
 
     return jsonify(course.__dict__), 200
 
@@ -62,29 +72,55 @@ def add_course():
     if not all(key in request.json for key in
                ["id", "name", "theory_hours", "lab_hours", "work_hours", "description", "domain_id", "term_id"]):
         return jsonify({"error": "Missing data to add"}), 400
-    
-    return add_course_from_request()
 
-
-@bp.route("/<string:id>", methods=["PUT"])
-def update_course(id):
-
-
-    name = request.json["name"]
-    theory_hours = request.json["theory_hours"]
-    lab_hours = request.json["lab_hours"]
-    work_hours = request.json["work_hours"]
-    description = request.json["description"]
-    domain_id = request.json["domain_id"]
-    term_id = request.json["term_id"]
+    course = Course(id=id, name=request.json["name"], theory_hours=request.json["theory_hours"],
+                    lab_hours=request.json["lab_hours"], work_hours=request.json["work_hours"],
+                    description=request.json["description"], domainId=request.json["domain_id"],
+                    termId=request.json["term_id"])
 
     try:
-        dtb.update_course(id, Course(name=name, theory_hours=theory_hours, lab_hours=lab_hours, work_hours=work_hours,
-                                     description=description, domainId=domain_id, termId=term_id))
+        dtb.add_course(course)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
     except ValueError as e:
         return jsonify({"error": str(e)}), 409
+
+    res = make_response({}, 201)
+    res.headers["Location"] = url_for(".get_course", id=id)
+
+    return res
+
+
+@bp.route("/<string:id>", methods=["PUT"])
+def update_course(id):
+    if not request.json:
+        return jsonify({"error": "Not a JSON"}), 400
+
+    if not all(key in request.json for key in
+               ["name", "theory_hours", "lab_hours", "work_hours", "description", "domain_id", "term_id"]):
+        return jsonify({"error": "Missing data to update"}), 400
+
+    course = Course(id=id, name=request.json["name"], theory_hours=request.json["theory_hours"],
+                    lab_hours=request.json["lab_hours"], work_hours=request.json["work_hours"],
+                    description=request.json["description"], domainId=request.json["domain_id"],
+                    termId=request.json["term_id"])
+
+    try:
+        dtb.update_course(course)
+    except oracledb.Error as e:
+        return jsonify({"error": str(e)}), 500
+    except KeyError:
+        try:
+            dtb.add_course(course)
+        except oracledb.Error as e:
+            return jsonify({"error": str(e)}), 500
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 409
+
+        res = make_response({}, 201)
+        res.headers["Location"] = url_for(".get_course", id=id)
+
+        return res
 
     return jsonify({}), 204
 
@@ -97,33 +133,3 @@ def delete_course(id):
         return jsonify({"error": str(e)}), 500
 
     return {}, 204
-
-
-def add_course_from_request():
-    if not request.json:
-        return jsonify({"error": "Not a JSON"}), 400
-
-    if not all(key in request.json for key in
-               ["name", "theory_hours", "lab_hours", "work_hours", "description", "domain_id", "term_id"]):
-        return jsonify({"error": "Missing data to update"}), 400
-
-    id = request.json["id"]
-    name = request.json["name"]
-    description = request.json["description"]
-    term_id = request.json["term_id"]
-    domain_id = request.json["domain_id"]
-    lab_hours = request.json["lab_hours"]
-    theory_hours = request.json["theory_hours"]
-    work_hours = request.json["work_hours"]
-
-    course = Course(id, name, description, term_id, domain_id, lab_hours, theory_hours, work_hours)
-
-    try:
-        dtb.add_course(course)
-    except oracledb.Error as e:
-        return jsonify({"error": str(e)}), 500
-
-    resp = make_response({}, 201)
-    resp.headers["Location"] = url_for(".get_course", id=id)
-
-    return resp
