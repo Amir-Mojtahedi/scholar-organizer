@@ -483,7 +483,8 @@ class Database:
             for result in results:
                 foundElement = Element(id=result[0], order=result[1], name=result[2], criteria=result[3],
                                        competencyId=result[4])
-            return foundElement
+                return foundElement
+            return None
 
     def get_elements_covered_by_a_course(self, courseId):
         '''Returns all the Elements covered by a specific course'''
