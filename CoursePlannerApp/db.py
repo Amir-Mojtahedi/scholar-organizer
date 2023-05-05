@@ -85,8 +85,8 @@ class Database:
         '''Add a course to the DB for the given Course object'''
         with self.__get_cursor() as cursor:
             # Check Type
-            if (not isinstance(course, Course)):
-                raise ValueError("Should be a Course obj")
+            if not isinstance(course, Course):
+                raise TypeError("Should be a Course obj")
 
             # Check if course doesn't already exist
             results = cursor.execute(
@@ -117,13 +117,13 @@ class Database:
                 work=course.work_hours, description=course.description, domain_id=course.domain_id,
                 term_id=course.term_id)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
     def update_course(self, course, oldCourseId):
         '''Update a coursefor the given Course object'''
         with self.__get_cursor() as cursor:
-            if (not isinstance(course, Course)):
-                raise ValueError
+            if not isinstance(course, Course):
+                raise TypeError
 
             ##Create course with the updated data            
             # Check if domain exists
@@ -147,7 +147,7 @@ class Database:
                 work=course.work_hours, description=course.description, domain_id=course.domain_id,
                 term_id=course.term_id)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
             ##Update bridgin tbl
             cursor.execute(
@@ -155,18 +155,18 @@ class Database:
                 OldCourseId=oldCourseId,
                 courseId=course.id)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
             ##Delete old course
             cursor.execute("DELETE FROM courses WHERE course_id = :courseId", courseId=oldCourseId)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
     def delete_course(self, course):
         '''Delete a course in DB for the given Course object id'''
         with self.__get_cursor() as cursor:
-            if (not isinstance(course, Course)):
-                raise ValueError
+            if not isinstance(course, Course):
+                raise TypeError
 
             # Check if course exists in course_element table
             results = cursor.execute("SELECT * FROM COURSES_ELEMENTS where course_id = :courseId", courseId=course.id)
@@ -176,7 +176,7 @@ class Database:
 
             cursor.execute("DELETE FROM courses WHERE course_id = :courseId", courseId=course.id)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
     def get_domains_api(self, page_num=1, page_size=50):
         domains = []
@@ -294,7 +294,8 @@ class Database:
 
     def get_domain(self, domain_id):
         with self.__get_cursor() as cursor:
-            results = cursor.execute("SELECT domain_id, domain, domain_description FROM DOMAINS WHERE domain_id = :domain_id", domain_id=domain_id)
+            results = cursor.execute("SELECT domain_id, domain, domain_description FROM DOMAINS WHERE domain_id = "
+                                     ":domain_id", domain_id=domain_id)
 
             for result in results:
                 domain = Domain(id=result[0], name=result[1], description=result[2])
@@ -420,8 +421,8 @@ class Database:
     def add_competency(self, competency):
         '''Add a competency to the DB for the given Competency object'''
         with self.__get_cursor() as cursor:
-            if (not isinstance(competency, Competency)):
-                raise ValueError("Should be Competency obj")
+            if not isinstance(competency, Competency):
+                raise TypeError("Should be Competency obj")
 
             # Check if competency doesn't already exist
             results = cursor.execute(
@@ -437,13 +438,13 @@ class Database:
                 competencyId=competency.id, competencyName=competency.name,
                 competencyAchievement=competency.achievement, competencyType=competency.type)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
     def update_competency(self, competency, oldCompetencyId):
         '''Update a competency for the given Competency object'''
         with self.__get_cursor() as cursor:
-            if (not isinstance(competency, Competency)):
-                raise ValueError
+            if not isinstance(competency, Competency):
+                raise TypeError
 
             ##Create competency with the updated data            
             # Insert data
@@ -452,7 +453,7 @@ class Database:
                 competencyId=competency.id, competencyName=competency.name,
                 competencyAchievement=competency.achievement, competencyType=competency.type)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
             ##Update bridgin tbl
             cursor.execute(
@@ -460,51 +461,49 @@ class Database:
                 OldCompetencyId=oldCompetencyId,
                 competencyId=competency.id)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
             ##Delete old course
             cursor.execute("DELETE FROM COMPETENCIES WHERE competency_id = :competencyId", competencyId=oldCompetencyId)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
     def delete_competency(self, competency):
         '''Delete a competency in DB for the given COmpetency object id'''
         with self.__get_cursor() as cursor:
-            if (not isinstance(competency, Competency)):
-                raise ValueError
+            if not isinstance(competency, Competency):
+                raise TypeError
 
             # Delete associated elements
             cursor.execute("DELETE FROM elements WHERE competency_id = :competencyId", competencyId=competency.id)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
             cursor.execute("DELETE FROM competencies WHERE competency_id = :competencyId", competencyId=competency.id)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
-    # ELEMENT
     def get_elements(self):
-        '''Returns all Element objects in a list'''
         with self.__get_cursor() as cursor:
-            newListElement = []
+            elements = []
             results = cursor.execute(
                 "SELECT element_id, element_order, element, element_criteria, competency_id FROM ELEMENTS")
-            for result in results:
-                newElement = Element(id=result[0], order=result[1], name=result[2], criteria=result[3],
-                                     competencyId=result[4])
-                newListElement.append(newElement)
-            return newListElement
 
-    def get_specific_element(self, elementId):
-        '''Returns a specific domain'''
-        with self.__get_cursor() as cursor:
-            results = cursor.execute(
-                "SELECT element_id, element_order, element, element_criteria, competency_id FROM ELEMENTS WHERE element_id = :elementId",
-                elementId=elementId)
             for result in results:
-                foundElement = Element(id=result[0], order=result[1], name=result[2], criteria=result[3],
-                                       competencyId=result[4])
-            return foundElement
+                elements.append(
+                    Element(id=result[0], order=result[1], name=result[2], criteria=result[3], competencyId=result[4]))
+
+            return elements
+
+    def get_element(self, element_id):
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("SELECT element_id, element_order, element, element_criteria, competency_id FROM "
+                                     "ELEMENTS WHERE element_id = :element_id", element_id=element_id)
+            for result in results:
+                element = Element(id=result[0], order=result[1], name=result[2], criteria=result[3],
+                                  competencyId=result[4])
+
+            return element
 
     def get_elements_covered_by_a_course(self, courseId):
         '''Returns all the Elements covered by a specific course'''
@@ -520,48 +519,45 @@ class Database:
             return newListElement
 
     def add_element(self, element):
-        '''Add an element to the DB for the given Element object'''
         with self.__get_cursor() as cursor:
-            if (not isinstance(element, Element)):
-                raise ValueError("Should be Element obj")
-            # Check if Competency exists
-            results = cursor.execute("SELECT * FROM COMPETENCIES where competency_id = :competencyId",
-                                     competencyId=element.competencyId)
-            nCompetency = [result for result in results if result[0] == element.competencyId]
-            if nCompetency is None:
-                raise ValueError("Competency doesn't exist. Create a competency first")
-            # Insert Data
-            cursor.execute(
-                "INSERT INTO ELEMENTS (element_id, element_order, element, element_criteria, competency_id) VALUES (:elementId, :elementOrder, :elementName, :elementCriteria, :competencyId)",
-                elementId=element.id, elementOrder=element.order, elementName=element.name,
-                elementCriteria=element.criteria, competencyId=element.competencyId)
-            if not cursor.rowcount:
-                raise oracledb.Error
+            if not isinstance(element, Element):
+                raise TypeError
 
-    def add_element_course_bridging(self, elementId, courseId, elementHours):
+            # check if competency exists
+            competency = self.get_specific_competency(element.competencyId)
+            if not competency:
+                raise ValueError("Competency doesn't exist")
+
+            cursor.execute(
+                "INSERT INTO ELEMENTS (element_id, element_order, element, element_criteria, competency_id) VALUES ("
+                ":element_id, :elementOrder, :elementName, :elementCriteria, :competencyId)",
+                element_id=element.id, elementOrder=element.order, elementName=element.name,
+                elementCriteria=element.criteria, competencyId=element.competencyId)
+
+    def add_element_course_bridging(self, element_id, courseId, elementHours):
         '''Add a record to the bridging table'''
         with self.__get_cursor() as cursor:
             # Check if the record doesn't already exist in the bridging table
             results = cursor.execute(
-                "SELECT course_id, element_id FROM COURSES_ELEMENTS where element_id = :elementId and course_id = :courseId",
-                elementId=elementId, courseId=courseId)
+                "SELECT course_id, element_id FROM COURSES_ELEMENTS where element_id = :element_id and course_id = :courseId",
+                element_id=element_id, courseId=courseId)
             for result in results:
                 if result:
                     raise ValueError("record already exists")
             cursor.execute(
-                "INSERT INTO COURSES_ELEMENTS (element_id, course_id,element_hours) VALUES(:elementId, :courseId,:elementHours)",
-                elementId=elementId, courseId=courseId, elementHours=elementHours)
+                "INSERT INTO COURSES_ELEMENTS (element_id, course_id,element_hours) VALUES(:element_id, :courseId,:elementHours)",
+                element_id=element_id, courseId=courseId, elementHours=elementHours)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
-    def delete_element_course_bridging(self, elementId, courseId):
+    def delete_element_course_bridging(self, element_id, courseId):
         '''Delete a record from the bridging table'''
         with self.__get_cursor() as cursor:
             cursor.execute(
-                "DELETE FROM COURSES_ELEMENTS WHERE element_id = :elementId and course_id = :courseId",
-                elementId=elementId, courseId=courseId)
+                "DELETE FROM COURSES_ELEMENTS WHERE element_id = :element_id and course_id = :courseId",
+                element_id=element_id, courseId=courseId)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
     def get_sum_hours(self, courseId):
         '''Get records from the bridging table'''
@@ -572,7 +568,7 @@ class Database:
                     "SELECT SUM(element_hours) FROM COURSES_ELEMENTS WHERE course_id=:courseId",
                     courseId=courseId)
                 for result in results:
-                    if (result[0] is None):
+                    if result[0] is None:
                         return 0
                     hours = result[0]
             except TypeError:
@@ -582,24 +578,19 @@ class Database:
     def update_element(self, element):
         '''Update a element for the given Competency object'''
         with self.__get_cursor() as cursor:
-            if (not isinstance(element, Element)):
-                raise ValueError
+            if not isinstance(element, Element):
+                raise TypeError
             cursor.execute(
-                "UPDATE elements SET element_order = :elementOrder, element = :elementName, element_criteria = :elementCriteria, competency_Id = :competencyId WHERE element_id  = :elementId",
-                elementId=element.id, elementOrder=element.order, elementName=element.name,
+                "UPDATE elements SET element_order = :elementOrder, element = :elementName, element_criteria = :elementCriteria, competency_Id = :competencyId WHERE element_id  = :element_id",
+                element_id=element.id, elementOrder=element.order, elementName=element.name,
                 elementCriteria=element.criteria, competencyId=element.competencyId)
             if not cursor.rowcount:
-                raise oracledb.Error
+                raise KeyError
 
-    def delete_element(self, element):
+    def delete_element(self, element_id):
         '''Delete a element for the given Element object'''
         with self.__get_cursor() as cursor:
-            if not isinstance(element, Element):
-                raise ValueError("Should be an Element obj")
-
-            cursor.execute("DELETE FROM elements WHERE element_id = :elementId", elementId=element.id)
-            if not cursor.rowcount:
-                raise oracledb.Error
+            cursor.execute("DELETE FROM elements WHERE element_id = :element_id", element_id=element_id)
 
     def close(self):
         if self.__connection is not None:
