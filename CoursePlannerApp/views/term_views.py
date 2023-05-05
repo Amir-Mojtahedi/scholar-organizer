@@ -55,7 +55,7 @@ def update_term(term_id):
     
     #Check if term exist
     try:
-        term = dtb.get_specific_term(term_id)
+        term = dtb.get_term(term_id)
     except Exception as e:
         flash("Error: "+ str(e))
     
@@ -84,7 +84,7 @@ def update_term(term_id):
 def delete(term_id):
     
     try:
-        term = dtb.get_specific_term(term_id)  
+        term = dtb.get_term(term_id)  
         courseImpacted = dtb.get_courses_in_term(term_id)      
     except Exception as e:
         flash("Could not acces the term")

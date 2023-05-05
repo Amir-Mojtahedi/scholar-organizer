@@ -23,10 +23,10 @@ def get_domains():
         return render_template('domains.html',domains=domains)
 
 @bp.route("/<int:domain_id>/")
-def get_specific_domain(domain_id):
+def get_domain(domain_id):
     if request.method == 'GET':
         try:
-            domain = dtb.get_specific_domain(domain_id) 
+            domain = dtb.get_domain(domain_id) 
         except Exception as e:
             flash('There is an issue with the Database')
         if not domain:
@@ -65,7 +65,7 @@ def update_domain(domain_id):
     
     #Check if domain exist
     try:
-        domain = dtb.get_specific_domain(domain_id)
+        domain = dtb.get_domain(domain_id)
     except Exception as e:
         flash("Error: "+ str(e))
     
@@ -94,7 +94,7 @@ def update_domain(domain_id):
 def delete(domain_id):
 
     try:    
-        domain = dtb.get_specific_domain(domain_id)
+        domain = dtb.get_domain(domain_id)
         courseImpacted = dtb.get_courses_in_domain(domain_id) 
     except Exception as e:
         flash("Could not acces the domain")

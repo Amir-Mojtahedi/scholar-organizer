@@ -27,7 +27,7 @@ def get_courses():
 def list_competencies(course_id):
     if request.method == 'GET':
         try:
-            course = dtb.get_specific_course(course_id)
+            course = dtb.get_course(course_id)
             competencies = dtb.get_course_competencies(course_id) 
             elements_covered=dtb.get_elements_covered_by_a_course(course_id)
             domains = dtb.get_domains() 
@@ -105,7 +105,7 @@ def update_course(course_id):
     oldCourseId = course_id
     #Cheack if course exist
     try:
-        course = dtb.get_specific_course(course_id)
+        course = dtb.get_course(course_id)
     except Exception as e:
         flash("Error: "+ str(e))
     
@@ -145,7 +145,7 @@ def update_course(course_id):
 @login_required
 def delete(course_id):
     try:
-        course = dtb.get_specific_course(course_id)
+        course = dtb.get_course(course_id)
     except Exception as e:
         flash("Couldn't access the course")
         return redirect(url_for(".get_courses"))
@@ -174,7 +174,7 @@ def delete_element_for_course(course_id,element_id):
     return redirect(url_for('courses.list_competencies',course_id=course_id))
 
 def hour_validator(course_id):
-    course=dtb.get_specific_course(course_id)
+    course=dtb.get_course(course_id)
     total_hours=(course.lab_hours + course.theory_hours) * 15
     current_hours=dtb.get_sum_hours(course_id)
     diff=total_hours-current_hours
