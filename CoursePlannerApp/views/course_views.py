@@ -59,7 +59,7 @@ def add_element_for_course(course_id):
         flash('There is an issue with the Database')
         
     form.id.choices = sorted([(element.id, str(element.id) + " - " + element.name) for element in
-                             elements])  # Getting data for Select field for competencyId 
+                             elements])  # Getting data for Select field for competency_id 
     form.id.choices.insert(0, [0, "Choose an Element of Competency"])
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -91,23 +91,24 @@ def create_course():
         domains = dtb.get_domains()
     except Exception:
         flash("There is an issue with the database")
-        
+
     # Fill term drop list
     form.term_id.choices = sorted([(term.id, str(term.id) + " - " + term.name) for term in terms])
     form.term_id.choices.insert(0, [0, "Choose a term"])
     form.term_id.choices.append(['newTerm', "Create new term"])
-    
+
     # Fill domain drop list
-    form.domain_id.choices = sorted([(domain.id, str(domain.id) + " - " + domain.name) for domain in domains]) 
+    form.domain_id.choices = sorted([(domain.id, str(domain.id) + " - " + domain.name)
+                                     for domain in domains])
     form.domain_id.choices.insert(0, [0, "Choose a domain"])
     form.domain_id.choices.append(['newDomain', "Create new domain"])
 
     if request.method == 'POST':
         if form.validate_on_submit():
-            
+   
             if form.term_id.data == 'newTerm':
                 return redirect(url_for('terms.create_term')) #If user want new term
-            
+
             if form.domain_id.data == 'newDomain':
                 return redirect(url_for('domains.create_domain')) #If user want new domain
 
@@ -150,22 +151,23 @@ def update_course(course_id):
         domains = dtb.get_domains()
     except Exception:
         flash("Error: "+ str(e))
-        
+
     form.term_id.choices = sorted([(term.id, str(term.id) + " - " + term.name) for term in terms])
     form.term_id.choices.insert(0, [0, "Choose a term"])
     form.term_id.choices.append(['newTerm', "Create new term"])
 
     # Fill domain drop list
-    form.domain_id.choices = sorted([(domain.id, str(domain.id) + " - " + domain.name) for domain in domains])  
+    form.domain_id.choices = sorted([(domain.id, str(domain.id) + " - " + domain.name)
+                                     for domain in domains])
     form.domain_id.choices.insert(0, [0, "Choose a domain"])
     form.domain_id.choices.append(['newDomain', "Create new domain"])
 
     if request.method == 'POST':
         if form.validate_on_submit():
-            
+
             if form.term_id.data == 'newTerm':
                 return redirect(url_for('terms.create_term')) #If user want new term
-            
+
             if form.domain_id.data == 'newDomain':
                 return redirect(url_for('domains.create_domain')) #If user want new domain
 
@@ -219,7 +221,8 @@ def hour_validator(course_id):
     total_hours = (course.lab_hours + course.theory_hours) * 15
     current_hours = dtb.get_sum_hours(course_id)
     diff = total_hours - current_hours
-    if (diff < 0):
+    if diff < 0:
         flash(f'You must remove {diff * -1} to match {total_hours} of {course.name}')
-    elif (diff > 0):
-        flash(f'You must add {diff} hours to match {total_hours} hours of {course.id} {course.name}')
+    elif diff > 0:
+        flash(f'You must add {diff} hours to match {total_hours} hours of {course.id} \
+              {course.name}')

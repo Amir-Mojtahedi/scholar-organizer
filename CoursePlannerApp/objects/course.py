@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, Regexp, NumberRange
 
 class Course:
     '''Class representing Course object'''
-    def __init__(self, id, name, description, term_id, domain_id, lab_hours, 
+    def __init__(self, id, name, description, term_id, domain_id, lab_hours,
                  theory_hours, work_hours):
         if not isinstance(id, str): #Id validation
             raise TypeError("Enter a valid Id. Try again.")

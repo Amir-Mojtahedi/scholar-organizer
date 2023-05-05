@@ -1,7 +1,7 @@
 """Modules providing form and validation for forms"""
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField
-from wtforms.validators import DataRequired, NumberRange
+from wtforms import StringField
+from wtforms.validators import DataRequired
 
 
 class Domain:

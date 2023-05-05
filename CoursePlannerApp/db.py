@@ -311,7 +311,7 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
 
-    def delete_domain(self, domainId):
+    def delete_domain(self, domain_id):
         '''Delete a domain in DB for the given Domain object id'''
         with self.__get_cursor() as cursor:
             cursor.execute("DELETE FROM domains WHERE domain_id = :domain_id", domain_id=domain_id)

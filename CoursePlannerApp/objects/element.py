@@ -46,7 +46,7 @@ class ElementForm(FlaskForm):
                                               ])
     name = StringField('Name', validators=[DataRequired()])
     criteria = StringField('Criteria', validators=[DataRequired()])
-    competencyId = SelectField('Id of associated Competency',
+    competency_id = SelectField('Id of associated Competency',
                                validators=[DataRequired()], choices=[])
 
 
