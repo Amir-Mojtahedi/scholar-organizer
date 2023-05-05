@@ -61,7 +61,6 @@ class TestForAPI(flask_unittest.ClientTestCase):
         resp = client.get('/api/v1/domains/3')
         self.assertEqual(resp.status_code, 200)
         domain = resp.json
-        domain['id'] = 3
         domain['name'] = 'TEST UPDATE TITLE'
         domain['description'] = 'TEST UPDATE TITLE'
         resp = client.put('/api/v1/domains/3', json=domain)
@@ -76,7 +75,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(json_domain.description,domain.description)
 
     def test_delete_domain(self, client):
-        resp = client.delete('/api/v1/domains/3')
+        resp = client.delete('/api/v1/domains/2')
         self.assertEqual(resp.status_code, 204)
     # --------------- END DOMAIN CRUD TEST ---------------
 
@@ -127,7 +126,6 @@ class TestForAPI(flask_unittest.ClientTestCase):
         resp = client.get('/api/v1/terms/6')
         self.assertEqual(resp.status_code, 200)
         term = resp.json
-        term['id'] = 6
         term['name'] = 'Summer'
         resp = client.put('/api/v1/terms/6', json=term)
         self.assertEqual(resp.status_code, 204)

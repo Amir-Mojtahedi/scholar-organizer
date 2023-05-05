@@ -299,10 +299,20 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
 
-    def delete_domain(self, domain_id):
+    def delete_domain(self, domainId):
         '''Delete a domain in DB for the given Domain object id'''
         with self.__get_cursor() as cursor:
-            cursor.execute("DELETE FROM domains WHERE domain_id = :domainId", domainId=domain_id)
+            coursesToDelete = []
+            results = cursor.execute("SELECT course_id from Courses WHERE domain_id= :domainId",domainId=domainId)
+            for result in results:
+                courseId = result[0]
+                coursesToDelete.append(courseId)
+            for courseId in coursesToDelete:
+                cursor.execute("DELETE FROM courses_elements WHERE course_id = :courseId" , courseId=courseId)
+            
+            cursor.execute("DELETE FROM courses WHERE domain_id= :domainId" , domainId=domainId)
+
+            cursor.execute("DELETE FROM domains WHERE domain_id = :domainId", domainId=domainId)
 
     # TERM
     def get_terms(self):
