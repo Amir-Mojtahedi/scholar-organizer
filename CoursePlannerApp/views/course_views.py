@@ -27,7 +27,7 @@ def get_courses():
 def list_competencies(course_id):
     if request.method == 'GET':
         try:
-            course = dtb.get_specific_course(course_id)
+            course = dtb.get_course(course_id)
             competencies = dtb.get_course_competencies(course_id) 
             elements_covered=dtb.get_elements_covered_by_a_course(course_id)
             domains = dtb.get_domains() 
@@ -42,7 +42,12 @@ def list_competencies(course_id):
 def add_element_for_course(course_id):
     form = ElementFormBridge()
     #Fill element drop list
-    form.id.choices = sorted([(element.id, str(element.id)+" - "+element.name) for element in dtb.get_elements()]) #Getting data for Select field for competencyId  (Circular import error)
+    try:
+        elements = dtb.get_elements()
+    except Exception:
+        flash('There is an issue with the Database')
+        
+    form.id.choices = sorted([(element.id, str(element.id)+" - "+element.name) for element in elements]) #Getting data for Select field for competencyId  (Circular import error)
     form.id.choices.insert(0, [0, "Choose an Element of Competency"])
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -51,14 +56,15 @@ def add_element_for_course(course_id):
                 flash("Element was created successfully.")
                 hour_validator(course_id)
                 return redirect(url_for('courses.list_competencies',course_id=course_id))
+            
             except oracledb.IntegrityError as e:
                 error_obj, = e.args #To acces code error 
                 if error_obj.code == 1: # 1 is related to primary key issue (when the primary key already exist) 
                     flash("Element already exist")
+            
             except Exception as e:
-                flash("Error: " + str(e))
-        else:
-            flash('Invalid input')
+                flash('There is an issue with the Database')
+
     return render_template('Add/addCourseElementBridge.html', form=form)
 
 #Add course
@@ -70,6 +76,7 @@ def create_course():
     form.termId.choices = sorted([(term.id, str(term.id)+" - "+term.name) for term in dtb.get_terms()]) #Getting data for Select field for termId  (Circular import error)
     form.termId.choices.insert(0, [0, "Choose a term"])
 
+    
     #Fill domain drop list
     form.domainId.choices = sorted([(domain.id, str(domain.id)+" - "+domain.name) for domain in dtb.get_domains()]) #Getting data for Select field for domainId  (Circular import error)
     form.domainId.choices.insert(0, [0, "Choose a domain"])
@@ -81,6 +88,12 @@ def create_course():
                                form.termId.data, form.domainId.data, 
                                form.lab_hours.data, form.theory_hours.data, 
                                form.work_hours.data)
+            
+            for course in dtb.get_courses():
+                if(newCourse.id == course.id or newCourse.name == course.name):
+                    flash("Course already exists!")
+                    return redirect(url_for('courses.get_courses'))
+            
             try:
                 dtb.add_course(newCourse)
                 flash("Course has been added")
@@ -102,10 +115,9 @@ def create_course():
 @bp.route('/<course_id>/update/', methods=['GET', 'POST'])
 @login_required
 def update_course(course_id):
-    
     #Cheack if course exist
     try:
-        course = dtb.get_specific_course(course_id)
+        course = dtb.get_course(course_id)
     except Exception as e:
         flash("Error: "+ str(e))
     
@@ -113,26 +125,37 @@ def update_course(course_id):
         flash("Course not found")
         return redirect(url_for('courses.get_courses'))
     
+    
     form = CourseForm(obj=course) #Prefill the form
       
     #Creating a new one based on the updated form
     #Fill term drop list
-    form.termId.choices = sorted([(term.id, str(term.id)+" - "+term.name) for term in dtb.get_terms()]) #Getting data for Select field for termId  (Circular import error)
+    try:
+        terms = dtb.get_terms()
+        domains = dtb.get_domains()
+    except Exception:
+        flash("")
+    form.termId.choices = sorted([(term.id, str(term.id)+" - "+term.name) for term in terms]) #Getting data for Select field for termId  (Circular import error)
     form.termId.choices.insert(0, [0, "Choose a term"])
 
     #Fill domain drop list
-    form.domainId.choices = sorted([(domain.id, str(domain.id)+" - "+domain.name) for domain in dtb.get_domains()]) #Getting data for Select field for domainId  (Circular import error)
+    form.domainId.choices = sorted([(domain.id, str(domain.id)+" - "+domain.name) for domain in domains]) #Getting data for Select field for domainId  (Circular import error)
     form.domainId.choices.insert(0, [0, "Choose a domain"])
     
     if request.method == 'POST':
         if form.validate_on_submit():
             
-            updatedCourse = Course(course_id, form.name.data, form.description.data, 
+            updatedCourse = Course(form.id.data, form.name.data, form.description.data, 
                                form.termId.data, form.domainId.data, 
                                form.lab_hours.data, form.theory_hours.data, 
                                form.work_hours.data)
+            
+            # for course in dtb.get_courses():
+            #     if( updatedCourse.id == course.id or updatedCourse.name == course.name):
+            #         flash("Course already exists!")
+                
             try:
-                dtb.update_course(updatedCourse)
+                dtb.update_course(updatedCourse, course_id)
                 flash("Course has been updated")    
                 return redirect(url_for('courses.get_courses'))      
             except Exception as e:
@@ -144,14 +167,9 @@ def update_course(course_id):
 @bp.route("/<course_id>/delete/", methods=["GET"])
 @login_required
 def delete(course_id):
-    try:
-        course = dtb.get_specific_course(course_id)
-    except Exception as e:
-        flash("Couldn't access the course")
-        return redirect(url_for(".get_courses"))
     # try to delete course
     try:
-        dtb.delete_course(course)
+        dtb.delete_course(course_id)
     except oracledb.Error as e:
         flash("Error: " + str(e))
         return redirect(url_for(".get_courses"))
@@ -159,12 +177,13 @@ def delete(course_id):
     flash("Course deleted successfully")
     return redirect(url_for('courses.get_courses'))
 
+#Delete an element for specific course
 @bp.route('/<course_id>/<int:element_id>/delete/', methods=['GET'])
 @login_required
 def delete_element_for_course(course_id,element_id):
     try:
         dtb.delete_element_course_bridging(element_id,course_id)
-        flash("Element deleted successfully")
+        flash("Element deleted for this course successfully")
         hour_validator(course_id)
     except Exception as e:
         flash("Could not access the record")
@@ -173,7 +192,7 @@ def delete_element_for_course(course_id,element_id):
     return redirect(url_for('courses.list_competencies',course_id=course_id))
 
 def hour_validator(course_id):
-    course=dtb.get_specific_course(course_id)
+    course=dtb.get_course(course_id)
     total_hours=(course.lab_hours + course.theory_hours) * 15
     current_hours=dtb.get_sum_hours(course_id)
     diff=total_hours-current_hours

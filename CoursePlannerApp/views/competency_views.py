@@ -26,7 +26,7 @@ def get_competencies():
 def list_elements(competency_id):
     if request.method == 'GET':
         try:
-            competency = dtb.get_specific_competency(competency_id)
+            competency = dtb.get_competency(competency_id)
             elements = dtb.get_competency_elements(competency_id) 
         except Exception as e:
             flash('There is an issue with the Database')
@@ -44,6 +44,16 @@ def create_competency():
 
             newCompetency = Competency(form.id.data, form.name.data, form.achievement.data, 
                                        form.type.data)
+
+            try:
+                competencies = dtb.get_competencies() 
+            except Exception:
+                flash('There is an issue with the Database')
+                
+            for competency in competencies:
+                if(newCompetency.id == competency.id or newCompetency.name == competency.name):
+                    flash("Competency already exists!")
+            
             try:
                 dtb.add_competency(newCompetency)
                 return redirect(url_for('competencies.get_competencies'))
@@ -63,10 +73,10 @@ def create_competency():
 @bp.route('/<competency_id>/update/', methods=['GET', 'POST'])
 @login_required
 def update_competency(competency_id):
-    
+    oldCompetencyId = competency_id
     #Check if competency exist
     try:
-        competency = dtb.get_specific_competency(competency_id)
+        competency = dtb.get_competency(competency_id)
     except Exception as e:
         flash("Error: "+ str(e))
     
@@ -79,10 +89,15 @@ def update_competency(competency_id):
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            updatedCompetency = Competency(competency_id, form.name.data, form.achievement.data, 
+            updatedCompetency = Competency(form.id.data, form.name.data, form.achievement.data, 
                                        form.type.data)
+            
+            for competency in dtb.get_competencies():
+                if(updatedCompetency.id == competency.id or updatedCompetency.name == competency.name):
+                    flash("Competency already exists!")
+                
             try:
-                dtb.update_competency(updatedCompetency)
+                dtb.update_competency(updatedCompetency, oldCompetencyId)
                 flash("Competency has been updated")    
                 return redirect(url_for('competencies.get_competencies'))
             except Exception as e:
@@ -94,14 +109,14 @@ def update_competency(competency_id):
 @login_required
 def delete(competency_id):
     try:
-        competency = dtb.get_specific_competency(competency_id)        
+        competency = dtb.get_competency(competency_id)
     except Exception as e:
         flash("Could not acces the competency")
         return redirect(url_for('competency.list_elements', competency_id=competency.id))
     
     # try to delete competency
     try:
-        dtb.delete_competency(competency)
+        dtb.delete_competency(competency.id)
     except oracledb.Error as e:
         flash("Error: " + str(e))
         return redirect(url_for('competency.list_elements', 'competency_id=competency.id'))

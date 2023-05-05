@@ -9,28 +9,37 @@ bp = Blueprint("competencies_api", __name__, url_prefix="/api/v1/competencies")
 dtb = LocalProxy(get_db)
 
 
-@bp.route("", methods=["GET"])
+@bp.route("")
 def get_competencies():
+    # pagination
     page = int(request.args.get("page") or 1)
 
+    # get competencies
     try:
         competencies, prev_page, next_page, count = dtb.get_competencies_api(page)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
-    next = url_for("competencies_api.get_competencies", page=next_page) if next_page else None
-    prev = url_for("competencies_api.get_competencies", page=prev_page) if prev_page else None
+    # pagination urls
+    next = url_for(".get_competencies", page=next_page) if next_page else None
+    prev = url_for(".get_competencies", page=prev_page) if prev_page else None
 
+    # add self url to competencies
+    for competency in competencies:
+        competency.url = url_for(".get_competency", id=competency.id)
+
+    # structure json
     json = {"count": count, "next": next, "prev": prev,
             "results": [competency.__dict__ for competency in competencies]}
 
+    # return json
     return jsonify(json), 200
 
 
-@bp.route("/<string:id>", methods=["GET"])
+@bp.route("/<string:id>")
 def get_competency(id):
     try:
-        competency = dtb.get_specific_competency(id)
+        competency = dtb.get_competency(id)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
@@ -44,6 +53,7 @@ def get_competency(id):
         return jsonify({"error": str(e)}), 500
 
     competency.elements = [url_for("elements_api.get_element", id=element.id) for element in elements]
+    competency.url = url_for(".get_competency", id=competency.id)
 
     return jsonify(competency.__dict__), 200
 
@@ -65,13 +75,13 @@ def add_competency():
     except ValueError as e:
         return jsonify({"error": str(e)}), 409
 
-    resp = make_response({}, 201)
-    resp.headers["Location"] = url_for("competencies_api.get_competency", id=competency.id)
+    res = make_response({}, 201)
+    res.headers["Location"] = url_for(".get_competency", id=competency.id)
 
-    return resp
+    return res
 
 
-@bp.route("/<string:id>", methods=["PATCH"])
+@bp.route("/<string:id>", methods=["PUT"])
 def update_competency(id):
     if not request.json:
         return jsonify({"error": "Not a JSON"}), 400
@@ -79,22 +89,33 @@ def update_competency(id):
     if not any(key in request.json for key in ["name", "achievement", "type"]):
         return jsonify({"error": "Missing fields"}), 400
 
+    competency = Competency(id, request.json["name"], request.json["achievement"], request.json["type"])
+
     try:
-        dtb.update_competency(
-            Competency(id, request.json.get("name"), request.json.get("achievement"), request.json.get("type")))
+        dtb.update_competency(competency)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 409
+    except KeyError:
+        try:
+            dtb.add_competency(competency)
+        except oracledb.Error as e:
+            return jsonify({"error": str(e)}), 500
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 409
 
-    return jsonify({}), 204
+        res = make_response({}, 201)
+        res.headers["Location"] = url_for(".get_competency", id=competency.id)
+
+        return res
+
+    return {}, 204
 
 
 @bp.route("/<string:id>", methods=["DELETE"])
 def delete_competency(id):
     try:
-        dtb.delete_competency(Competency(id, "", "", ""))
+        dtb.delete_competency(id)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
-    return jsonify({}), 204
+    return {}, 204

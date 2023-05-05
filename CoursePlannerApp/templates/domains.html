@@ -4,10 +4,11 @@
 {% endblock %}
 
 {% block content %}
+    <input type="text" name="filter" placeholder="Filter">
     <a href="{{ url_for('domains.create_domain') }}"><button>Add Domain</button></a>
     <br>
     {% for domain in domains %}
-        <main>
+        <main class="searchable">
             <div class="headings">
                 <div class="title">
                     <h2>{{ domain.name }}</h2>
