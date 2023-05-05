@@ -11,7 +11,6 @@
     <h1>Domain to Update:</h1>
     <form method="post">
         {{ form.csrf_token }}
-        {% comment %} {{ form.id.label}}              {{ form.id(readonly=True) }} {% endcomment %}
         {{ form.name.label}}            {{ form.name() }}
         {{ form.description.label}}     {{ form.description() }}
         <button type="submit" id="updateDomain" name="updateDomain"> Update </button>

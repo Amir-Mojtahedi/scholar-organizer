@@ -1,12 +1,14 @@
+"""Modules providing form and validation for forms"""
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField
-from wtforms.validators import DataRequired, NumberRange
+from wtforms import StringField
+from wtforms.validators import DataRequired
 
 
 class Domain:
-    def __init__(self, id, name, description):
-        if not isinstance(id, int):  # Id validation
-            raise TypeError("Enter a valid id. Try again.")
+    '''Class representing Domain object'''
+    def __init__(self, name, description, id = 0):
+        if not isinstance(id, int):  # Name validation
+            raise TypeError("Enter a valid name. Try again.")
         self.id = id
         if not isinstance(name, str):  # Name validation
             raise TypeError("Enter a valid name. Try again.")
@@ -26,7 +28,5 @@ class Domain:
                     </ul>'
 
 class DomainForm(FlaskForm):
-    id = IntegerField('Id',validators=[DataRequired(),
-                                        NumberRange(min=1)])
     name = StringField('Name',validators=[DataRequired()])
     description = StringField('Domain Description',validators=[DataRequired()])

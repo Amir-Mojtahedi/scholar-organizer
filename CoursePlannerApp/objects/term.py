@@ -1,9 +1,11 @@
+"""Modules providing form and validation for forms"""
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SelectField
-from wtforms.validators import DataRequired, NumberRange
+from wtforms import SelectField
+from wtforms.validators import DataRequired
 
 class Term:
-    def __init__(self, id, name):
+    '''Class for term object'''
+    def __init__(self, name, id=0):
         if not isinstance(id, int):  # Id validation
             raise TypeError("Enter a valid id. Try again.")
         self.id = id
@@ -21,6 +23,6 @@ class Term:
                     </ul>'
 
 class TermForm(FlaskForm):
-    id = IntegerField('Id',validators=[DataRequired(),
-                                        NumberRange(min=1)])
-    name =  SelectField('Season',validators=[DataRequired()], choices=["Choose one season", "Winter", "Summer", "Fall"])
+    '''Form for term object'''
+    name =  SelectField('Season',validators=[DataRequired()], 
+                        choices=["Choose one season", "Winter", "Summer", "Fall"])
