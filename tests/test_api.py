@@ -2,6 +2,7 @@ import flask_unittest
 from CoursePlannerApp import create_app
 from CoursePlannerApp.objects.competency import Competency
 from CoursePlannerApp.objects.domain import Domain
+from CoursePlannerApp.objects.element import Element
 from CoursePlannerApp.objects.term import Term
 
 class TestForAPI(flask_unittest.ClientTestCase):
@@ -233,9 +234,16 @@ class TestForAPI(flask_unittest.ClientTestCase):
         resp = client.get('/api/v1/elements')
         self.assertEqual(resp.status_code, 200)
         json = resp.json
+        element = Element(1,1,"Analyze the problem.","* Correct breakdown of the problem * Proper identification of input and output data and of the nature of the processes * Appropriate choice and adaptation of the algorithm","00Q2")
+        json_element = Element(json['results'][0]['id'],json['results'][0]['order'],json['results'][0]['name'],json['results'][0]['criteria'],json['results'][0]['competencyId'])
         self.assertIsNotNone(json)
         self.assertIsNotNone(json['count'])
         self.assertIsNotNone(json['results'])
+        self.assertEqual(json_element.id,element.id)
+        self.assertEqual(json_element.order,element.order)
+        self.assertEqual(json_element.name,element.name)
+        self.assertEqual(json_element.criteria,element.criteria)
+        self.assertEqual(json_element.competencyId,element.competencyId)
         self.assertIsNotNone(json['next'])
         self.assertIsNone(json['prev'])
 
@@ -243,12 +251,19 @@ class TestForAPI(flask_unittest.ClientTestCase):
         resp = client.get('/api/v1/elements/1')
         self.assertEqual(resp.status_code, 200)
         json = resp.json
+        element = Element(1,1,"Analyze the problem.","* Correct breakdown of the problem * Proper identification of input and output data and of the nature of the processes * Appropriate choice and adaptation of the algorithm","00Q2")
+        json_element = Element(json['id'],json['order'],json['name'],json['criteria'],json['competencyId'])
         self.assertIsNotNone(json)
         self.assertIsNotNone(json["id"])
         self.assertIsNotNone(json["order"])
         self.assertIsNotNone(json["name"])
         self.assertIsNotNone(json["criteria"])
         self.assertIsNotNone(json["competencyId"])
+        self.assertEqual(json_element.id,element.id)
+        self.assertEqual(json_element.order,element.order)
+        self.assertEqual(json_element.name,element.name)
+        self.assertEqual(json_element.criteria,element.criteria)
+        self.assertEqual(json_element.competencyId,element.competencyId)
         
     def test_add_element(self, client):
         resp = client.get('/api/v1/elements')
@@ -272,12 +287,22 @@ class TestForAPI(flask_unittest.ClientTestCase):
         element["competency_id"] = '00Q8'
         resp = client.patch('/api/v1/elements/1', json=element)
         self.assertEqual(resp.status_code, 204)
-
-    def test_delete_element(self, client):
         resp = client.get('/api/v1/elements/1')
         self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        element = Element(1,5,"Debug C# code","* Make modular apps* Appropriate team work","00Q8")
+        json_element = Element(json['id'],json['order'],json['name'],json['criteria'],json['competencyId'])
+        self.assertEqual(json_element.id,element.id)
+        self.assertEqual(json_element.order,element.order)
+        self.assertEqual(json_element.name,element.name)
+        self.assertEqual(json_element.criteria,element.criteria)
+        self.assertEqual(json_element.competencyId,element.competencyId)
+
+    def test_delete_element(self, client):
+        resp = client.get('/api/v1/elements/2')
+        self.assertEqual(resp.status_code, 200)
         element = resp.json
-        resp = client.delete('/api/v1/elements/1', json=element)
+        resp = client.delete('/api/v1/elements/2', json=element)
         self.assertEqual(resp.status_code, 204)
     # --------------- END ELEMENT OF COMPETENCY CRUD TEST ---------------
 
