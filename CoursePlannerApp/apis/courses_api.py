@@ -75,8 +75,8 @@ def add_course():
 
     course = Course(id=request.json["id"], name=request.json["name"], theory_hours=request.json["theory_hours"],
                     lab_hours=request.json["lab_hours"], work_hours=request.json["work_hours"],
-                    description=request.json["description"], domainId=request.json["domain_id"],
-                    termId=request.json["term_id"])
+                    description=request.json["description"], domain_id=request.json["domain_id"],
+                    term_id=request.json["term_id"])
 
     try:
         dtb.add_course(course)
@@ -135,8 +135,8 @@ def update_course(id):
 
     course = Course(id=id, name=request.json["name"], theory_hours=request.json["theory_hours"],
                     lab_hours=request.json["lab_hours"], work_hours=request.json["work_hours"],
-                    description=request.json["description"], domainId=request.json["domain_id"],
-                    termId=request.json["term_id"])
+                    description=request.json["description"], domain_id=request.json["domain_id"],
+                    term_id=request.json["term_id"])
 
     try:
         dtb.update_course(course)
