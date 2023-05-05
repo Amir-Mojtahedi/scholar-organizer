@@ -1,9 +1,13 @@
 # ScholarOrganizer
+https://gitlab.com/serhiyfed/scholar-organizer
+
+## Live Demo
+[http://10.172.13.162:8000/](http://10.172.13.162:8000/)
 
 ## Contributors
-- Serhiy Fedurtsya
-- Mohamed Loutfi
-- Amirreza Mojtahedi
+- Serhiy Fedurtsya (2135229)
+- Mohamed Loutfi (2141950)
+- Amirreza Mojtahedi (2133044)
 
 ## Development
 1. Install Python 3.7 or greater.
