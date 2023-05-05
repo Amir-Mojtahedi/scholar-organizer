@@ -117,7 +117,7 @@ def create_course():
                                form.work_hours.data)
 
             try:
-                dtb.update_course(updatedCourse)
+                dtb.update_course(new_course)
                 flash("Course has been updated")    
                 return redirect(url_for('courses.get_courses'))      
             except Exception as e:

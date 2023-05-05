@@ -34,10 +34,11 @@ def create_element(competency_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             
-            newElement = Element(0,form.order.data, form.name.data, 
+            new_element = Element(form.order.data, form.name.data, 
                                     form.criteria.data, form.competencyId.data)
+
             try:
-                dtb.add_element(newElement)
+                dtb.add_element(new_element)
                 flash('Element was created successfully')
                 return redirect(url_for('competencies.list_elements',competency_id=competency_id))
             
@@ -77,10 +78,11 @@ def update_element(competency_id,element_id):
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            updatedElement = Element(element_id, form.order.data, form.name.data, 
-                                    form.criteria.data, form.competencyId.data)
+            updated_element = Element(form.order.data, form.name.data, 
+                                    form.criteria.data, form.competencyId.data, id=int(element_id))
+
             try:
-                dtb.update_element(updatedElement)
+                dtb.update_element(updated_element)
                 flash("Element has been updated")    
                 return redirect(url_for('competencies.list_elements',competency_id=competency_id))
             except Exception as e:
