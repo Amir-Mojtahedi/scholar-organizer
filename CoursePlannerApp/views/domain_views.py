@@ -43,19 +43,16 @@ def create_domain():
         if form.validate_on_submit():
             
             newDomain = Domain(form.id.data, form.name.data, form.description.data)
-            
-            for domain in dtb.get_domains():
-                if(newDomain.id == domain.id or newDomain.name == domain.name):
-                    flash("Domain already exists!")
                 
             try:
                 dtb.add_domain(newDomain)
+                flash('Doamin was created successfully')
                 return redirect(url_for('domains.get_domains'))
             
             except oracledb.IntegrityError as e:
                 error_obj, = e.args #To acces code error 
                 if error_obj.code == 1: # 1 is related to primary key issue (when the primary key already exist) 
-                    flash("Domain already exist")
+                    flash("Domain already exists")
         
             except Exception as e:
                 flash("Error: " + str(e))
@@ -85,10 +82,6 @@ def update_domain(domain_id):
 
             updatedDomain = Domain(form.id.data, form.name.data, form.description.data)
 
-            for domain in dtb.get_domains():
-                if(updatedDomain.id == domain.id or updatedDomain.name == domain.name):
-                    flash("Domain already exists!")
-
             try:
                 dtb.update_domain(updatedDomain)
                 flash("Domain has been updated")    
@@ -113,7 +106,7 @@ def delete(domain_id):
     # try to delete domain
     try:
         dtb.delete_domain(domain_id)
-        flash("Domain deleted successfully")
+        flash("Domain was deleted successfully")
     except oracledb.Error as e:
         flash("You can't delete this domain until you delete the following courses or change their domains")
         courseImpactedString = ""
