@@ -20,9 +20,12 @@ def get_courses():
             courses = dtb.get_courses()
             domains = dtb.get_domains()
         except Exception as e:
-            flash('There is an issue with the Database')
+            flash("Error: " + str(e))
+            return render_template('courses.html', courses=[], domains=[])
+        
         if not courses or len(courses) == 0:
             flash('There is no course in database')
+        
         return render_template('courses.html', courses=courses, domains=domains)
 
 
@@ -36,8 +39,11 @@ def list_competencies(course_id):
             domains = dtb.get_domains()
         except Exception as e:
             flash('There is an issue with the Database')
+            return render_template('courses.html', courses=[], domains=[], competencies=[], elements_covered=[])
+        
         if not competencies or len(competencies) == 0:
             flash('There is no competency in the database')
+    
     return render_template('course.html', competencies=competencies, course=course, domains=domains,
                            elements_covered=elements_covered)
 
@@ -51,9 +57,9 @@ def add_element_for_course(course_id):
         elements = dtb.get_elements()
     except Exception:
         flash('There is an issue with the Database')
-
+        
     form.id.choices = sorted([(element.id, str(element.id) + " - " + element.name) for element in
-                              elements])  # Getting data for Select field for competencyId  (Circular import error)
+                             elements])  # Getting data for Select field for competencyId 
     form.id.choices.insert(0, [0, "Choose an Element of Competency"])
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -70,7 +76,8 @@ def add_element_for_course(course_id):
 
             except Exception as e:
                 flash('There is an issue with the Database')
-
+                return render_template('courses.html', courses=[], domains=[])
+            
     return render_template('Add/addCourseElementBridge.html', form=form)
 
 
@@ -79,21 +86,25 @@ def add_element_for_course(course_id):
 @login_required
 def create_course():
     form = CourseForm()
+    try:
+        terms = dtb.get_terms()
+        domains = dtb.get_domains()
+    except Exception:
+        flash("There is an issue with the database")
+        
     # Fill term drop list
-    form.termId.choices = sorted([(term.id, str(term.id) + " - " + term.name) for term in
-                                  dtb.get_terms()])  # Getting data for Select field for termId  (Circular import error)
-    form.termId.choices.insert(0, [0, "Choose a term"])
+    form.term_id.choices = sorted([(term.id, str(term.id) + " - " + term.name) for term in terms])
+    form.term_id.choices.insert(0, [0, "Choose a term"])
 
     # Fill domain drop list
-    form.domainId.choices = sorted([(domain.id, str(domain.id) + " - " + domain.name) for domain in
-                                    dtb.get_domains()])  # Getting data for Select field for domainId  (Circular import error)
-    form.domainId.choices.insert(0, [0, "Choose a domain"])
+    form.domain_id.choices = sorted([(domain.id, str(domain.id) + " - " + domain.name) for domain in domains]) 
+    form.domain_id.choices.insert(0, [0, "Choose a domain"])
 
     if request.method == 'POST':
         if form.validate_on_submit():
 
             newCourse = Course(form.id.data, form.name.data, form.description.data,
-                               form.termId.data, form.domainId.data,
+                               form.term_id.data, form.domain_id.data,
                                form.lab_hours.data, form.theory_hours.data,
                                form.work_hours.data)
 
@@ -115,6 +126,7 @@ def create_course():
 
             except Exception as e:
                 flash("Error: " + str(e))
+
 
     return render_template('Add/addCourse.html', form=form)
 
@@ -142,20 +154,18 @@ def update_course(course_id):
         domains = dtb.get_domains()
     except Exception:
         flash("")
-    form.termId.choices = sorted([(term.id, str(term.id) + " - " + term.name) for term in
-                                  terms])  # Getting data for Select field for termId  (Circular import error)
+    form.termId.choices = sorted([(term.id, str(term.id) + " - " + term.name) for term in terms])
     form.termId.choices.insert(0, [0, "Choose a term"])
 
     # Fill domain drop list
-    form.domainId.choices = sorted([(domain.id, str(domain.id) + " - " + domain.name) for domain in
-                                    domains])  # Getting data for Select field for domainId  (Circular import error)
+    form.domainId.choices = sorted([(domain.id, str(domain.id) + " - " + domain.name) for domain in domains])  
     form.domainId.choices.insert(0, [0, "Choose a domain"])
 
     if request.method == 'POST':
         if form.validate_on_submit():
 
             updatedCourse = Course(form.id.data, form.name.data, form.description.data,
-                                   form.termId.data, form.domainId.data,
+                                   form.term_id.data, form.domain_id.data,
                                    form.lab_hours.data, form.theory_hours.data,
                                    form.work_hours.data)
 

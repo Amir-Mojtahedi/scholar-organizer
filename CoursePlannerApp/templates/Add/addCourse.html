@@ -14,8 +14,8 @@
         {{ form.id.label }}              {{ form.id() }}             <div class="error">{{ form.id.errors[0]}}</div>
         {{ form.name.label }}            {{ form.name() }}           <div class="error">{{ form.id.errors[0]}}</div>
         {{ form.description.label }}     {{ form.description() }}
-        {{ form.termId.label }}          {{ form.termId() | safe}}
-        {{ form.domainId.label }}        {{ form.domainId() }}
+        {{ form.term_id.label }}         {{ form.term_id() | safe }}
+        {{ form.domain_id.label }}       {{ form.domain_id() }}
         {{ form.theory_hours.label }}    {{ form.theory_hours() }}
         {{ form.lab_hours.label }}       {{ form.lab_hours() }}
         {{ form.work_hours.label }}      {{ form.work_hours() }}

@@ -1,9 +1,11 @@
+"""Modules providing form and validation for forms"""
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired
 
 
 class Group:
+    '''Class representing Group object'''
     def __init__(self, name, id=None):
         if not isinstance(name, str):
             raise TypeError("Name must be a string")
@@ -21,5 +23,6 @@ class Group:
 
 
 class GroupForm(FlaskForm):
+    '''Form for Group Object'''
     name = StringField("Name", validators=[DataRequired()])
     id = IntegerField("Id")

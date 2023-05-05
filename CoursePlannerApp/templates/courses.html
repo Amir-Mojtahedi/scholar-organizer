@@ -20,13 +20,13 @@
             </div>
 
             {% for domain in domains %}
-                {% if domain.id == course.domainId %}
+                {% if domain.id == course.domain_id %}
                     <p>Domain: <a href="{{ url_for('domains.get_domain', domain_id=domain.id) }}">{{ domain.name }}</a></p>
                 {% endif %}
             {% endfor %}
 
             <div class="grid">
-                <p>Term: {{ course.termId }}</p>
+                <p>Term: {{ course.term_id }}</p>
                 <p>Class hours: {{ course.theory_hours }}</p>
                 <p>Lab hours: {{ course.lab_hours }}</p>
                 <p>Homework hours: {{ course.work_hours }}</p>

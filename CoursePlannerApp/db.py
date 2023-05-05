@@ -41,7 +41,7 @@ class Database:
                 "SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES")
             for result in results:
                 newCourse = Course(id=result[0], name=result[1], theory_hours=result[2], lab_hours=result[3],
-                                   work_hours=result[4], description=result[5], domainId=result[6], termId=result[7])
+                                   work_hours=result[4], description=result[5], domain_id=result[6], term_id=result[7])
                 newListCourse.append(newCourse)
             return newListCourse
 
@@ -53,7 +53,7 @@ class Database:
                 courseId=courseId)
             for result in results:
                 course = Course(id=result[0], name=result[1], theory_hours=result[2], lab_hours=result[3],
-                                work_hours=result[4], description=result[5], domainId=result[6], termId=result[7])
+                                work_hours=result[4], description=result[5], domain_id=result[6], term_id=result[7])
             return course
 
     def get_course_competencies(self, course_id):
@@ -77,7 +77,7 @@ class Database:
                 competency_id=competency_id)
             for result in results:
                 element = Element(id=result[0], order=result[1], name=result[2], criteria=result[3],
-                                  competencyId=result[4])
+                                  competency_id=result[4])
                 elementsList.append(element)
             return elementsList
 
@@ -98,23 +98,23 @@ class Database:
 
             # Check if domain exists
             results = cursor.execute(
-                "SELECT domain_id, domain, domain_description FROM DOMAINS where domain_id = :domainId",
-                domainId=course.domainId)
-            domain = [result for result in results if result[0] == course.domainId]
+                "SELECT domain_id, domain, domain_description FROM DOMAINS where domain_id = :domain_id",
+                domain_id=course.domain_id)
+            domain = [result for result in results if result[0] == course.domain_id]
             if domain is None:
                 raise ValueError("Domain doesn't exist. Create a domain first")
 
             # Check if term exists
-            results = cursor.execute("SELECT term_id FROM TERMS where term_id = :termId", termId=course.termId)
-            term = [result for result in results if result[0] == course.termId]
+            results = cursor.execute("SELECT term_id FROM TERMS where term_id = :term_id", term_id=course.term_id)
+            term = [result for result in results if result[0] == course.term_id]
             if term is None:
                 raise ValueError("Term doesn't exist. Create a term first")
 
             # Insert data
             cursor.execute(
-                "INSERT INTO COURSES (course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id) VALUES (:courseId, :title, :theory, :lab, :work, :description, :domainId, :termId)",
+                "INSERT INTO COURSES (course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id) VALUES (:courseId, :title, :theory, :lab, :work, :description, :domain_id, :term_id)",
                 courseId=course.id, title=course.name, theory=course.theory_hours, lab=course.lab_hours,
-                work=course.work_hours, description=course.description, domainId=course.domainId, termId=course.termId)
+                work=course.work_hours, description=course.description, domain_id=course.domain_id, term_id=course.term_id)
             if not cursor.rowcount:
                 raise oracledb.Error
 
@@ -124,9 +124,9 @@ class Database:
             if not isinstance(course, Course):
                 raise ValueError
             cursor.execute(
-                "UPDATE COURSES SET course_title = :title, theory_hours = :theory, lab_hours = :lab, work_hours = :work, description = :description, domain_id = :domainId, term_id = :termId WHERE course_id = :courseId",
+                "UPDATE COURSES SET course_title = :title, theory_hours = :theory, lab_hours = :lab, work_hours = :work, description = :description, domain_id = :domain_id, term_id = :term_id WHERE course_id = :courseId",
                 courseId=course.id, title=course.name, theory=course.theory_hours, lab=course.lab_hours,
-                work=course.work_hours, description=course.description, domainId=course.domainId, termId=course.termId)
+                work=course.work_hours, description=course.description, domain_id=course.domain_id, term_id=course.term_id)
             if not cursor.rowcount:
                 raise oracledb.Error
 
@@ -199,7 +199,7 @@ class Database:
                                      'rows fetch next :page_size rows only', offset=offset, page_size=page_size)
             for row in results:
                 course = Course(id=row[0], name=row[1], theory_hours=row[2], lab_hours=row[3], work_hours=row[4],
-                                description=row[5], domainId=row[6], termId=row[7])
+                                description=row[5], domain_id=row[6], term_id=row[7])
                 courses.append(course)
         if page_num > 1:
             prev_page = page_num - 1
@@ -236,12 +236,12 @@ class Database:
         with self.__get_cursor() as cursor:
             results = cursor.execute('select count(*) from elements')
             count = results.fetchone()[0]
-            # id, order, name, criteria, competencyId
+            # id, order, name, criteria, competency_id
             results = cursor.execute(
                 'select element_id, ELEMENT_ORDER, ELEMENT, ELEMENT_CRITERIA, COMPETENCY_ID from elements order by element_id offset :offset rows fetch next :page_size rows only',
                 offset=offset, page_size=page_size)
             for row in results:
-                element = Element(id=row[0], order=row[1], name=row[2], criteria=row[3], competencyId=row[4])
+                element = Element(id=row[0], order=row[1], name=row[2], criteria=row[3], competency_id=row[4])
                 elements.append(element)
         if page_num > 1:
             prev_page = page_num - 1
@@ -249,28 +249,28 @@ class Database:
             next_page = page_num + 1
         return elements, prev_page, next_page, count
 
-    def get_domain(self, domainId):
+    def get_domain(self, domain_id):
         '''Returns a specific domain'''
         with self.__get_cursor() as cursor:
             domain = None
 
             results = cursor.execute(
-                "SELECT domain_id, domain, domain_description FROM DOMAINS WHERE domain_id = :domainId",
-                domainId=domainId)
+                "SELECT domain_id, domain, domain_description FROM DOMAINS WHERE domain_id = :domain_id",
+                domain_id=domain_id)
             for result in results:
                 domain = Domain(id=result[0], name=result[1], description=result[2])
             return domain
 
-    def get_courses_in_domain(self, domainId):
+    def get_courses_in_domain(self, domain_id):
         '''Returns a specific domain'''
         with self.__get_cursor() as cursor:
             impactedCourse = []
             results = cursor.execute(
-                "SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES WHERE domain_id = :domainId",
-                domainId=domainId)
+                "SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES WHERE domain_id = :domain_id",
+                domain_id=domain_id)
             for result in results:
                 newCourse = Course(id=result[0], name=result[1], theory_hours=result[2], lab_hours=result[3],
-                                   work_hours=result[4], description=result[5], domainId=result[6], termId=result[7])
+                                   work_hours=result[4], description=result[5], domain_id=result[6], term_id=result[7])
                 impactedCourse.append(newCourse)
             return impactedCourse
 
@@ -281,15 +281,15 @@ class Database:
                 raise ValueError("Should be domain obj")
 
             # Check if domain doesn't already exist
-            results = cursor.execute("SELECT domain FROM DOMAINS where domain_id = :domainId", domainId=domain.id)
+            results = cursor.execute("SELECT domain FROM DOMAINS where domain_id = :domain_id", domain_id=domain.id)
             nDomain = [result for result in results if result[0] == domain.id]
             if not (nDomain == []):
                 raise ValueError("Domain already exist")
 
             # Insert data
             cursor.execute(
-                "INSERT INTO DOMAINS (domain_id, domain, domain_description) VALUES(:domainId, :domainName, :domainDescription)",
-                domainId=domain.id, domainName=domain.name, domainDescription=domain.description)
+                "INSERT INTO DOMAINS (domain_id, domain, domain_description) VALUES(:domain_id, :domainName, :domainDescription)",
+                domain_id=domain.id, domainName=domain.name, domainDescription=domain.description)
             if not cursor.rowcount:
                 raise oracledb.Error
 
@@ -299,15 +299,15 @@ class Database:
             if not isinstance(domain, Domain):
                 raise ValueError
             cursor.execute(
-                "UPDATE domains SET domain = :domainName, domain_description = :domainDescription WHERE domain_id = :domainId",
-                domainName=domain.name, domainDescription=domain.description, domainId=domain.id)
+                "UPDATE domains SET domain = :domainName, domain_description = :domainDescription WHERE domain_id = :domain_id",
+                domainName=domain.name, domainDescription=domain.description, domain_id=domain.id)
             if not cursor.rowcount:
                 raise oracledb.Error
 
     def delete_domain(self, domain_id):
         '''Delete a domain in DB for the given Domain object id'''
         with self.__get_cursor() as cursor:
-            cursor.execute("DELETE FROM domains WHERE domain_id = :domainId", domainId=domain_id)
+            cursor.execute("DELETE FROM domains WHERE domain_id = :domain_id", domain_id=domain_id)
 
     # TERM
     def get_terms(self):
@@ -320,24 +320,24 @@ class Database:
                 newListTerm.append(newTerm)
             return newListTerm
 
-    def get_term(self, termId):
+    def get_term(self, term_id):
         '''Returns a specific term'''
         with self.__get_cursor() as cursor:
-            results = cursor.execute("SELECT term_id, term_name FROM TERMS WHERE term_id=:termId", termId=termId)
+            results = cursor.execute("SELECT term_id, term_name FROM TERMS WHERE term_id=:term_id", term_id=term_id)
             for result in results:
                 foundTerm = Term(id=result[0], name=result[1])
             return foundTerm
 
-    def get_courses_in_term(self, termId):
+    def get_courses_in_term(self, term_id):
         '''Returns a specific domain'''
         with self.__get_cursor() as cursor:
             impactedCourse = []
             results = cursor.execute(
-                "SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES WHERE term_id = :termId",
-                termId=termId)
+                "SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES WHERE term_id = :term_id",
+                term_id=term_id)
             for result in results:
                 newCourse = Course(id=result[0], name=result[1], theory_hours=result[2], lab_hours=result[3],
-                                   work_hours=result[4], description=result[5], domainId=result[6], termId=result[7])
+                                   work_hours=result[4], description=result[5], domain_id=result[6], term_id=result[7])
                 impactedCourse.append(newCourse)
             return impactedCourse
 
@@ -389,20 +389,20 @@ class Database:
     def get_competencies(self):
         '''Returns all Competency objects in a list'''
         with self.__get_cursor() as cursor:
-            newListCompetency = []
+            new_list_competency = []
             results = cursor.execute(
                 "SELECT competency_id, competency, competency_achievement, competency_type  FROM COMPETENCIES")
             for result in results:
-                newCompetency = Competency(id=result[0], name=result[1], achievement=result[2], type=result[3])
-                newListCompetency.append(newCompetency)
-            return newListCompetency
+                new_competency = Competency(id=result[0], name=result[1], achievement=result[2], type=result[3])
+                new_list_competency.append(new_competency)
+            return new_list_competency
 
-    def get_competency(self, competencyId):
+    def get_competency(self, competency_id):
         '''Returns a specific competency'''
         with self.__get_cursor() as cursor:
             results = cursor.execute(
-                "SELECT competency_id, competency, competency_achievement, competency_type FROM COMPETENCIES WHERE competency_id=:competencyId",
-                competencyId=competencyId)
+                "SELECT competency_id, competency, competency_achievement, competency_type FROM COMPETENCIES WHERE competency_id=:competency_id",
+                competency_id=competency_id)
             for result in results:
                 competency = Competency(id=result[0], name=result[1], achievement=result[2], type=result[3])
             return competency
@@ -415,16 +415,16 @@ class Database:
 
             # Check if competency doesn't already exist
             results = cursor.execute(
-                "SELECT * FROM COMPETENCIES where competency_id = :competencyId or competency = :competencyName",
-                competencyId=competency.id, competencyName=competency.name)
+                "SELECT * FROM COMPETENCIES where competency_id = :competency_id or competency = :competencyName",
+                competency_id=competency.id, competencyName=competency.name)
             nCompetency = [result for result in results if (result[0] == competency.id or result[1] == competency.name)]
             if not (nCompetency == []):
                 raise ValueError("Competency already exist")
 
             # Insert data
             cursor.execute(
-                "INSERT INTO COMPETENCIES (competency_id, competency, competency_achievement, competency_type) VALUES(:competencyId, :competencyName, :competencyAchievement, :competencyType)",
-                competencyId=competency.id, competencyName=competency.name,
+                "INSERT INTO COMPETENCIES (competency_id, competency, competency_achievement, competency_type) VALUES(:competency_id, :competencyName, :competencyAchievement, :competencyType)",
+                competency_id=competency.id, competencyName=competency.name,
                 competencyAchievement=competency.achievement, competencyType=competency.type)
             if not cursor.rowcount:
                 raise oracledb.Error
@@ -435,8 +435,8 @@ class Database:
             if not isinstance(competency, Competency):
                 raise ValueError
             cursor.execute(
-                "UPDATE COMPETENCIES SET competency = :competencyName, competency_achievement = :competencyAchievement, competency_type = :competencyType WHERE competency_id = :competencyId",
-                competencyId=competency.id, competencyName=competency.name,
+                "UPDATE COMPETENCIES SET competency = :competencyName, competency_achievement = :competencyAchievement, competency_type = :competencyType WHERE competency_id = :competency_id",
+                competency_id=competency.id, competencyName=competency.name,
                 competencyAchievement=competency.achievement, competencyType=competency.type)
             if not cursor.rowcount:
                 raise oracledb.Error
@@ -445,9 +445,9 @@ class Database:
         '''Delete a competency in DB for the given COmpetency object id'''
         with self.__get_cursor() as cursor:
             # Delete associated elements
-            cursor.execute("DELETE FROM elements WHERE competency_id = :competencyId", competencyId=competency_id)
+            cursor.execute("DELETE FROM elements WHERE competency_id = :competency_id", competency_id=competency_id)
 
-            cursor.execute("DELETE FROM competencies WHERE competency_id = :competencyId", competencyId=competency_id)
+            cursor.execute("DELETE FROM competencies WHERE competency_id = :competency_id", competency_id=competency_id)
             if not cursor.rowcount:
                 raise oracledb.Error
 
@@ -460,7 +460,7 @@ class Database:
                 "SELECT element_id, element_order, element, element_criteria, competency_id FROM ELEMENTS")
             for result in results:
                 newElement = Element(id=result[0], order=result[1], name=result[2], criteria=result[3],
-                                     competencyId=result[4])
+                                     competency_id=result[4])
                 newListElement.append(newElement)
             return newListElement
 
@@ -472,19 +472,19 @@ class Database:
                 elementId=elementId)
             for result in results:
                 foundElement = Element(id=result[0], order=result[1], name=result[2], criteria=result[3],
-                                       competencyId=result[4])
+                                       competency_id=result[4])
             return foundElement
 
-    def get_elements_covered_by_a_course(self, courseId):
+    def get_elements_covered_by_a_course(self, course_id):
         '''Returns all the Elements covered by a specific course'''
         with self.__get_cursor() as cursor:
             newListElement = []
             results = cursor.execute(
-                "SELECT element_id, element_order, element, element_criteria, competency_id FROM ELEMENTS JOIN courses_elements USING(element_id) JOIN courses USING(course_id) JOIN competencies USING(competency_id) WHERE course_id=:courseId",
-                courseId=courseId)
+                "SELECT element_id, element_order, element, element_criteria, competency_id FROM ELEMENTS JOIN courses_elements USING(element_id) JOIN courses USING(course_id) JOIN competencies USING(competency_id) WHERE course_id=:course_id",
+                course_id=course_id)
             for result in results:
                 newElement = Element(id=result[0], order=result[1], name=result[2], criteria=result[3],
-                                     competencyId=result[4])
+                                     competency_id=result[4])
                 newListElement.append(newElement)
             return newListElement
 
@@ -495,16 +495,16 @@ class Database:
                 raise ValueError("Should be Element obj")
 
             # Check if Competency exists
-            results = cursor.execute("SELECT * FROM COMPETENCIES where competency_id = :competencyId",
-                                     competencyId=element.competencyId)
-            nCompetency = [result for result in results if result[0] == element.competencyId]
+            results = cursor.execute("SELECT * FROM COMPETENCIES where competency_id = :competency_id",
+                                     competency_id=element.competency_id)
+            nCompetency = [result for result in results if result[0] == element.competency_id]
             if nCompetency is None:
                 raise ValueError("Competency doesn't exist. Create a competency first")
             # Insert Data
             cursor.execute(
-                "INSERT INTO ELEMENTS (element_id, element_order, element, element_criteria, competency_id) VALUES (:elementId, :elementOrder, :elementName, :elementCriteria, :competencyId)",
+                "INSERT INTO ELEMENTS (element_id, element_order, element, element_criteria, competency_id) VALUES (:elementId, :elementOrder, :elementName, :elementCriteria, :competency_id)",
                 elementId=element.id, elementOrder=element.order, elementName=element.name,
-                elementCriteria=element.criteria, competencyId=element.competencyId)
+                elementCriteria=element.criteria, competency_id=element.competency_id)
             if not cursor.rowcount:
                 raise oracledb.Error
 
@@ -555,9 +555,9 @@ class Database:
             if not isinstance(element, Element):
                 raise ValueError
             cursor.execute(
-                "UPDATE elements SET element_order = :elementOrder, element = :elementName, element_criteria = :elementCriteria, competency_Id = :competencyId WHERE element_id  = :elementId",
+                "UPDATE elements SET element_order = :elementOrder, element = :elementName, element_criteria = :elementCriteria, competency_Id = :competency_id WHERE element_id  = :elementId",
                 elementId=element.id, elementOrder=element.order, elementName=element.name,
-                elementCriteria=element.criteria, competencyId=element.competencyId)
+                elementCriteria=element.criteria, competency_id=element.competency_id)
             if not cursor.rowcount:
                 raise oracledb.Error
 
