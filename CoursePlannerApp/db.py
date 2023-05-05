@@ -278,10 +278,11 @@ class Database:
                 raise ValueError("Should be domain obj")
 
             # Check if domain doesn't already exist
-            results = cursor.execute("SELECT domain FROM DOMAINS where domain_id = :domain_id", domain_id=domain.id)
-            nDomain = [result for result in results if result[0] == domain.id]
+            results = cursor.execute("SELECT domain_id, domain FROM DOMAINS where domain_id = :domain_id or domain = :domain_name", 
+                                     domain_id=domain.id, domain_name=domain.name)
+            nDomain = [result for result in results if result[0] == domain.id or result[1] == domain.name]
             if not (nDomain == []):
-                raise ValueError("Domain already exist")
+                raise ValueError("Name already used")
 
             # Insert data
             cursor.execute(
@@ -295,6 +296,15 @@ class Database:
         with self.__get_cursor() as cursor:
             if not isinstance(domain, Domain):
                 raise ValueError
+            
+            results = cursor.execute(
+                "SELECT domain_id, domain FROM DOMAINS where domain_id = :domain_id or domain = :domain",
+                domain_id=domain.id, domain=domain.name)
+            for result in results:
+                if result[1] == domain.name:
+                    if result[0] != domain.id:
+                        raise ValueError("Name already used")    
+            
             cursor.execute(
                 "UPDATE domains SET domain = :domainName, domain_description = :domainDescription WHERE domain_id = :domain_id",
                 domainName=domain.name, domainDescription=domain.description, domain_id=domain.id)

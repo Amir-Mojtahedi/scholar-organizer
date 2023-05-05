@@ -1,4 +1,4 @@
-import oracledb
+import oracledb, uuid
 from flask import Blueprint, redirect, flash, render_template, request, url_for
 from flask_login import login_required
 from werkzeug.local import LocalProxy
@@ -18,9 +18,12 @@ def get_domains():
         try:
             domains = dtb.get_domains()
         except Exception as e:
-            flash('There is an issue with the Database')
+            flash('There is an issue with the Database'+str(e))
+            return render_template('domains.html', domains=[])
+        
         if not domains or len(domains) == 0:
-            flash('There is no course in database')
+            flash('There is no domains in the database')
+            return render_template('domains.html', domains=[])
         return render_template('domains.html', domains=domains)
 
 
@@ -31,8 +34,10 @@ def get_domain(domain_id):
             domain = dtb.get_domain(domain_id)
         except Exception as e:
             flash('There is an issue with the Database')
+            return render_template('domain.html', domain=[])
         if not domain:
-            flash('There is no course in database')
+            flash('There is no domain in the database')
+            return render_template('domain.html', domain=[])
         return render_template('domain.html', domain=domain)
 
 
@@ -44,25 +49,16 @@ def create_domain():
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            newDomain = Domain(form.id.data, form.name.data, form.description.data)
-
-            for domain in dtb.get_domains():
-                if newDomain.id == domain.id or newDomain.name == domain.name:
-                    flash("Domain already exists!")
+            new_domain = Domain(id(form.name.data), form.name.data, form.description.data)
 
             try:
-                dtb.add_domain(newDomain)
+                dtb.add_domain(new_domain)
+                flash("Domain has been added!")
                 return redirect(url_for('domains.get_domains'))
-
-            except oracledb.IntegrityError as e:
-                error_obj, = e.args  # To acces code error
-                if error_obj.code == 1:  # 1 is related to primary key issue (when the primary key already exist)
-                    flash("Domain already exist")
 
             except Exception as e:
                 flash("Error: " + str(e))
-        else:
-            flash('Invalid input')
+        
     return render_template('Add/addDomain.html', form=form)
 
 
@@ -85,16 +81,13 @@ def update_domain(domain_id):
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            updatedDomain = Domain(form.id.data, form.name.data, form.description.data)
-
-            for domain in dtb.get_domains():
-                if updatedDomain.id == domain.id or updatedDomain.name == domain.name:
-                    flash("Domain already exists!")
+            updated_domain = Domain(form.id.data, form.name.data, form.description.data)
 
             try:
-                dtb.update_domain(updatedDomain)
+                dtb.update_domain(updated_domain)
                 flash("Domain has been updated")
                 return redirect(url_for('domains.get_domains'))
+            
             except Exception as e:
                 flash("Error: " + str(e))
 
@@ -106,7 +99,7 @@ def update_domain(domain_id):
 @login_required
 def delete(domain_id):
     try:
-        courseImpacted = dtb.get_courses_in_domain(domain_id)
+        course_impacted = dtb.get_courses_in_domain(domain_id)
     except Exception as e:
         flash("Could not acces the domain")
         flash("Error: " + str(e))
@@ -118,10 +111,10 @@ def delete(domain_id):
         flash("Domain deleted successfully")
     except oracledb.Error as e:
         flash("You can't delete this domain until you delete the following courses or change their domains")
-        courseImpactedString = ""
-        for course in courseImpacted:
-            courseImpactedString = f'-- {course.name} --' + courseImpactedString
-        flash(courseImpactedString)
+        course_impacted_string = ""
+        for course in course_impacted:
+            course_impacted_string = f'-- {course.name} --' + course_impacted_string
+        flash(course_impacted_string)
     except Exception as e:
         flash("Error: " + str(e))
         return redirect(url_for("domains.get_domains"))

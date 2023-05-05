@@ -95,30 +95,33 @@ def create_course():
     # Fill term drop list
     form.term_id.choices = sorted([(term.id, str(term.id) + " - " + term.name) for term in terms])
     form.term_id.choices.insert(0, [0, "Choose a term"])
-
+    form.term_id.choices.append(['newTerm', "Create new term"])
+    
     # Fill domain drop list
     form.domain_id.choices = sorted([(domain.id, str(domain.id) + " - " + domain.name) for domain in domains]) 
     form.domain_id.choices.insert(0, [0, "Choose a domain"])
+    form.domain_id.choices.append(['newDomain', "Create new domain"])
 
     if request.method == 'POST':
         if form.validate_on_submit():
+            
+            if form.term_id.data == 'newTerm':
+                return redirect(url_for('terms.create_term')) #If user want new term
+            
+            if form.domain_id.data == 'newDomain':
+                return redirect(url_for('domains.create_domain')) #If user want new domain
 
-            newCourse = Course(form.id.data, form.name.data, form.description.data,
+            new_course = Course(form.id.data, form.name.data, form.description.data,
                                form.term_id.data, form.domain_id.data,
                                form.lab_hours.data, form.theory_hours.data,
                                form.work_hours.data)
 
             try:
-                dtb.add_course(newCourse)
+                dtb.add_course(new_course)
                 flash("Course has been added")
                 hour_validator(form.id.data)
                 return redirect(url_for('courses.list_competencies', course_id=form.id.data))
-
-            except oracledb.IntegrityError as e:
-                error_obj, = e.args  # To acces code error
-                if error_obj.code == 1:  # 1 is related to primary key issue (when the primary key already exist)
-                    flash("Course already exist")
-
+            
             except Exception as e:
                 flash("Error: " + str(e))
 
@@ -151,21 +154,29 @@ def update_course(course_id):
         flash("")
     form.term_id.choices = sorted([(term.id, str(term.id) + " - " + term.name) for term in terms])
     form.term_id.choices.insert(0, [0, "Choose a term"])
+    form.term_id.choices.append(['newTerm', "Create new term"])
 
     # Fill domain drop list
     form.domain_id.choices = sorted([(domain.id, str(domain.id) + " - " + domain.name) for domain in domains])  
     form.domain_id.choices.insert(0, [0, "Choose a domain"])
+    form.domain_id.choices.append(['newDomain', "Create new domain"])
 
     if request.method == 'POST':
         if form.validate_on_submit():
+            
+            if form.term_id.data == 'newTerm':
+                return redirect(url_for('terms.create_term')) #If user want new term
+            
+            if form.domain_id.data == 'newDomain':
+                return redirect(url_for('domains.create_domain')) #If user want new domain
 
-            updatedCourse = Course(form.id.data, form.name.data, form.description.data,
+            updated_course = Course(form.id.data, form.name.data, form.description.data,
                                    form.term_id.data, form.domain_id.data,
                                    form.lab_hours.data, form.theory_hours.data,
                                    form.work_hours.data)
 
             try:
-                dtb.update_course(updatedCourse)
+                dtb.update_course(updated_course)
                 flash("Course has been updated")
                 return redirect(url_for('courses.get_courses'))
             except Exception as e:
