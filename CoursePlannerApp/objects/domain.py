@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, NumberRange
 
+
 class Domain:
     def __init__(self, id, name, description):
         if not isinstance(id, int):  # Id validation
@@ -23,10 +24,19 @@ class Domain:
                             <li> ID: {self.id}</li> \
                             <li> Description: {self.description}</li>   \
                     </ul>'
+    
+    def from_json(domain_dict):
+        if not isinstance(domain_dict,dict):
+            raise TypeError("Expected dict")
+        return Domain(domain_dict['id'],domain_dict['name'],domain_dict['description'])
+    
+    def to_json(domain):
+        if not isinstance(domain,Domain):
+            raise TypeError("Expected Address")
+        return domain.__dict__
 
 class DomainForm(FlaskForm):
     id = IntegerField('Id',validators=[DataRequired(),
                                         NumberRange(min=1)])
     name = StringField('Name',validators=[DataRequired()])
     description = StringField('Domain Description',validators=[DataRequired()])
-    

@@ -14,7 +14,7 @@ dtb = LocalProxy(get_db)
 @bp.route("/")
 def get_terms():
     try:
-        terms = dtb.get_terms() 
+        terms = dtb.get_terms()
     except Exception as e:
         flash("Error: " + str(e))
         return render_template("terms.html", terms=[])
@@ -22,7 +22,7 @@ def get_terms():
     terms.sort(key=lambda x: x.id)
     
     if not terms or len(terms) == 0:
-        flash('There is no term in database') 
+        flash('There is no term in database')
         return render_template('display.html')
     return render_template('terms.html', terms = terms)
 
@@ -38,12 +38,12 @@ def create_term():
             try:
                 dtb.add_term(newTerm)
                 return redirect(url_for('terms.get_terms'))
-            
+
             except oracledb.IntegrityError as e:
-                error_obj, = e.args #To acces code error 
-                if error_obj.code == 1: # 1 is related to primary key issue (when the primary key already exist) 
+                error_obj, = e.args #To acces code error
+                if error_obj.code == 1: # 1 is related to primary key issue (when the primary key already exist)
                     flash("Course already exist")
-        
+
             except Exception as e:
                 flash("Error: " + str(e))
         else:
@@ -54,26 +54,26 @@ def create_term():
 @bp.route('/<term_id>/update/', methods=['GET', 'POST'])
 @login_required
 def update_term(term_id):
-    
+
     #Check if term exist
     try:
-        term = dtb.get_specific_term(term_id)
+        term = dtb.get_term(term_id)
     except Exception as e:
         flash("Error: "+ str(e))
-    
+
     if term is None:
         flash("Term not found")
         return redirect(url_for('terms.get_terms'))
-    
+
     form = TermForm(obj=term) #Prefill the form
-    
+
     if request.method == 'POST':
         if form.validate_on_submit():
-            
+
             updatedTerm = Term(term_id, form.name.data)
             try:
                 dtb.update_term(updatedTerm)
-                flash("Term has been updated")    
+                flash("Term has been updated")
                 return redirect(url_for('terms.get_terms'))
             except Exception as e:
                 flash("Error: " + str(e))
@@ -84,17 +84,16 @@ def update_term(term_id):
 @bp.route("/<term_id>/delete/", methods=["GET"])
 @login_required
 def delete(term_id):
-    
+
     try:
-        term = dtb.get_specific_term(term_id)  
-        courseImpacted = dtb.get_courses_in_term(term_id)      
+        courseImpacted = dtb.get_courses_in_term(term_id)
     except Exception as e:
         flash("Could not acces the term")
-        
-           
+
+
     # try to delete term
     try:
-        dtb.delete_term(term) 
+        dtb.delete_term(term_id)
         flash("Term deleted successfully")
     except oracledb.Error as e:
         flash("You can't delete this term until you delete the following courses or change their domains")

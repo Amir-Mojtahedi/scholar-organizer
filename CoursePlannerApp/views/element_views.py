@@ -50,7 +50,7 @@ def update_element(element_id):
     
     #Check if element exist
     try:
-        element = dtb.get_specific_element(element_id)
+        element = dtb.get_element(element_id)
     except Exception as e:
         flash("Error: "+ str(e))
     
@@ -85,9 +85,9 @@ def update_element(element_id):
 def delete(element_id):
 
     try:
-        element = dtb.get_specific_element(element_id)        
+        element = dtb.get_element(element_id)
         # try to delete element
-        dtb.delete_element(element)
+        dtb.delete_element(element.id)
         flash("Element deleted successfully")
     except Exception as e:
         flash("Error: " + str(e))
