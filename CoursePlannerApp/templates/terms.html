@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-    <input type="text" name="filter" placeholder="Filter">
+    <input type="text" name="filter" placeholder="Type words and press Enter">
     <a href="{{ url_for('terms.create_term') }}"><button>Add Term</button></a>
     <br>
     {% for term in terms %}

@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-    <input type="text" name="filter" placeholder="Filter">
+    <input type="text" name="filter" placeholder="Type words and press Enter">
     <a href="{{ url_for('domains.create_domain') }}"><button>Add Domain</button></a>
     <br>
     {% for domain in domains %}

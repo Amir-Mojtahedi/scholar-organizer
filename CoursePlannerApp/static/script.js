@@ -15,7 +15,7 @@ document.addEventListener("submit", e => {
 const searchables = document.querySelectorAll(".searchable")
 const filter = document.querySelector("input[name=filter]")
 
-filter.addEventListener("input", () => {
+filter.addEventListener("change", () => {
     searchables.forEach(searchable => {
         if (searchable.innerHTML.toLowerCase().includes(filter.value.toLowerCase())) searchable.style.display = "block"
         else {

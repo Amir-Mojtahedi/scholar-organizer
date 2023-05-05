@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content%}
-    <input type="text" name="filter" placeholder="Filter">
+    <input type="text" name="filter" placeholder="Type words and press Enter">
     <a href="{{ url_for('courses.create_course') }}"><button>Add Course</button></a>
     <br>
     {% for course in courses %}
