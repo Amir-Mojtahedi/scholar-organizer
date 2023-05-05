@@ -155,7 +155,7 @@ def update_course(course_id):
             #         flash("Course already exists!")
                 
             try:
-                dtb.update_course(updatedCourse, course_id)
+                dtb.update_course(updatedCourse)
                 flash("Course has been updated")    
                 return redirect(url_for('courses.get_courses'))      
             except Exception as e:
