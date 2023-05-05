@@ -314,17 +314,6 @@ class Database:
     def delete_domain(self, domain_id):
         '''Delete a domain in DB for the given Domain object id'''
         with self.__get_cursor() as cursor:
-            courseToDelete = []
-            results = cursor.execute("SELECT course_id FROM Courses WHERE domain_id = :domain_id", domain_id=domain_id)
-            for result in results:
-                courseId = result[0]
-                courseToDelete.append(courseId)
-
-            for courseId in courseToDelete:
-                cursor.execute("DELETE FROM courses_elements WHERE course_id = :courseId", courseId=courseId)
-
-            cursor.execute("DELETE FROM courses WHERE domain_id = :domain_id", domain_id=domain_id)
-
             cursor.execute("DELETE FROM domains WHERE domain_id = :domain_id", domain_id=domain_id)
 
 
@@ -392,17 +381,6 @@ class Database:
     def delete_term(self, term_id):
         '''Delete a term in DB for the given Term object id'''
         with self.__get_cursor() as cursor:
-            courseToDelete = []
-            results = cursor.execute("SELECT course_id FROM Courses WHERE term_id = :termId", termId=term_id)
-            for result in results:
-                courseId = result[0]
-                courseToDelete.append(courseId)
-
-            for courseId in courseToDelete:
-                cursor.execute("DELETE FROM courses_elements WHERE course_id = :courseId", courseId=courseId)
-
-            cursor.execute("DELETE FROM courses WHERE term_id = :termId", termId=term_id)
-
             cursor.execute("DELETE FROM terms WHERE term_id = :termId", termId=term_id)
 
     # COMPETENCY
@@ -480,7 +458,7 @@ class Database:
             cursor.execute("DELETE FROM competencies WHERE competency_id = :competency_id", competency_id=competency_id)
             if not cursor.rowcount:
                 raise oracledb.Error
-
+            
     # ELEMENT
     def get_elements(self):
         '''Returns all Element objects in a list'''

@@ -25,11 +25,11 @@ class Course:
         if not isinstance(description, str): #Description validation
             raise TypeError("Enter a valid Description. Try again.")
         self.description = description 
-        # if not isinstance(term_id, str): #Term validation
-        #     raise TypeError("Enter a valid/existing Term ID. Try again.")
+        if not isinstance(term_id, int): #Term validation
+            raise TypeError("Enter a valid/existing Term ID. Try again.")
         self.term_id = term_id
-        # if not isinstance(domain_id, str): #Domain validation
-        #     raise TypeError("Enter a valid/existing Domain ID. Try again.")
+        if not isinstance(domain_id, int): #Domain validation
+            raise TypeError("Enter a valid/existing Domain ID. Try again.")
         self.domain_id = domain_id
 
     def __repr__(self):

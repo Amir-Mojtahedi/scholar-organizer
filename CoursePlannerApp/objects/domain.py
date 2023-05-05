@@ -7,6 +7,8 @@ from wtforms.validators import DataRequired, NumberRange
 class Domain:
     '''Class representing Domain object'''
     def __init__(self, id, name, description):
+        if not isinstance(id, int):  # Name validation
+            raise TypeError("Enter a valid name. Try again.")
         self.id = id
         if not isinstance(name, str):  # Name validation
             raise TypeError("Enter a valid name. Try again.")
@@ -24,18 +26,6 @@ class Domain:
                             <li> ID: {self.id}</li> \
                             <li> Description: {self.description}</li>   \
                     </ul>'
-
-    def from_json(domain_dict):
-        '''Create Domain object from Json'''
-        if not isinstance(domain_dict,dict):
-            raise TypeError("Expected dict")
-        return Domain(domain_dict['id'],domain_dict['name'],domain_dict['description'])
-
-    def to_json(domain):
-        '''Return in json format'''
-        if not isinstance(domain,Domain):
-            raise TypeError("Expected Address")
-        return domain.__dict__
 
 class DomainForm(FlaskForm):
     '''Form for Domain object'''
