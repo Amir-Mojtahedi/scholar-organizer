@@ -129,7 +129,7 @@ def delete(competency_id):
 
 #Add an Element to the competency
 @bp.route('/<competency_id>/new-element/', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def create_element(competency_id):
     form = ElementForm()
     form.competencyId.choices.append(competency_id)
@@ -159,7 +159,7 @@ def create_element(competency_id):
 
 # Update an element of the competency
 @bp.route('/<competency_id>/<int:element_id>/update-element/', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def update_element(competency_id,element_id):
     
     #Check if element exist
@@ -194,7 +194,7 @@ def update_element(competency_id,element_id):
 
 #Delete an element of competency
 @bp.route("/<competency_id>/<int:element_id>/delete/", methods=["GET"])
-# @login_required
+@login_required
 def delete_element(competency_id,element_id):
 
     try:
