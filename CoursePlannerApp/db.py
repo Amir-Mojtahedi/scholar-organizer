@@ -41,7 +41,7 @@ class Database:
                 "SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES")
             for result in results:
                 newCourse = Course(id=result[0], name=result[1], theory_hours=result[2], lab_hours=result[3],
-                                   work_hours=result[4], description=result[5], domainId=result[6], term_id=result[7])
+                                   work_hours=result[4], description=result[5], domain_id=result[6], term_id=result[7])
                 newListCourse.append(newCourse)
             return newListCourse
 
@@ -53,7 +53,7 @@ class Database:
                 courseId=courseId)
             for result in results:
                 course = Course(id=result[0], name=result[1], theory_hours=result[2], lab_hours=result[3],
-                                work_hours=result[4], description=result[5], domainId=result[6], term_id=result[7])
+                                work_hours=result[4], description=result[5], domain_id=result[6], term_id=result[7])
             return course
 
     def get_course_competencies(self, course_id):
@@ -98,9 +98,9 @@ class Database:
 
             # Check if domain exists
             results = cursor.execute(
-                "SELECT domain_id, domain, domain_description FROM DOMAINS where domain_id = :domainId",
-                domainId=course.domainId)
-            domain = [result for result in results if result[0] == course.domainId]
+                "SELECT domain_id, domain, domain_description FROM DOMAINS where domain_id = :domain_id",
+                domain_id=course.domain_id)
+            domain = [result for result in results if result[0] == course.domain_id]
             if domain is None:
                 raise ValueError("Domain doesn't exist. Create a domain first")
 
@@ -112,9 +112,9 @@ class Database:
 
             # Insert data
             cursor.execute(
-                "INSERT INTO COURSES (course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id) VALUES (:courseId, :title, :theory, :lab, :work, :description, :domainId, :term_id)",
+                "INSERT INTO COURSES (course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id) VALUES (:courseId, :title, :theory, :lab, :work, :description, :domain_id, :term_id)",
                 courseId=course.id, title=course.name, theory=course.theory_hours, lab=course.lab_hours,
-                work=course.work_hours, description=course.description, domainId=course.domainId,
+                work=course.work_hours, description=course.description, domain_id=course.domain_id,
                 term_id=course.term_id)
             if not cursor.rowcount:
                 raise oracledb.Error
@@ -128,9 +128,9 @@ class Database:
             ##Create course with the updated data            
             # Check if domain exists
             results = cursor.execute(
-                "SELECT domain_id, domain, domain_description FROM DOMAINS where domain_id = :domainId",
-                domainId=course.domainId)
-            domain = [result for result in results if result[0] == course.domainId]
+                "SELECT domain_id, domain, domain_description FROM DOMAINS where domain_id = :domain_id",
+                domain_id=course.domain_id)
+            domain = [result for result in results if result[0] == course.domain_id]
             if domain is None:
                 raise ValueError("Domain doesn't exist. Create a domain first")
 
@@ -142,9 +142,9 @@ class Database:
 
             # Insert data
             cursor.execute(
-                "INSERT INTO COURSES (course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id) VALUES (:courseId, :title, :theory, :lab, :work, :description, :domainId, :term_id)",
+                "INSERT INTO COURSES (course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id) VALUES (:courseId, :title, :theory, :lab, :work, :description, :domain_id, :term_id)",
                 courseId=course.id, title=course.name, theory=course.theory_hours, lab=course.lab_hours,
-                work=course.work_hours, description=course.description, domainId=course.domainId,
+                work=course.work_hours, description=course.description, domain_id=course.domain_id,
                 term_id=course.term_id)
             if not cursor.rowcount:
                 raise oracledb.Error
@@ -177,17 +177,6 @@ class Database:
             cursor.execute("DELETE FROM courses WHERE course_id = :courseId", courseId=course.id)
             if not cursor.rowcount:
                 raise oracledb.Error
-
-    # DOMAIN
-    def get_domains(self):
-        '''Returns all Domains objects in a list'''
-        with self.__get_cursor() as cursor:
-            newListDomain = []
-            results = cursor.execute("SELECT domain_id, domain, domain_description FROM DOMAINS")
-            for result in results:
-                newDomain = Domain(id=result[0], name=result[1], description=result[2])
-                newListDomain.append(newDomain)
-            return newListDomain
 
     def get_domains_api(self, page_num=1, page_size=50):
         domains = []
@@ -242,7 +231,7 @@ class Database:
                                      'rows fetch next :page_size rows only', offset=offset, page_size=page_size)
             for row in results:
                 course = Course(id=row[0], name=row[1], theory_hours=row[2], lab_hours=row[3], work_hours=row[4],
-                                description=row[5], domainId=row[6], term_id=row[7])
+                                description=row[5], domain_id=row[6], term_id=row[7])
                 courses.append(course)
         if page_num > 1:
             prev_page = page_num - 1
@@ -292,71 +281,63 @@ class Database:
             next_page = page_num + 1
         return elements, prev_page, next_page, count
 
-    def get_specific_domain(self, domainId):
-        '''Returns a specific domain'''
+    def get_domains(self):
         with self.__get_cursor() as cursor:
-            domain = None
+            domains = []
 
-            results = cursor.execute(
-                "SELECT domain_id, domain, domain_description FROM DOMAINS WHERE domain_id = :domainId",
-                domainId=domainId)
+            results = cursor.execute("SELECT domain_id, domain, domain_description FROM DOMAINS")
+
+            for result in results:
+                domains.append(Domain(id=result[0], name=result[1], description=result[2]))
+
+            return domains
+
+    def get_domain(self, domain_id):
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("SELECT domain_id, domain, domain_description FROM DOMAINS WHERE domain_id = :domain_id", domain_id=domain_id)
+
             for result in results:
                 domain = Domain(id=result[0], name=result[1], description=result[2])
+
             return domain
 
-    def get_courses_in_domain(self, domainId):
+    def get_courses_in_domain(self, domain_id):
         '''Returns a specific domain'''
         with self.__get_cursor() as cursor:
             impactedCourse = []
             results = cursor.execute(
-                "SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES WHERE domain_id = :domainId",
-                domainId=domainId)
+                "SELECT course_id, course_title, theory_hours, lab_hours, work_hours, description, domain_id, term_id FROM COURSES WHERE domain_id = :domain_id",
+                domain_id=domain_id)
             for result in results:
                 newCourse = Course(id=result[0], name=result[1], theory_hours=result[2], lab_hours=result[3],
-                                   work_hours=result[4], description=result[5], domainId=result[6], term_id=result[7])
+                                   work_hours=result[4], description=result[5], domain_id=result[6], term_id=result[7])
                 impactedCourse.append(newCourse)
             return impactedCourse
 
     def add_domain(self, domain):
-        '''Add a domain to the DB for the given Domain object'''
         with self.__get_cursor() as cursor:
-            if (not isinstance(domain, Domain)):
-                raise ValueError("Should be domain obj")
+            if not isinstance(domain, Domain):
+                raise TypeError
 
-            # Check if domain doesn't already exist
-            results = cursor.execute("SELECT domain FROM DOMAINS where domain_id = :domainId", domainId=domain.id)
-            nDomain = [result for result in results if result[0] == domain.name]
-            if not (nDomain == []):
-                raise ValueError("Domain already exist")
+            cursor.execute("INSERT INTO domains (domain_id, domain, domain_description) VALUES (:domain_id, :domain, "
+                           ":domain_description)",
+                           domain_id=domain.id, domain=domain.name, domain_description=domain.description)
 
-            # Insert data
-            cursor.execute(
-                "INSERT INTO DOMAINS (domain_id, domain, domain_description) VALUES(:domainId, :domainName, :domainDescription)",
-                domainId=domain.id, domainName=domain.name, domainDescription=domain.description)
-            if not cursor.rowcount:
-                raise oracledb.Error
-
-    def update_domain(self, domain, olddomainId):
-        '''Update a domain for the given Domain object'''
+    def update_domain(self, domain):
         with self.__get_cursor() as cursor:
-            if (not isinstance(domain, Domain)):
-                raise ValueError
-            cursor.execute(
-                "UPDATE domains SET domain = :domainName, domain_description = :domainDescription WHERE domain_id = :domainId",
-                domainName=domain.name, domainDescription=domain.description, domainId=domain.id)
-            if not cursor.rowcount:
-                raise oracledb.Error
+            if not isinstance(domain, Domain):
+                raise TypeError
 
-    def delete_domain(self, domain):
-        '''Delete a domain in DB for the given Domain object id'''
+            cursor.execute("UPDATE domains SET domain = :domain, domain_description = :domain_description WHERE "
+                           "domain_id = :domain_id",
+                           domain=domain.name, domain_description=domain.description, domain_id=domain.id)
+
+            if not cursor.rowcount:  # if no rows were updated
+                raise KeyError
+
+    def delete_domain(self, domain_id):
         with self.__get_cursor() as cursor:
-            if (not isinstance(domain, Domain)):
-                raise ValueError
-            cursor.execute("DELETE FROM domains WHERE domain_id = :domainId", domainId=domain.id)
-            if not cursor.rowcount:
-                raise oracledb.Error
-
-
+            cursor.execute("DELETE FROM domains WHERE domain_id = :domain_id", domain_id=domain_id)
 
     def get_courses_in_term(self, term_id):
         '''Returns a specific domain'''
@@ -367,7 +348,7 @@ class Database:
                 term_id=term_id)
             for result in results:
                 newCourse = Course(id=result[0], name=result[1], theory_hours=result[2], lab_hours=result[3],
-                                   work_hours=result[4], description=result[5], domainId=result[6], term_id=result[7])
+                                   work_hours=result[4], description=result[5], domain_id=result[6], term_id=result[7])
                 impactedCourse.append(newCourse)
             return impactedCourse
 

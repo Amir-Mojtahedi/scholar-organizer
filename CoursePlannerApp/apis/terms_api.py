@@ -65,8 +65,6 @@ def add_term():
         dtb.add_term(term)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 409
 
     res = make_response({}, 201)
     res.headers['Location'] = url_for(".get_term", id=term.id)
@@ -89,13 +87,13 @@ def update_term(id):
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
     except KeyError:  # raised manually when term not found
-        try:  # try to add term
+        try:
             dtb.add_term(term)
         except oracledb.Error as e:
             return jsonify({"error": str(e)}), 500
 
         res = make_response({}, 201)
-        res.headers['Location'] = url_for(".get_term", id=term.id)
+        res.headers['Location'] = url_for(".get_term", id=id)
 
         return res
 
