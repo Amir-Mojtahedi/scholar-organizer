@@ -1,5 +1,6 @@
 import flask_unittest
 from CoursePlannerApp import create_app
+from CoursePlannerApp.objects.competency import Competency
 from CoursePlannerApp.objects.domain import Domain
 from CoursePlannerApp.objects.term import Term
 
@@ -73,7 +74,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(json_domain.description,domain.description)
 
     def test_delete_domain(self, client):
-        resp = client.get('/api/v1/domains/3')
+        resp = client.get('/api/v1/domains/2')
         self.assertEqual(resp.status_code, 200)
         domain = resp.json
         resp = client.delete('/api/v1/domains/3', json=domain)
@@ -140,10 +141,10 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(json_term.name,term.name)
 
     def test_delete_term(self, client):
-        resp = client.get('/api/v1/terms/2')
+        resp = client.get('/api/v1/terms/3')
         self.assertEqual(resp.status_code, 200)
         term = resp.json
-        resp = client.delete('/api/v1/terms/2', json=term)
+        resp = client.delete('/api/v1/terms/3', json=term)
         self.assertEqual(resp.status_code, 204)
     # --------------- END TERM CRUD TEST ---------------
 
@@ -152,32 +153,53 @@ class TestForAPI(flask_unittest.ClientTestCase):
         resp = client.get('/api/v1/competencies')
         self.assertEqual(resp.status_code, 200)
         json = resp.json
+        competency = Competency("00Q2","Use programming languages","* For problems that are easily solved * Using basic algorithms * Using a debugger and a functional test plan","Mandatory")
+        json_competency = Competency(json['results'][1]['id'],json['results'][1]['name'],json['results'][1]['achievement'],json['results'][1]['type'])
         self.assertIsNotNone(json)
         self.assertIsNotNone(json['count'])
         self.assertIsNotNone(json['results'])
+        self.assertEqual(json_competency.id,competency.id)
+        self.assertEqual(json_competency.name,competency.name)
+        self.assertEqual(json_competency.achievement,competency.achievement)
+        self.assertEqual(json_competency.type,competency.type)
         self.assertIsNone(json['next'])
         self.assertIsNone(json['prev'])
 
     def test_get_competency(self,client):
-        resp = client.get('/api/v1/competencies/00SR')
+        resp = client.get('/api/v1/competencies/00Q2')
         self.assertEqual(resp.status_code, 200)
         json = resp.json
+        competency = Competency("00Q2","Use programming languages","* For problems that are easily solved * Using basic algorithms * Using a debugger and a functional test plan","Mandatory")
+        json_competency = Competency(json['id'],json['name'],json['achievement'],json['type'])
         self.assertIsNotNone(json)
         self.assertIsNotNone(json["id"])
         self.assertIsNotNone(json["name"])
         self.assertIsNotNone(json["achievement"])
         self.assertIsNotNone(json["type"])
+        self.assertEqual(json_competency.id,competency.id)
+        self.assertEqual(json_competency.name,competency.name)
+        self.assertEqual(json_competency.achievement,competency.achievement)
+        self.assertEqual(json_competency.type,competency.type)
 
     def test_add_competency(self, client):
         resp = client.get('/api/v1/competencies')
         self.assertEqual(resp.status_code, 200)
         competency = resp.json['results'][0]
         competency['id'] = '00XX'
-        competency['name'] = 'Understanding te basics of serverside programming'
+        competency['name'] = 'Understanding the basics of serverside programming'
         competency["achievement"] = '* Based on a problem * Using flask rules'
         competency["type"] = 'Mandatory'
         resp = client.post('/api/v1/competencies', json=competency)
         self.assertEqual(resp.status_code, 201)
+        resp = client.get('/api/v1/competencies/00XX')
+        self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        competency = Competency("00XX","Understanding the basics of serverside programming",'* Based on a problem * Using flask rules',"Mandatory")
+        json_competency = Competency(json['id'],json['name'],json['achievement'],json['type'])
+        self.assertEqual(json_competency.id,competency.id)
+        self.assertEqual(json_competency.name,competency.name)
+        self.assertEqual(json_competency.achievement,competency.achievement)
+        self.assertEqual(json_competency.type,competency.type)
 
     def test_update_competency(self, client):
         resp = client.get('/api/v1/competencies/00SR')
@@ -188,12 +210,21 @@ class TestForAPI(flask_unittest.ClientTestCase):
         competency["type"] = 'Optional'
         resp = client.patch('/api/v1/competencies/00SR', json=competency)
         self.assertEqual(resp.status_code, 204)
-
-    def test_delete_competency(self, client):
         resp = client.get('/api/v1/competencies/00SR')
         self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        competency = Competency("00SR","Understanding the basics of flask","* Based on a project * Using refactoring","Optional")
+        json_competency = Competency(json['id'],json['name'],json['achievement'],json['type'])
+        self.assertEqual(json_competency.id,competency.id)
+        self.assertEqual(json_competency.name,competency.name)
+        self.assertEqual(json_competency.achievement,competency.achievement)
+        self.assertEqual(json_competency.type,competency.type)
+
+    def test_delete_competency(self, client):
+        resp = client.get('/api/v1/competencies/00SS')
+        self.assertEqual(resp.status_code, 200)
         competency = resp.json
-        resp = client.delete('/api/v1/competencies/00SR', json=competency)
+        resp = client.delete('/api/v1/competencies/00SS', json=competency)
         self.assertEqual(resp.status_code, 204)
     # --------------- END COMPETENCY CRUD TEST ---------------
 
