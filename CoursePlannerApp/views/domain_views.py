@@ -93,8 +93,7 @@ def update_domain(domain_id):
 @login_required
 def delete(domain_id):
 
-    try:    
-        domain = dtb.get_domain(domain_id)
+    try:
         courseImpacted = dtb.get_courses_in_domain(domain_id) 
     except Exception as e:
         flash("Could not acces the domain")
@@ -103,7 +102,7 @@ def delete(domain_id):
 
     # try to delete domain
     try:
-        dtb.delete_domain(domain) 
+        dtb.delete_domain(domain_id)
         flash("Domain deleted successfully")
     except oracledb.Error as e:
         flash("You can't delete this domain until you delete the following courses or change their domains")

@@ -144,14 +144,9 @@ def update_course(course_id):
 @bp.route("/<course_id>/delete/", methods=["GET"])
 @login_required
 def delete(course_id):
-    try:
-        course = dtb.get_course(course_id)
-    except Exception as e:
-        flash("Couldn't access the course")
-        return redirect(url_for(".get_courses"))
     # try to delete course
     try:
-        dtb.delete_course(course)
+        dtb.delete_course(course_id)
     except oracledb.Error as e:
         flash("Error: " + str(e))
         return redirect(url_for(".get_courses"))
