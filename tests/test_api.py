@@ -351,9 +351,9 @@ class TestForAPI(flask_unittest.ClientTestCase):
         course["description"] = 'Introduction to advanced development'
         course["term_id"] = '6'
         course["domain_id"] = '2'
-        course["lab_hours"] = '3'
-        course["theory_hours"] = '4'
-        course["work_hours"] = '4'
+        course["lab_hours"] = 3
+        course["theory_hours"] = 4
+        course["work_hours"] = 4
         resp = client.post('/api/v1/courses', json=course)
         self.assertEqual(resp.status_code, 201)
         resp = client.get('/api/v1/courses/420-620-DE')
@@ -370,16 +370,6 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(json_course.work_hours,course.work_hours)
 
     def test_update_course(self, client):
-        resp = client.get('/api/v1/courses/420-110-DW')
-        self.assertEqual(resp.status_code, 200)
-        course = resp.json
-        course['name'] = 'Hacking I'
-        course["description"] = 'Introduction to hacking'
-        course["term_id"] = '1'
-        course["domain_id"] = '1'
-        course["lab_hours"] = '5'
-        course["theory_hours"] = '5'
-        course["work_hours"] = '5'
         resp = client.patch('/api/v1/courses/420-110-DW', json=course)
         self.assertEqual(resp.status_code, 204)
         resp = client.get('/api/v1/courses/420-110-DW')
