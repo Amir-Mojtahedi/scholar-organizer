@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, NumberRange
 
 class Domain:
     '''Class representing Domain object'''
-    def __init__(self, id, name, description):
+    def __init__(self, name, description, id = 0):
         if not isinstance(id, int):  # Name validation
             raise TypeError("Enter a valid name. Try again.")
         self.id = id
@@ -28,7 +28,5 @@ class Domain:
                     </ul>'
 
 class DomainForm(FlaskForm):
-    '''Form for Domain object'''
-    id = IntegerField('Id')
     name = StringField('Name',validators=[DataRequired()])
     description = StringField('Domain Description',validators=[DataRequired()])

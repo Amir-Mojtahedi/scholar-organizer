@@ -36,20 +36,14 @@ def create_term():
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            newTerm = Term(form.id.data, form.name.data)
+            newTerm = Term(form.name.data)
             try:
                 dtb.add_term(newTerm)
                 return redirect(url_for('terms.get_terms'))
 
-            except oracledb.IntegrityError as e:
-                error_obj, = e.args  # To acces code error
-                if error_obj.code == 1:  # 1 is related to primary key issue (when the primary key already exist)
-                    flash("Course already exist")
-
             except Exception as e:
                 flash("Error: " + str(e))
-        else:
-            flash('Invalid input')
+
     return render_template('Add/addTerm.html', form=form)
 
 
@@ -72,11 +66,12 @@ def update_term(term_id):
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            updatedTerm = Term(term_id, form.name.data)
+            updatedTerm = Term(form.name.data, id=int(term_id))
             try:
                 dtb.update_term(updatedTerm)
                 flash("Term has been updated")
                 return redirect(url_for('terms.get_terms'))
+            
             except Exception as e:
                 flash("Error: " + str(e))
 

@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, NumberRange
 
 class Term:
     '''Class for term object'''
-    def __init__(self, id, name):
+    def __init__(self, name, id=0):
         if not isinstance(id, int):  # Id validation
             raise TypeError("Enter a valid id. Try again.")
         self.id = id
@@ -24,7 +24,5 @@ class Term:
 
 class TermForm(FlaskForm):
     '''Form for term object'''
-    id = IntegerField('Id',validators=[DataRequired(),
-                                        NumberRange(min=1)])
     name =  SelectField('Season',validators=[DataRequired()], 
                         choices=["Choose one season", "Winter", "Summer", "Fall"])

@@ -49,7 +49,7 @@ def create_domain():
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            new_domain = Domain(id(form.name.data), form.name.data, form.description.data)
+            new_domain = Domain(form.name.data, form.description.data)
 
             try:
                 dtb.add_domain(new_domain)
@@ -81,7 +81,7 @@ def update_domain(domain_id):
     if request.method == 'POST':
         if form.validate_on_submit():
 
-            updated_domain = Domain(form.id.data, form.name.data, form.description.data)
+            updated_domain = Domain(form.name.data, form.description.data, id=int(domain_id))
 
             try:
                 dtb.update_domain(updated_domain)
