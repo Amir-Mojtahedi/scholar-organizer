@@ -76,10 +76,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(json_domain.description,domain.description)
 
     def test_delete_domain(self, client):
-        resp = client.get('/api/v1/domains/2')
-        self.assertEqual(resp.status_code, 200)
-        domain = resp.json
-        resp = client.delete('/api/v1/domains/3', json=domain)
+        resp = client.delete('/api/v1/domains/3')
         self.assertEqual(resp.status_code, 204)
     # --------------- END DOMAIN CRUD TEST ---------------
 
@@ -143,10 +140,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(json_term.name,term.name)
 
     def test_delete_term(self, client):
-        resp = client.get('/api/v1/terms/3')
-        self.assertEqual(resp.status_code, 200)
-        term = resp.json
-        resp = client.delete('/api/v1/terms/3', json=term)
+        resp = client.delete('/api/v1/terms/3')
         self.assertEqual(resp.status_code, 204)
     # --------------- END TERM CRUD TEST ---------------
 
@@ -223,10 +217,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(json_competency.type,competency.type)
 
     def test_delete_competency(self, client):
-        resp = client.get('/api/v1/competencies/00SS')
-        self.assertEqual(resp.status_code, 200)
-        competency = resp.json
-        resp = client.delete('/api/v1/competencies/00SS', json=competency)
+        resp = client.delete('/api/v1/competencies/00SS')
         self.assertEqual(resp.status_code, 204)
     # --------------- END COMPETENCY CRUD TEST ---------------
 
@@ -405,10 +396,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(json_course.work_hours,course.work_hours)
 
     def test_delete_course(self, client):
-        resp = client.get('/api/v1/courses/420-551-D')
-        self.assertEqual(resp.status_code, 200)
-        course = resp.json
-        resp = client.delete('/api/v1/courses/420-551-D', json=course)
+        resp = client.delete('/api/v1/courses/420-551-D')
         self.assertEqual(resp.status_code, 204)
     # --------------- END COURSE CRUD TEST ---------------
 
