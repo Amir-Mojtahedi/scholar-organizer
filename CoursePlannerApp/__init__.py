@@ -4,15 +4,14 @@ import secrets
 from flask import Flask, render_template
 from flask_login import LoginManager
 
-from CoursePlannerApp.apis.domains_api import bp as domains_api
-from CoursePlannerApp.apis.terms_api import bp as terms_api
-from CoursePlannerApp.apis.courses_api import bp as courses_api
 from CoursePlannerApp.apis.competencies_api import bp as competencies_api
+from CoursePlannerApp.apis.courses_api import bp as courses_api
+from CoursePlannerApp.apis.domains_api import bp as domains_api
 from CoursePlannerApp.apis.elements_api import bp as elements_api
+from CoursePlannerApp.apis.terms_api import bp as terms_api
 from CoursePlannerApp.views.auth_views import bp as auth_bp
 from CoursePlannerApp.views.competency_views import bp as competency_bp
 from CoursePlannerApp.views.course_views import bp as course_bp
-# from CoursePlannerApp.views.display_views import bp as display_bp
 from CoursePlannerApp.views.domain_views import bp as domain_bp
 from CoursePlannerApp.views.element_views import bp as element_bp
 from CoursePlannerApp.views.groups_views import bp as groups_bp
@@ -56,7 +55,6 @@ def init_app(app):
 
     app.register_blueprint(home_bp)
     app.register_blueprint(auth_bp)
-    # app.register_blueprint(display_bp)
     app.register_blueprint(competency_bp)
     app.register_blueprint(course_bp)
     app.register_blueprint(domain_bp)
