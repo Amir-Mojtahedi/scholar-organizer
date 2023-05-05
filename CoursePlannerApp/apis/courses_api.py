@@ -96,11 +96,11 @@ def add_element_to_course(id):
     if not request.json:
         return jsonify({"error": "Not a JSON"}), 400
 
-    if not all(key in request.json for key in ["element_id"]):
+    if not all(key in request.json for key in ["element_id", "element_hours"]):
         return jsonify({"error": "Missing data to add"}), 400
 
     try:
-        dtb.add_element_course_bridging(id, request.json["element_id"])
+        dtb.add_element_course_bridging(id, request.json["element_id"], request.json["element_hours"])
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
     except ValueError as e:
