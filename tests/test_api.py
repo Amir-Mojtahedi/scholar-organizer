@@ -1,6 +1,7 @@
 import flask_unittest
 from CoursePlannerApp import create_app
 from CoursePlannerApp.objects.domain import Domain
+from CoursePlannerApp.objects.term import Term
 
 class TestForAPI(flask_unittest.ClientTestCase):
     app = create_app()
@@ -84,37 +85,59 @@ class TestForAPI(flask_unittest.ClientTestCase):
         resp = client.get('/api/v1/terms')
         self.assertEqual(resp.status_code, 200)
         json = resp.json
+        term = Term(1,"Fall  ")
+        json_term = Term(json['results'][0]['id'],json['results'][0]['name'])
         self.assertIsNotNone(json)
         self.assertIsNotNone(json['count'])
         self.assertIsNotNone(json['results'])
+        self.assertEqual(json_term.id,term.id)
+        self.assertEqual(json_term.name,term.name)
         self.assertIsNone(json['next'])
         self.assertIsNone(json['prev'])
 
     def test_get_term(self,client):
-        resp = client.get('/api/v1/terms/1')
+        resp = client.get('/api/v1/terms/2')
         self.assertEqual(resp.status_code, 200)
         json = resp.json
+        term = Term(2,"Winter")
+        json_term = Term(json['id'],json['name'])
         self.assertIsNotNone(json)
         self.assertIsNotNone(json["id"])
         self.assertIsNotNone(json["name"])
+        self.assertEqual(json_term.id,term.id)
+        self.assertEqual(json_term.name,term.name)
 
     def test_add_term(self, client):
         resp = client.get('/api/v1/terms')
         self.assertEqual(resp.status_code, 200)
         term = resp.json['results'][0]
         term['id'] = 7
-        term['name'] = 'FALL'
+        term['name'] = 'Fall  '
         resp = client.post('/api/v1/terms', json=term)
         self.assertEqual(resp.status_code, 201)
+        resp = client.get('/api/v1/terms/7')
+        self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        term = Term(7,"Fall  ")
+        json_term = Term(json['id'],json['name'])
+        self.assertEqual(json_term.id,term.id)
+        self.assertEqual(json_term.name,term.name)
 
     def test_update_term(self, client):
         resp = client.get('/api/v1/terms/6')
         self.assertEqual(resp.status_code, 200)
         term = resp.json
         term['id'] = 6
-        term['name'] = 'SUMMER'
+        term['name'] = 'Summer'
         resp = client.patch('/api/v1/terms/6', json=term)
         self.assertEqual(resp.status_code, 204)
+        resp = client.get('/api/v1/terms/6')
+        self.assertEqual(resp.status_code, 200)
+        json = resp.json
+        term = Term(6,"Summer")
+        json_term = Term(json['id'],json['name'])
+        self.assertEqual(json_term.id,term.id)
+        self.assertEqual(json_term.name,term.name)
 
     def test_delete_term(self, client):
         resp = client.get('/api/v1/terms/2')
