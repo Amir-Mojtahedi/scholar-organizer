@@ -395,3 +395,31 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(resp.status_code, 204)
     # --------------- END COURSE CRUD TEST ---------------
 
+    # --------------- START COURSE EXCEPTION TEST ---------------
+    def test_get_course_404(self,client):
+        resp = client.get('/api/v1/courses/720-110-DW')
+        self.assertEqual(resp.status_code, 404)
+        
+    def test_add_course_400(self, client):
+        resp = client.get('/api/v1/courses')
+        self.assertEqual(resp.status_code, 200)
+        course = resp.json['results'][0]
+        course['id'] = '420-620-DE'
+        course['name'] = 'Programing VI'
+        course["description"] = 'Introduction to advanced development'
+        course["term_id"] = '6'
+        resp = client.post('/api/v1/courses', json=course)
+        self.assertEqual(resp.status_code, 400)
+
+    def test_update_course_400(self, client):
+        resp = client.get('/api/v1/courses/420-110-DW')
+        self.assertEqual(resp.status_code, 200)
+        course = resp.json
+        course['name'] = 'Hacking I'
+        course["description"] = 'Introduction to hacking'
+        course["term_id"] = '1'
+        resp = client.put('/api/v1/courses/420-110-DW', json=course)
+        self.assertEqual(resp.status_code, 400)
+    # --------------- END COURSE EXCEPTION TEST ---------------
+    
+

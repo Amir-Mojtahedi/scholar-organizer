@@ -54,7 +54,9 @@ class Database:
             for result in results:
                 course = Course(id=result[0], name=result[1], theory_hours=result[2], lab_hours=result[3],
                                 work_hours=result[4], description=result[5], domainId=result[6], termId=result[7])
-            return course
+                return course
+            
+            return None
 
     def get_course_competencies(self, course_id):
         '''Returns a specific competencies for a course'''
@@ -410,7 +412,8 @@ class Database:
                 competencyId=competencyId)
             for result in results:
                 competency = Competency(id=result[0], name=result[1], achievement=result[2], type=result[3])
-            return competency
+                return competency
+            return None
 
     def add_competency(self, competency):
         '''Add a competency to the DB for the given Competency object'''
