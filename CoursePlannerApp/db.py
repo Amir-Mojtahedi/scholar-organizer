@@ -54,7 +54,9 @@ class Database:
             for result in results:
                 course = Course(id=result[0], name=result[1], theory_hours=result[2], lab_hours=result[3],
                                 work_hours=result[4], description=result[5], domainId=result[6], termId=result[7])
-            return course
+                return course
+            
+            return None
 
     def get_course_competencies(self, course_id):
         '''Returns a specific competencies for a course'''
@@ -225,7 +227,7 @@ class Database:
             next_page = page_num + 1
         return competencies, prev_page, next_page, count
 
-    def get_elements_api(self, page_num=1, page_size=50):
+    def get_elements_api(self, page_num=1, page_size=10):
         elements = []
         offset = (page_num-1)*page_size
         prev_page = None
@@ -299,10 +301,20 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
 
-    def delete_domain(self, domain_id):
+    def delete_domain(self, domainId):
         '''Delete a domain in DB for the given Domain object id'''
         with self.__get_cursor() as cursor:
-            cursor.execute("DELETE FROM domains WHERE domain_id = :domainId", domainId=domain_id)
+            coursesToDelete = []
+            results = cursor.execute("SELECT course_id from Courses WHERE domain_id= :domainId",domainId=domainId)
+            for result in results:
+                courseId = result[0]
+                coursesToDelete.append(courseId)
+            for courseId in coursesToDelete:
+                cursor.execute("DELETE FROM courses_elements WHERE course_id = :courseId" , courseId=courseId)
+            
+            cursor.execute("DELETE FROM courses WHERE domain_id= :domainId" , domainId=domainId)
+
+            cursor.execute("DELETE FROM domains WHERE domain_id = :domainId", domainId=domainId)
 
     # TERM
     def get_terms(self):
@@ -321,7 +333,8 @@ class Database:
             results = cursor.execute("SELECT term_id, term_name FROM TERMS WHERE term_id=:termId", termId=termId)
             for result in results:
                 foundTerm = Term(id=result[0], name=result[1])
-            return foundTerm
+                return foundTerm
+            return None
 
     def get_courses_in_term(self, termId):
         '''Returns a specific domain'''
@@ -400,7 +413,8 @@ class Database:
                 competencyId=competencyId)
             for result in results:
                 competency = Competency(id=result[0], name=result[1], achievement=result[2], type=result[3])
-            return competency
+                return competency
+            return None
 
     def add_competency(self, competency):
         '''Add a competency to the DB for the given Competency object'''
@@ -470,7 +484,8 @@ class Database:
             for result in results:
                 foundElement = Element(id=result[0], order=result[1], name=result[2], criteria=result[3],
                                        competencyId=result[4])
-            return foundElement
+                return foundElement
+            return None
 
     def get_elements_covered_by_a_course(self, courseId):
         '''Returns all the Elements covered by a specific course'''
@@ -499,8 +514,8 @@ class Database:
                 raise ValueError("Competency doesn't exist. Create a competency first")
             # Insert Data
             cursor.execute(
-                "INSERT INTO ELEMENTS (element_id, element_order, element, element_criteria, competency_id) VALUES (:elementId, :elementOrder, :elementName, :elementCriteria, :competencyId)",
-                elementId=element.id, elementOrder=element.order, elementName=element.name,
+                "INSERT INTO ELEMENTS (element_order, element, element_criteria, competency_id) VALUES (:elementOrder, :elementName, :elementCriteria, :competencyId)",
+                elementOrder=element.order, elementName=element.name,
                 elementCriteria=element.criteria, competencyId=element.competencyId)
             if not cursor.rowcount:
                 raise oracledb.Error

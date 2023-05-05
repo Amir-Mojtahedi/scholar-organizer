@@ -155,7 +155,7 @@ def update_course(course_id):
             #         flash("Course already exists!")
                 
             try:
-                dtb.update_course(updatedCourse, course_id)
+                dtb.update_course(updatedCourse)
                 flash("Course has been updated")    
                 return redirect(url_for('courses.get_courses'))      
             except Exception as e:
@@ -197,6 +197,6 @@ def hour_validator(course_id):
     current_hours=dtb.get_sum_hours(course_id)
     diff=total_hours-current_hours
     if(diff<0):
-        flash(f'You must remove {diff*-1} to match {total_hours} of {course.name}')
+        flash(f'You must remove {diff*-1} hours to match {total_hours} hours of {course.name}')
     elif(diff>0):
         flash(f'You must add {diff} hours to match {total_hours} hours of {course.id} {course.name}')

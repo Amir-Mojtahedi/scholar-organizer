@@ -73,7 +73,7 @@ def add_course():
                ["id", "name", "theory_hours", "lab_hours", "work_hours", "description", "domain_id", "term_id"]):
         return jsonify({"error": "Missing data to add"}), 400
 
-    course = Course(id=id, name=request.json["name"], theory_hours=request.json["theory_hours"],
+    course = Course(id=request.json["id"], name=request.json["name"], theory_hours=request.json["theory_hours"],
                     lab_hours=request.json["lab_hours"], work_hours=request.json["work_hours"],
                     description=request.json["description"], domainId=request.json["domain_id"],
                     termId=request.json["term_id"])
