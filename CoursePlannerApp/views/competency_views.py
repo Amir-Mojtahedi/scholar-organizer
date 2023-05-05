@@ -44,6 +44,16 @@ def create_competency():
 
             newCompetency = Competency(form.id.data, form.name.data, form.achievement.data, 
                                        form.type.data)
+
+            try:
+                competencies = dtb.get_competencies() 
+            except Exception:
+                flash('There is an issue with the Database')
+                
+            for competency in competencies:
+                if(newCompetency.id == competency.id or newCompetency.name == competency.name):
+                    flash("Competency already exists!")
+            
             try:
                 dtb.add_competency(newCompetency)
                 return redirect(url_for('competencies.get_competencies'))
@@ -81,6 +91,11 @@ def update_competency(competency_id):
 
             updatedCompetency = Competency(form.id.data, form.name.data, form.achievement.data, 
                                        form.type.data)
+            
+            for competency in dtb.get_competencies():
+                if(updatedCompetency.id == competency.id or updatedCompetency.name == competency.name):
+                    flash("Competency already exists!")
+                
             try:
                 dtb.update_competency(updatedCompetency, oldCompetencyId)
                 flash("Competency has been updated")    

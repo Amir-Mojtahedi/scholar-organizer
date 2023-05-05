@@ -367,7 +367,21 @@ class Database:
     def delete_term(self, term_id):
         '''Delete a term in DB for the given Term object id'''
         with self.__get_cursor() as cursor:
-            cursor.execute("DELETE FROM terms WHERE term_id = :termId", termId=term_id)
+            if (not isinstance(term, Term)):
+                raise ValueError
+
+            courseToDelete = []
+            results = cursor.execute("SELECT course_id FROM Courses WHERE term_id = :termId", termId = term.id)
+            for result in results:
+                courseId = result[0]
+                courseToDelete.append(courseId)
+            
+            for courseId in courseToDelete:
+                cursor.execute("DELETE FROM courses_elements WHERE course_id = :courseId", courseId=courseId)
+            
+            cursor.execute("DELETE FROM courses WHERE term_id = :termId", termId = term.id)
+            
+            cursor.execute("DELETE FROM terms WHERE term_id = :termId", termId = term.id)
 
     # COMPETENCY
     def get_competencies(self):
@@ -428,7 +442,16 @@ class Database:
     def delete_competency(self, competency_id):
         '''Delete a competency in DB for the given COmpetency object id'''
         with self.__get_cursor() as cursor:
-            cursor.execute("DELETE FROM COMPETENCIES WHERE competency_id = :competencyId", competencyId=competency_id)
+            if (not isinstance(competency, Competency)):
+                raise ValueError
+
+            # Delete associated elements
+            cursor.execute("DELETE FROM elements WHERE competency_id = :competencyId", competencyId=competency.id)
+            
+
+            cursor.execute("DELETE FROM competencies WHERE competency_id = :competencyId", competencyId=competency.id)
+            if not cursor.rowcount:
+                raise oracledb.Error
 
     # ELEMENT
     def get_elements(self):
@@ -472,6 +495,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if not isinstance(element, Element):
                 raise ValueError("Should be Element obj")
+            
             # Check if Competency exists
             results = cursor.execute("SELECT * FROM COMPETENCIES where competency_id = :competencyId",
                                      competencyId=element.competencyId)
@@ -541,7 +565,13 @@ class Database:
     def delete_element(self, element_id):
         '''Delete a element for the given Element object'''
         with self.__get_cursor() as cursor:
-            cursor.execute("DELETE FROM elements WHERE element_id = :elementId", elementId=element_id)
+            if not isinstance(element, Element):
+                raise ValueError("Should be an Element obj")
+
+            cursor.execute("DELETE FROM courses_elements WHERE element_id = :elementId", elementId=element.id)
+            
+            cursor.execute("DELETE FROM elements WHERE element_id = :elementId", elementId=element.id)
+            
 
     def close(self):
         if self.__connection is not None:
