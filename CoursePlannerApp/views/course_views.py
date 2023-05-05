@@ -110,13 +110,13 @@ def create_course():
                 return redirect(url_for('domains.create_domain')) #If user want new domain
 
             new_course = Course(form.id.data, form.name.data, form.description.data,
-                               form.term_id.data, form.domain_id.data,
+                               int(form.term_id.data), int(form.domain_id.data),
                                form.lab_hours.data, form.theory_hours.data,
                                form.work_hours.data)
 
             try:
-                dtb.update_course(new_course)
-                flash("Course has been updated")    
+                dtb.add_course(new_course)
+                flash("Course has been added successfully.")    
                 return redirect(url_for('courses.get_courses'))      
             except Exception as e:
                 flash("Error: " + str(e))
