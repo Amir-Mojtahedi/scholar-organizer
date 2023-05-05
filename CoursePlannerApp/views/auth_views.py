@@ -51,6 +51,8 @@ def signup():
                 _hash = generate_password_hash(form.password.data)
                 user = User(None, 0, form.name.data, form.email.data, _hash)
                 dtb.add_user(user)
+                flash("Sign up was successful. Login please")
+                return redirect(url_for('auth.login'))
         else:
             flash("Form is not valid")
 
