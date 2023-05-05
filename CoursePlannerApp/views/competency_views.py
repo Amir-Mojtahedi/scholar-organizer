@@ -97,12 +97,7 @@ def update_competency(competency_id):
 @bp.route("/<competency_id>/delete/", methods=["GET"])
 @login_required
 def delete(competency_id):
-    # try:
-    #     competency = dtb.get_competency(competency_id)
-    # except Exception as e:
-    #     flash("Could not acces the competency")
-    #     return redirect(url_for('competency.list_elements', competency_id=competency_id))
-
+    
     # try to delete competency
     try:
         dtb.delete_competency(competency_id)

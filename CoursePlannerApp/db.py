@@ -94,21 +94,8 @@ class Database:
                 courseId=course.id, courseName=course.name)
             nCourse = [result for result in results if (result[0] == course.id or result[1] == course.name)]
             if not (nCourse == []):
-                raise ValueError("Course already exist")
+                raise ValueError("Name or Title already used.")
 
-            # Check if domain exists
-            results = cursor.execute(
-                "SELECT domain_id, domain, domain_description FROM DOMAINS where domain_id = :domain_id",
-                domain_id=course.domain_id)
-            domain = [result for result in results if result[0] == course.domain_id]
-            if domain is None:
-                raise ValueError("Domain doesn't exist. Create a domain first")
-
-            # Check if term exists
-            results = cursor.execute("SELECT term_id FROM TERMS where term_id = :term_id", term_id=course.term_id)
-            term = [result for result in results if result[0] == course.term_id]
-            if term is None:
-                raise ValueError("Term doesn't exist. Create a term first")
 
             # Insert data
             cursor.execute(
@@ -123,6 +110,16 @@ class Database:
         with self.__get_cursor() as cursor:
             if not isinstance(course, Course):
                 raise ValueError
+
+            results = cursor.execute(
+                "SELECT course_id, course_title FROM COURSES where course_id = :course_id or course_title = :course_title",
+                course_id=course.id, course_title=course.name)
+            for result in results:
+                if result[1] == course.name:
+                    if result[0] != course.id:
+                        raise ValueError("Name already used")    
+
+            
             cursor.execute(
                 "UPDATE COURSES SET course_title = :title, theory_hours = :theory, lab_hours = :lab, work_hours = :work, description = :description, domain_id = :domain_id, term_id = :term_id WHERE course_id = :courseId",
                 courseId=course.id, title=course.name, theory=course.theory_hours, lab=course.lab_hours,

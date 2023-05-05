@@ -20,7 +20,7 @@ def get_courses():
             courses = dtb.get_courses()
             domains = dtb.get_domains()
         except Exception as e:
-            flash("Error: " + str(e))
+            flash('There is an issue with the Database')
             return render_template('courses.html', courses=[], domains=[])
         
         if not courses or len(courses) == 0:
@@ -108,11 +108,6 @@ def create_course():
                                form.lab_hours.data, form.theory_hours.data,
                                form.work_hours.data)
 
-            for course in dtb.get_courses():
-                if (newCourse.id == course.id or newCourse.name == course.name):
-                    flash("Course already exists!")
-                    return redirect(url_for('courses.get_courses'))
-
             try:
                 dtb.add_course(newCourse)
                 flash("Course has been added")
@@ -154,12 +149,12 @@ def update_course(course_id):
         domains = dtb.get_domains()
     except Exception:
         flash("")
-    form.termId.choices = sorted([(term.id, str(term.id) + " - " + term.name) for term in terms])
-    form.termId.choices.insert(0, [0, "Choose a term"])
+    form.term_id.choices = sorted([(term.id, str(term.id) + " - " + term.name) for term in terms])
+    form.term_id.choices.insert(0, [0, "Choose a term"])
 
     # Fill domain drop list
-    form.domainId.choices = sorted([(domain.id, str(domain.id) + " - " + domain.name) for domain in domains])  
-    form.domainId.choices.insert(0, [0, "Choose a domain"])
+    form.domain_id.choices = sorted([(domain.id, str(domain.id) + " - " + domain.name) for domain in domains])  
+    form.domain_id.choices.insert(0, [0, "Choose a domain"])
 
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -169,12 +164,8 @@ def update_course(course_id):
                                    form.lab_hours.data, form.theory_hours.data,
                                    form.work_hours.data)
 
-            # for course in dtb.get_courses():
-            #     if( updatedCourse.id == course.id or updatedCourse.name == course.name):
-            #         flash("Course already exists!")
-
             try:
-                dtb.update_course(updatedCourse, course_id)
+                dtb.update_course(updatedCourse)
                 flash("Course has been updated")
                 return redirect(url_for('courses.get_courses'))
             except Exception as e:
