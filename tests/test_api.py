@@ -259,8 +259,8 @@ class TestForAPI(flask_unittest.ClientTestCase):
         resp = client.get('/api/v1/elements')
         self.assertEqual(resp.status_code, 200)
         element = resp.json['results'][0]
-        element['id'] = '53'
-        element['order'] = '3'
+        element['id'] = 53
+        element['order'] = 3
         element["name"] = 'Debug flask problems'
         element["criteria"] = '* Correct breakdown of the project * Appropriate choice and adaptation of the framework'
         element["competency_id"] = '00SR'

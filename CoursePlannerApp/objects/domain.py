@@ -24,16 +24,6 @@ class Domain:
                             <li> ID: {self.id}</li> \
                             <li> Description: {self.description}</li>   \
                     </ul>'
-    
-    def from_json(domain_dict):
-        if not isinstance(domain_dict,dict):
-            raise TypeError("Expected dict")
-        return Domain(domain_dict['id'],domain_dict['name'],domain_dict['description'])
-    
-    def to_json(domain):
-        if not isinstance(domain,Domain):
-            raise TypeError("Expected Address")
-        return domain.__dict__
 
 class DomainForm(FlaskForm):
     id = IntegerField('Id',validators=[DataRequired(),

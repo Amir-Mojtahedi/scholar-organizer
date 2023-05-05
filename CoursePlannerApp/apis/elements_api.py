@@ -59,7 +59,7 @@ def add_element():
     if not all(key in request.json for key in ["id", "order", "name", "criteria", "competency_id"]):
         return jsonify({"error": "Missing fields"}), 400
 
-    element = Element(int(request.json["id"]), int(request.json["order"]), request.json["name"], request.json["criteria"],
+    element = Element(request.json["id"], request.json["order"], request.json["name"], request.json["criteria"],
                       request.json["competency_id"])
 
     try:
@@ -75,7 +75,7 @@ def add_element():
     return resp
 
 
-@bp.route("/<string:id>", methods=["PUT"])
+@bp.route("/<int:id>", methods=["PUT"])
 def update_element(id):
     if not request.json:
         return jsonify({"error": "Not a JSON"}), 400
@@ -83,7 +83,7 @@ def update_element(id):
     if not all(key in request.json for key in ["order", "name", "criteria", "competency_id"]):
         return jsonify({"error": "Missing fields"}), 400
 
-    element = Element(int(id), int(request.json["order"]), request.json["name"], request.json["criteria"],
+    element = Element(id, request.json["order"], request.json["name"], request.json["criteria"],
                       request.json["competency_id"])
 
     try:
