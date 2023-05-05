@@ -7,6 +7,10 @@ class Course:
     '''Class representing Course object'''
     def __init__(self, id, name, description, term_id, domain_id, lab_hours,
                  theory_hours, work_hours):
+        
+        term_id = int(term_id)
+        domain_id = int(domain_id)
+
         if not isinstance(id, str): #Id validation
             raise TypeError("Enter a valid Id. Try again.")
         self.id = id
