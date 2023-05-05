@@ -445,3 +445,27 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(resp.status_code, 400)
     # --------------- END ELEMENT OF COMPETENCY EXCEPTION TEST ---------------
 
+    # --------------- START COMPETENCY EXCEPTION TEST ---------------
+    def test_get_competency_404(self,client):
+        resp = client.get('/api/v1/competencies/00ZZ')
+        self.assertEqual(resp.status_code, 404)
+        
+    def test_add_competency_400(self, client):
+        resp = client.get('/api/v1/competencies')
+        self.assertEqual(resp.status_code, 200)
+        competency = resp.json['results'][0]
+        competency['name'] = 'FAILURE'
+        # del drops a key in the dictionary
+        del competency['id']
+        resp = client.post('/api/v1/competencies', json=competency)
+        self.assertEqual(resp.status_code, 400)
+
+    def test_update_competency_400(self, client):
+        resp = client.get('/api/v1/competencies/00SH')
+        self.assertEqual(resp.status_code, 200)
+        competency = resp.json
+        competency['name'] = 'FAILURE'
+        resp = client.put('/api/v1/courses/420-110-DW', json=competency)
+        self.assertEqual(resp.status_code, 400)
+    # --------------- END COMPETENCY EXCEPTION TEST ---------------
+
