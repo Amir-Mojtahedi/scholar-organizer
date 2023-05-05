@@ -2,21 +2,21 @@ import oracledb, uuid
 from flask import Blueprint, redirect, flash, render_template, request, url_for
 from flask_login import login_required
 from werkzeug.local import LocalProxy
-
 from CoursePlannerApp.dbmanager import get_db
+import oracledb
+
 from CoursePlannerApp.objects.domain import DomainForm, Domain
 
 bp = Blueprint('domains', __name__, url_prefix='/domains')
 
 dtb = LocalProxy(get_db)
 
-
-# Get * Domains
+#Get * Domains
 @bp.route("/")
 def get_domains():
     if request.method == 'GET':
         try:
-            domains = dtb.get_domains()
+            domains = dtb.get_domains() 
         except Exception as e:
             flash('There is an issue with the Database'+str(e))
             return render_template('domains.html', domains=[])
@@ -31,7 +31,7 @@ def get_domains():
 def get_domain(domain_id):
     if request.method == 'GET':
         try:
-            domain = dtb.get_domain(domain_id)
+            domain = dtb.get_domain(domain_id) 
         except Exception as e:
             flash('There is an issue with the Database')
             return render_template('domain.html', domain=[])
@@ -41,7 +41,7 @@ def get_domain(domain_id):
         return render_template('domain.html', domain=domain)
 
 
-# Add Domain
+#Add Domain
 @bp.route('/new/', methods=['GET', 'POST'])
 @login_required
 def create_domain():
@@ -61,23 +61,23 @@ def create_domain():
         
     return render_template('Add/addDomain.html', form=form)
 
-
-# Update Domain
+#Update Domain
 @bp.route('/<int:domain_id>/update/', methods=['GET', 'POST'])
 @login_required
 def update_domain(domain_id):
-    # Check if domain exist
+    
+    #Check if domain exist
     try:
         domain = dtb.get_domain(domain_id)
     except Exception as e:
-        flash("Error: " + str(e))
-
+        flash("Error: "+ str(e))
+    
     if domain is None:
         flash("Domain not found")
         return redirect(url_for('domains.get_domains'))
-
-    form = DomainForm(obj=domain)  # Prefill the form
-
+    
+    form = DomainForm(obj=domain) #Prefill the form
+    
     if request.method == 'POST':
         if form.validate_on_submit():
 
@@ -93,11 +93,11 @@ def update_domain(domain_id):
 
     return render_template('Update/updateDomain.html', form=form, domain=domain)
 
-
-# Delete
+#Delete
 @bp.route("/<domain_id>/delete/", methods=["GET"])
 @login_required
 def delete(domain_id):
+
     try:
         course_impacted = dtb.get_courses_in_domain(domain_id)
     except Exception as e:

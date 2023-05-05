@@ -1,24 +1,22 @@
-import oracledb
-from flask import Blueprint, redirect, flash, render_template, request, url_for
-from flask_login import login_required
+from flask import Blueprint, redirect, render_template, flash, render_template, request, url_for
+from flask_login import current_user, login_required
 from werkzeug.local import LocalProxy
-
 from CoursePlannerApp.dbmanager import get_db
+import oracledb
 from CoursePlannerApp.objects.course import CourseForm, Course
-from CoursePlannerApp.objects.element import ElementFormBridge
+from CoursePlannerApp.objects.element import Element, ElementFormBridge
 
 bp = Blueprint('courses', __name__, url_prefix='/courses')
 
 dtb = LocalProxy(get_db)
 
-
-# Get * Courses
+#Get * Courses 
 @bp.route("/")
 def get_courses():
     if request.method == 'GET':
         try:
             courses = dtb.get_courses()
-            domains = dtb.get_domains()
+            domains = dtb.get_domains() 
         except Exception as e:
             flash('There is an issue with the Database')
             return render_template('courses.html', courses=[], domains=[])
@@ -34,9 +32,9 @@ def list_competencies(course_id):
     if request.method == 'GET':
         try:
             course = dtb.get_course(course_id)
-            competencies = dtb.get_course_competencies(course_id)
-            elements_covered = dtb.get_elements_covered_by_a_course(course_id)
-            domains = dtb.get_domains()
+            competencies = dtb.get_course_competencies(course_id) 
+            elements_covered=dtb.get_elements_covered_by_a_course(course_id)
+            domains = dtb.get_domains() 
         except Exception as e:
             flash('There is an issue with the Database')
             return render_template('courses.html', courses=[], domains=[], competencies=[], elements_covered=[])
@@ -52,7 +50,7 @@ def list_competencies(course_id):
 @login_required
 def add_element_for_course(course_id):
     form = ElementFormBridge()
-    # Fill element drop list
+    #Fill element drop list
     try:
         elements = dtb.get_elements()
     except Exception:
@@ -64,24 +62,23 @@ def add_element_for_course(course_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             try:
-                dtb.add_element_course_bridging(int(form.id.data), course_id, int(form.element_hours.data))
+                dtb.add_element_course_bridging(int(form.id.data),course_id,int(form.element_hours.data))
                 flash("Element was created successfully.")
                 hour_validator(course_id)
-                return redirect(url_for('courses.list_competencies', course_id=course_id))
-
+                return redirect(url_for('courses.list_competencies',course_id=course_id))
+            
             except oracledb.IntegrityError as e:
-                error_obj, = e.args  # To acces code error
-                if error_obj.code == 1:  # 1 is related to primary key issue (when the primary key already exist)
+                error_obj, = e.args #To acces code error 
+                if error_obj.code == 1: # 1 is related to primary key issue (when the primary key already exist) 
                     flash("Element already exist")
-
+            
             except Exception as e:
                 flash('There is an issue with the Database')
                 return render_template('courses.html', courses=[], domains=[])
             
     return render_template('Add/addCourseElementBridge.html', form=form)
 
-
-# Add course
+#Add course
 @bp.route('/new/', methods=['GET', 'POST'])
 @login_required
 def create_course():
@@ -128,24 +125,25 @@ def create_course():
     return render_template('Add/addCourse.html', form=form)
 
 
-# Update course
+#Update course
 @bp.route('/<course_id>/update/', methods=['GET', 'POST'])
 @login_required
 def update_course(course_id):
-    # Cheack if course exist
+    #Cheack if course exist
     try:
         course = dtb.get_course(course_id)
     except Exception as e:
-        flash("Error: " + str(e))
-
+        flash("Error: "+ str(e))
+    
     if course is None:
         flash("Course not found")
         return redirect(url_for('courses.get_courses'))
-
-    form = CourseForm(obj=course)  # Prefill the form
-
-    # Creating a new one based on the updated form
-    # Fill term drop list
+    
+    
+    form = CourseForm(obj=course) #Prefill the form
+      
+    #Creating a new one based on the updated form
+    #Fill term drop list
     try:
         terms = dtb.get_terms()
         domains = dtb.get_domains()
@@ -182,11 +180,10 @@ def update_course(course_id):
                 return redirect(url_for('courses.get_courses'))
             except Exception as e:
                 flash("Error: " + str(e))
-
+                
     return render_template('Update/updateCourse.html', form=form, course=course)
 
-
-# Delete
+#Delete
 @bp.route("/<course_id>/delete/", methods=["GET"])
 @login_required
 def delete(course_id):
@@ -200,21 +197,19 @@ def delete(course_id):
     flash("Course deleted successfully")
     return redirect(url_for('courses.get_courses'))
 
-
-# Delete an element for specific course
+#Delete an element for specific course
 @bp.route('/<course_id>/<int:element_id>/delete/', methods=['GET'])
 @login_required
-def delete_element_for_course(course_id, element_id):
+def delete_element_for_course(course_id,element_id):
     try:
-        dtb.delete_element_course_bridging(element_id, course_id)
+        dtb.delete_element_course_bridging(element_id,course_id)
         flash("Element deleted for this course successfully")
         hour_validator(course_id)
     except Exception as e:
         flash("Could not access the record")
         flash("Error: " + str(e))
-        return redirect(url_for('courses.list_competencies', course_id=course_id))
-    return redirect(url_for('courses.list_competencies', course_id=course_id))
-
+        return redirect(url_for('courses.list_competencies',course_id=course_id))
+    return redirect(url_for('courses.list_competencies',course_id=course_id))
 
 def hour_validator(course_id):
     course = dtb.get_course(course_id)

@@ -81,6 +81,7 @@ class Database:
                 elementsList.append(element)
             return elementsList
 
+
     def add_course(self, course):
         '''Add a course to the DB for the given Course object'''
         with self.__get_cursor() as cursor:
@@ -145,28 +146,26 @@ class Database:
 
     def get_domains_api(self, page_num=1, page_size=50):
         domains = []
-        offset = (page_num - 1) * page_size
+        offset = (page_num-1)*page_size
         prev_page = None
         next_page = None
         with self.__get_cursor() as cursor:
             results = cursor.execute('select count(*) from domains')
             count = results.fetchone()[0]
-            results = cursor.execute(
-                'select domain_id, domain, domain_description from domains order by domain_id offset :offset rows fetch next :page_size rows only',
-                offset=offset, page_size=page_size)
+            results = cursor.execute('select domain_id, domain, domain_description from domains order by domain_id offset :offset rows fetch next :page_size rows only', offset=offset, page_size=page_size)
             for row in results:
                 domain = Domain(id=row[0], name=row[1],
                                 description=row[2])
                 domains.append(domain)
         if page_num > 1:
             prev_page = page_num - 1
-        if len(domains) > 0 and (count / page_size) > page_num:
+        if len(domains) > 0 and (count/page_size) > page_num:
             next_page = page_num + 1
         return domains, prev_page, next_page, count
 
     def get_terms_api(self, page_num=1, page_size=50):
         terms = []
-        offset = (page_num - 1) * page_size
+        offset = (page_num-1)*page_size
         prev_page = None
         next_page = None
         with self.__get_cursor() as cursor:
@@ -179,13 +178,13 @@ class Database:
                 terms.append(term)
         if page_num > 1:
             prev_page = page_num - 1
-        if len(terms) > 0 and (count / page_size) > page_num:
+        if len(terms) > 0 and (count/page_size) > page_num:
             next_page = page_num + 1
         return terms, prev_page, next_page, count
 
     def get_courses_api(self, page_num=1, page_size=50):
         courses = []
-        offset = (page_num - 1) * page_size
+        offset = (page_num-1)*page_size
         prev_page = None
         next_page = None
         with self.__get_cursor() as cursor:
@@ -200,34 +199,32 @@ class Database:
                 courses.append(course)
         if page_num > 1:
             prev_page = page_num - 1
-        if len(courses) > 0 and (count / page_size) > page_num:
+        if len(courses) > 0 and (count/page_size) > page_num:
             next_page = page_num + 1
         return courses, prev_page, next_page, count
 
     def get_competencies_api(self, page_num=1, page_size=50):
         competencies = []
-        offset = (page_num - 1) * page_size
+        offset = (page_num-1)*page_size
         prev_page = None
         next_page = None
         with self.__get_cursor() as cursor:
             results = cursor.execute('select count(*) from competencies')
             count = results.fetchone()[0]
-            # id, name, achievement, type
-            results = cursor.execute(
-                'select competency_id, COMPETENCY, COMPETENCY_ACHIEVEMENT, COMPETENCY_TYPE from competencies order by competency_id offset :offset rows fetch next :page_size rows only',
-                offset=offset, page_size=page_size)
+            #id, name, achievement, type
+            results = cursor.execute('select competency_id, COMPETENCY, COMPETENCY_ACHIEVEMENT, COMPETENCY_TYPE from competencies order by competency_id offset :offset rows fetch next :page_size rows only', offset=offset, page_size=page_size)
             for row in results:
                 competency = Competency(id=row[0], name=row[1], achievement=row[2], type=row[3])
                 competencies.append(competency)
         if page_num > 1:
             prev_page = page_num - 1
-        if len(competencies) > 0 and (count / page_size) > page_num:
+        if len(competencies) > 0 and (count/page_size) > page_num:
             next_page = page_num + 1
         return competencies, prev_page, next_page, count
 
     def get_elements_api(self, page_num=1, page_size=10):
         elements = []
-        offset = (page_num - 1) * page_size
+        offset = (page_num-1)*page_size
         prev_page = None
         next_page = None
         with self.__get_cursor() as cursor:
@@ -242,7 +239,7 @@ class Database:
                 elements.append(element)
         if page_num > 1:
             prev_page = page_num - 1
-        if len(elements) > 0 and (count / page_size) > page_num:
+        if len(elements) > 0 and (count/page_size) > page_num:
             next_page = page_num + 1
         return elements, prev_page, next_page, count
 
@@ -453,6 +450,7 @@ class Database:
     def delete_competency(self, competency_id):
         '''Delete a competency in DB for the given COmpetency object id'''
         with self.__get_cursor() as cursor:
+
             # Delete associated elements
             cursor.execute("DELETE FROM elements WHERE competency_id = :competency_id", competency_id=competency_id)
 
@@ -502,7 +500,7 @@ class Database:
         with self.__get_cursor() as cursor:
             if not isinstance(element, Element):
                 raise ValueError("Should be Element obj")
-
+            
             # Check if Competency exists
             results = cursor.execute("SELECT * FROM COMPETENCIES where competency_id = :competency_id",
                                      competency_id=element.competency_id)
@@ -517,7 +515,7 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
 
-    def add_element_course_bridging(self, elementId, courseId, elementHours):
+    def add_element_course_bridging(self,elementId,courseId,elementHours):
         '''Add a record to the bridging table'''
         with self.__get_cursor() as cursor:
             # Check if the record doesn't already exist in the bridging table
@@ -528,12 +526,11 @@ class Database:
                 if result:
                     raise ValueError("record already exists")
             cursor.execute(
-                "INSERT INTO COURSES_ELEMENTS (element_id, course_id,element_hours) VALUES(:elementId, :courseId,:elementHours)",
-                elementId=elementId, courseId=courseId, elementHours=elementHours)
+                "INSERT INTO COURSES_ELEMENTS (element_id, course_id,element_hours) VALUES(:elementId, :courseId,:elementHours)",elementId=elementId, courseId=courseId,elementHours=elementHours)
             if not cursor.rowcount:
                 raise oracledb.Error
 
-    def delete_element_course_bridging(self, elementId, courseId):
+    def delete_element_course_bridging(self,elementId,courseId):
         '''Delete a record from the bridging table'''
         with self.__get_cursor() as cursor:
             cursor.execute(
@@ -542,10 +539,10 @@ class Database:
             if not cursor.rowcount:
                 raise oracledb.Error
 
-    def get_sum_hours(self, courseId):
+    def get_sum_hours(self,courseId):
         '''Get records from the bridging table'''
         with self.__get_cursor() as cursor:
-            hours = 0
+            hours=0
             try:
                 results = cursor.execute(
                     "SELECT SUM(element_hours) FROM COURSES_ELEMENTS WHERE course_id=:courseId",
@@ -553,7 +550,7 @@ class Database:
                 for result in results:
                     if result[0] is None:
                         return 0
-                    hours = result[0]
+                    hours=result[0]
             except TypeError:
                 return 0
             return hours
@@ -573,9 +570,11 @@ class Database:
     def delete_element(self, element_id):
         '''Delete a element for the given Element object'''
         with self.__get_cursor() as cursor:
-            cursor.execute("DELETE FROM courses_elements WHERE element_id = :elementId", elementId=element_id)
 
+            cursor.execute("DELETE FROM courses_elements WHERE element_id = :elementId", elementId=element_id)
+            
             cursor.execute("DELETE FROM elements WHERE element_id = :elementId", elementId=element_id)
+            
 
     def close(self):
         if self.__connection is not None:
