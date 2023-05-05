@@ -64,7 +64,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         domain['id'] = 3
         domain['name'] = 'TEST UPDATE TITLE'
         domain['description'] = 'TEST UPDATE TITLE'
-        resp = client.patch('/api/v1/domains/3', json=domain)
+        resp = client.put('/api/v1/domains/3', json=domain)
         self.assertEqual(resp.status_code, 204)
         resp = client.get('/api/v1/domains/3')
         self.assertEqual(resp.status_code, 200)
@@ -129,7 +129,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         term = resp.json
         term['id'] = 6
         term['name'] = 'Summer'
-        resp = client.patch('/api/v1/terms/6', json=term)
+        resp = client.put('/api/v1/terms/6', json=term)
         self.assertEqual(resp.status_code, 204)
         resp = client.get('/api/v1/terms/6')
         self.assertEqual(resp.status_code, 200)
@@ -204,7 +204,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         competency['name'] = 'Understanding the basics of flask'
         competency["achievement"] = '* Based on a project * Using refactoring'
         competency["type"] = 'Optional'
-        resp = client.patch('/api/v1/competencies/00SR', json=competency)
+        resp = client.put('/api/v1/competencies/00SR', json=competency)
         self.assertEqual(resp.status_code, 204)
         resp = client.get('/api/v1/competencies/00SR')
         self.assertEqual(resp.status_code, 200)
@@ -273,11 +273,11 @@ class TestForAPI(flask_unittest.ClientTestCase):
         resp = client.get('/api/v1/elements/1')
         self.assertEqual(resp.status_code, 200)
         element = resp.json
-        element['order'] = '5'
+        element['order'] = 5
         element["name"] = 'Debug C# code'
         element["criteria"] = '* Make modular apps* Appropriate team work'
         element["competency_id"] = '00Q8'
-        resp = client.patch('/api/v1/elements/1', json=element)
+        resp = client.put('/api/v1/elements/1', json=element)
         self.assertEqual(resp.status_code, 204)
         resp = client.get('/api/v1/elements/1')
         self.assertEqual(resp.status_code, 200)
@@ -291,10 +291,7 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(json_element.competencyId,element.competencyId)
 
     def test_delete_element(self, client):
-        resp = client.get('/api/v1/elements/2')
-        self.assertEqual(resp.status_code, 200)
-        element = resp.json
-        resp = client.delete('/api/v1/elements/2', json=element)
+        resp = client.delete('/api/v1/elements/2')
         self.assertEqual(resp.status_code, 204)
     # --------------- END ELEMENT OF COMPETENCY CRUD TEST ---------------
 
@@ -370,7 +367,17 @@ class TestForAPI(flask_unittest.ClientTestCase):
         self.assertEqual(json_course.work_hours,course.work_hours)
 
     def test_update_course(self, client):
-        resp = client.patch('/api/v1/courses/420-110-DW', json=course)
+        resp = client.get('/api/v1/courses/420-110-DW')
+        self.assertEqual(resp.status_code, 200)
+        course = resp.json
+        course['name'] = 'Hacking I'
+        course["description"] = 'Introduction to hacking'
+        course["term_id"] = '1'
+        course["domain_id"] = '1'
+        course["lab_hours"] = 5
+        course["theory_hours"] = 5
+        course["work_hours"] = 5
+        resp = client.put('/api/v1/courses/420-110-DW', json=course)
         self.assertEqual(resp.status_code, 204)
         resp = client.get('/api/v1/courses/420-110-DW')
         self.assertEqual(resp.status_code, 200)

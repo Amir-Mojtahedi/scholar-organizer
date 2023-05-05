@@ -106,11 +106,11 @@ def update_element(id):
     return {}, 204
 
 
-@bp.route("/<string:id>", methods=["DELETE"])
+@bp.route("/<int:id>", methods=["DELETE"])
 def delete_element(id):
     try:
         # Just take the id
-        dtb.delete_element(Element(int(id), 0, "", "", ""))
+        dtb.delete_element(id)
     except oracledb.Error as e:
         return jsonify({"error": str(e)}), 500
 
